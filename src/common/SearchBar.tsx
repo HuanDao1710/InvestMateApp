@@ -5,9 +5,7 @@ import IconSearch from "../IconSVG/IconSearch";
 
 
 const SearceBar = () => {
-
     const [text, setText] = React.useState('');
-
     const handleTextChange = (inputText: string) => {
         setText(inputText);
         console.log("Text Change!");
@@ -24,7 +22,7 @@ const SearceBar = () => {
                 placeholder="Tìm kiếm..."
                 placeholderTextColor={"#7D7C7C"}
                 cursorColor="black"
-            ></TextInput>
+            />
             <TouchableOpacity 
                 style={{width: "9%", aspectRatio: 1, position: "absolute", right: 0,}}
                 onPress={()=> {console.log("mic pressed!")}}>
