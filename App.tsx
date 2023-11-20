@@ -11,6 +11,7 @@ import IconTabWatchlist from './src/IconSVG/IconTabWatchlist';
 import IconTabStockFilter from './src/IconSVG/IconTabStockFilter';
 import SearchBar from './src/common/SearchBar';
 import StockFilterScreen from './src/screen/filter/StockFIlterScreen';
+import { MenuProvider } from 'react-native-popup-menu';
 
 
 const Tab = createBottomTabNavigator();
@@ -18,6 +19,7 @@ const Tab = createBottomTabNavigator();
 
 const App = () => {
   return (
+    <MenuProvider>
   <NavigationContainer>
     <Tab.Navigator 
         screenOptions={{
@@ -71,6 +73,7 @@ const App = () => {
         />
       </Tab.Navigator>
   </NavigationContainer>
+  </MenuProvider>
   );
 }
 export default App;
