@@ -189,11 +189,10 @@ const renderItemTopStock = (props : TopStockPropsStyle) : React.JSX.Element => {
                     <Text style={[styles.textCell, {color: "black", width: "55%"}]}>{props.code}</Text>
                     <IconSmallAdd style={{width: 12, height: 12, margin: "10%"}}/>
                 </TouchableOpacity>
-                
             </DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>{props.chart}</DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>
-                <SMG dimension={9} smg={props.smg}/>
+                <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={styles.textCell}>{props.price}</Text>
@@ -224,7 +223,7 @@ const renderItemTopIndustry = (props : TopIndustryPropsStyle) : React.JSX.Elemen
                 </TouchableOpacity>
             </DataTable.Cell>  
             <DataTable.Cell style={styles.cell}>
-                <SMG dimension={9} smg={props.smg}/>
+                <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>

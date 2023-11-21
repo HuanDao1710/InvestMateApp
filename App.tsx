@@ -12,6 +12,7 @@ import IconTabStockFilter from './src/IconSVG/IconTabStockFilter';
 import SearchBar from './src/common/SearchBar';
 import StockFilterScreen from './src/screen/filter/StockFIlterScreen';
 import { MenuProvider } from 'react-native-popup-menu';
+import { WatchlistHeader } from './src/screen/Watchlist/WatchlistScreen';
 
 
 const Tab = createBottomTabNavigator();
@@ -58,7 +59,8 @@ const App = () => {
             tabBarLabel: 'DS theo dõi',
             tabBarIcon: () => (
               <IconTabWatchlist  style={{width: 22.5, height: 22.5,}}/>
-            )
+            ),
+            headerRight: () => (<WatchlistHeader/>),
           }}
         />
         <Tab.Screen

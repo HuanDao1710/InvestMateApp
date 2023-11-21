@@ -91,7 +91,7 @@ const renderStock = (item : StockInfoStyle) => {
                     {item.chart}
                 </View>
                 <View style={{width:"15%",  justifyContent: 'center', alignItems: 'center'}}>
-                    <SMG smg={item.smg} dimension={11}/>
+                    <SMG smg={item.smg} style={{width:"55%", aspectRatio: 1}}/>
                 </View>
                 <View style={{width:"25%", justifyContent: 'center', alignItems:"flex-end"}}>
                     <Text style={{color:"black", fontSize: 14}}>{item.price}</Text>
@@ -138,7 +138,7 @@ const ListStockScreen = () =>{
                             {listSortOption.map((item) => (
                                 <MenuOption key={item.code}
                                     onSelect={()=>{handleSelectSortOption(item)}}>
-                                    <Text style={{color: "black"}}>
+                                    <Text style={{color: "black", fontSize: 14}}>
                                         {item.name}
                                     </Text>
                                 </MenuOption>
