@@ -1,22 +1,27 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {Text, View, StyleSheet, ScrollView, Dimensions, Touchable, TouchableOpacity} from 'react-native';
 import { DataTable } from 'react-native-paper';
-import IconTime from '../../IconSVG/IconTime';
-import IconChart from '../../IconSVG/IconChart';
+import IconTime from '../../iconSVG/IconTime';
+import IconChart from '../../iconSVG/IconChart';
 import SMG from '../../common/SMG';
-import IconSmallAdd from '../../IconSVG/IconSmallAdd';
+import IconSmallAdd from '../../iconSVG/IconSmallAdd';
+import { API_CORE } from '../../api';
+import { convertEpochToDateString, convertEpochToTimeString } from '../../utils/utils';
+import ChartDetail from '../../charts/ChartDetail';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 interface IndexPropsStyle {
     name: string,
-    updateTime: string,
+    comGroupCode : string,
+    updateTime: number,
+    priceTimeSeries : number[],
+    open: number,
     price: number,
     volume: number,
     transactionValue: number,
-    change: number,
-    percentChange: string
+    priceChange: number,
 }
 
 interface TopStockPropsStyle {
@@ -150,27 +155,35 @@ const listTopIndustry= [
 ]
 
 const indexContent = (data : IndexPropsStyle) =>{
-    const priceColor = data.change > 0 ? {color: "#37c284"} : {color : "#f65959"}
+    const priceColor = data.priceChange > 0 ? {color: "#37c284"} : {color : "#f65959"}
+    const price = data.price.toFixed(2);
+    const volume = (data.volume/1e6).toFixed(2);
+    const priceChange = data.priceChange. toFixed(2);
+    const priceChangeText = data.priceChange > 0? "+" + priceChange : priceChange; 
+    const percentChange = (data.priceChange / data.price * 100). toFixed(2);
+    const percentChangeText = data.priceChange > 0 ? "+" + percentChange + "%": percentChange;
+    const transactionValue = data.transactionValue > 0 ? data.transactionValue : "_._";
+    const updateTime = convertEpochToTimeString(data.updateTime); 
     return (
         <View style={styles.indexContent}>
-            <View style={{height:"60%", width: "100%", borderBottomWidth: 0.5, alignItems: "center", justifyContent: "center"}}>
-                <Text style={{color: "black"}}>Chart</Text>
+            <View style={{height:"60%", width: "100%", borderBottomWidth: 0.5, alignItems: "center", justifyContent: "center",}}>
+                <ChartDetail data={data.priceTimeSeries} lineColor={priceColor.color}/>
             </View>
             <View style={{width: "100%", height: "40%", justifyContent: "center", alignItems: "center"}}>
                 <View style={styles.indexContentDetail}>
                     <Text style={{color: "black", fontSize: 14, fontWeight: "600"}}>{data.name}</Text>
-                    <Text style={[{fontSize: 16, fontWeight: "600"}, priceColor]}>{data.price}</Text>
+                    <Text style={[{fontSize: 16, fontWeight: "600"}, priceColor]}>{price}</Text>
                 </View>
                 <View style={[styles.indexContentDetail, {height:"30%"}]}>
                     <View style={{width: "auto", height: "auto", flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                         <IconTime style={{width: 10, height: 10, marginRight: 5}}/>
-                        <Text style={{color: "#7e7e7e", fontSize: 10}}>{data.updateTime}</Text>
+                        <Text style={{color: "#7e7e7e", fontSize: 10}}>{updateTime}</Text>
                     </View>
-                    <Text style={[{fontSize: 10, fontWeight: "600"},priceColor]}>{data.change}/{data.percentChange}</Text>
+                    <Text style={[{fontSize: 10, fontWeight: "600"},priceColor]}>{priceChangeText}/{percentChangeText}</Text>
                 </View>
                 <View style={[styles.indexContentDetail, {height: "30%"}]}>
-                    <Text style={{color:"#7e7e7e", fontSize: 12}}>{data.volume} triệu</Text>
-                    <Text style={{color:"#7e7e7e", fontSize: 12}}>{data.transactionValue} nghìn tỷ</Text>
+                    <Text style={{color:"#7e7e7e", fontSize: 12}}>{volume} triệu</Text>
+                    <Text style={{color:"#7e7e7e", fontSize: 12}}>{transactionValue} nghìn tỷ</Text>
                 </View>
             </View>                          
         </View>
@@ -189,23 +202,23 @@ const renderItemTopStock = (props : TopStockPropsStyle) : React.JSX.Element => {
                     <Text style={[styles.textCell, {color: "black", width: "55%"}]}>{props.code}</Text>
                     <IconSmallAdd style={{width: 12, height: 12, margin: "10%"}}/>
                 </TouchableOpacity>
-            </DataTable.Cell> 
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>{props.chart}</DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>
                 <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={styles.textCell}>{props.price}</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
             </DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
         </DataTable.Row> 
     );
 }
@@ -221,25 +234,47 @@ const renderItemTopIndustry = (props : TopIndustryPropsStyle) : React.JSX.Elemen
                 <TouchableOpacity style={{flexDirection: 'row', justifyContent: "center", alignItems: "center",}}>
                     <Text style={[styles.textCell, {color: "black"}]}>{props.name}</Text>
                 </TouchableOpacity>
-            </DataTable.Cell>  
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
                 <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
-            </DataTable.Cell> 
+            </DataTable.Cell>
         </DataTable.Row> 
     );
 }
 
 const HomeScreen = () =>{
-    const [updateTime, setUpdateTime] = React.useState<String>("18/11/2023");
+    const [updateTime, setUpdateTime] = React.useState<String|undefined>("");
+    const [indexOverViewData, setIndexOverViewData] = React.useState<IndexPropsStyle[]>([]);
+
+    const getData = async () => {
+        try {
+            const res = await API_CORE.get<any>(
+              "http://192.168.0.103:8080/invest_mate/api/home/index",
+            );
+            if (res.status === 200) {
+              setIndexOverViewData(res.data);
+              setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
+            } else {
+              console.log("FETCH FAIL! Status Code: " + res.status);
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+    };
+
+    useEffect(()=> {
+        getData();
+    }, [])
+
     return (
         <ScrollView>
             <View style={{width: windowWidth, height: "auto", alignItems: "center", backgroundColor: "#f0f0f0",}}>
@@ -257,10 +292,10 @@ const HomeScreen = () =>{
                             Chỉ số
                         </Text>
                     </View>
-                    <View style={{height: "74%", backgroundColor :"#f4f5f7", flexDirection: "row", alignItems: "center", width: "100%"}}>
-                        {indexContent(listStockIndexs[0])}
-                        <View style={{width: 1,height: "50%", borderWidth: 0.5, borderColor:"#727272", borderStyle: 'dashed'}}/>                       
-                        {indexContent(listStockIndexs[1])}
+                    <View style={{height: "74%", backgroundColor :"#f4f5f7", flexDirection: "row", alignItems: "center", width: "100%",}}>
+                        {indexOverViewData[0] != undefined? indexContent(indexOverViewData[0]) : <View style={styles.indexContent}/>}
+                        <View style={{height: "50%", borderWidth: 0.5, borderColor:"#727272", borderStyle: 'dashed'}}/>                       
+                        {indexOverViewData[0] != undefined?  indexContent(indexOverViewData[1]) : <View style={styles.indexContent}/>}
                     </View>
                 </View>
                 <View style={styles.topStock}>

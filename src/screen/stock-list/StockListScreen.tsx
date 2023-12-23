@@ -1,57 +1,20 @@
 import React from 'react';
 import {Text, View, StyleSheet, ScrollView, Dimensions, Modal, TouchableOpacity, TouchableHighlight} from 'react-native';
-import { DataTable } from 'react-native-paper';
-import IconTime from '../../IconSVG/IconTime';
-import IconChart from '../../IconSVG/IconChart';
+import { DataTable, Title } from 'react-native-paper';
+import IconTime from '../../iconSVG/IconTime';
+import IconChart from '../../iconSVG/IconChart';
 import SMG from '../../common/SMG';
-import IconSmallAdd from '../../IconSVG/IconSmallAdd';
-import IconSort from '../../IconSVG/IconSort';
+import IconSmallAdd from '../../iconSVG/IconSmallAdd';
+import IconSort from '../../iconSVG/IconSort';
 import { Menu, MenuOptions, MenuTrigger, MenuOption } from 'react-native-popup-menu';
+import { useNavigation } from '@react-navigation/native';
+import { StockInfoProps } from '../../type';
+import { listSortOption } from './ListSortOptions';
+import { getColorPrice, getTextChangePrice } from '../../utils/utils';
 
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
-
-interface StockInfoStyle {
-    name: string,
-    code: string,
-    chart: any,
-    smg : number,
-    price: number,
-    changePrice: number,
-    changePricePercent: number
-}
-
-const listSortOption = [
-    {
-        code: "highest_RS",
-        name: "SMG cao nhất"
-    },
-    {
-        code: "lowest_RS",
-        name: "SMG thấp nhất"
-    },
-    {
-        code: "most_active",
-        name: "Hoạt động mạnh nhất"
-    },
-    {
-        code: "strongest_point_increase",
-        name: "Tăng điểm mạnh nhất"
-    },
-    {
-        code: "strongest_point_reduction",
-        name: "Giảm điểm mạnh nhất"
-    },
-    {
-        code: "52-week_high",
-        name: "Mức đỉnh 52 tuần"
-    },
-    {
-        code: "52-week_low",
-        name: "Mức đáy 52 tuần"
-    },
-]
 
 const listStock =[
     {
@@ -61,7 +24,9 @@ const listStock =[
         smg : 85,
         price: 28150.0,
         changePrice: 900.0,
-        changePricePercent: 0.0328
+        changePricePercent: 0.0328,
+        exchange : "HOSE",
+        time : 1703325162
     },
     {
         name: "Chứng khoán SSI",
@@ -70,18 +35,19 @@ const listStock =[
         smg : 85,
         price: 28150.0,
         changePrice: -800.0,
-        changePricePercent: -0.0328
+        changePricePercent: -0.0328,
+        exchange: "HOSE",
+        time : 1703325162
     }
 ]
 
-const renderStock = (item : StockInfoStyle) => {
+const renderStock = (item : StockInfoProps, onPress : any) => {
 
-    const colorStyle = item.changePrice >= 0 ? {color: "#059926"} : {color: "#f65959"};
-    const textChange = item.changePrice >= 0 ? "+" + item.changePrice + "(" + "+" + (item.changePricePercent * 100).toFixed(2) + "%)"
-                                            :  item.changePrice + "(" +  (item.changePricePercent * 100).toFixed(2) + "%)";
+    const colorStyle = getColorPrice(item.changePrice);
+    const textChange = getTextChangePrice(item.changePrice, item.changePricePercent);
     return (
         <TouchableOpacity style={styles.stockItemContainer} key={item.code}
-            onPress={()=>{console.log("do something!")}}>
+            onPress={()=> {onPress(item)}}>
             <View style={styles.stockItemContent}>
                 <View style={{width: "35%", height: "100%", justifyContent: "center",}}>
                     <Text style={{color:"black", fontWeight: "600"}}>{item.name}</Text>
@@ -106,6 +72,7 @@ const ListStockScreen = () =>{
     const [updateTime, setUpdateTime] = React.useState<string>("18/11/2023");
     const [sortOption, setSortOption] = React.useState<string>("highest_RS");
     const [optionSortName, setOptionSortName] = React.useState<string>("");
+    const navigation = useNavigation<any>();
     React.useEffect (()=>{
         const name = listSortOption.find(item => item.code===sortOption)?.name
         setOptionSortName(name? name : "");
@@ -115,6 +82,10 @@ const ListStockScreen = () =>{
     const handleSelectSortOption = (item :  any) => {
         setSortOption(item.code);
         //do sth
+    }
+
+    const handlePressItem = (item : StockInfoProps) => {
+        navigation.navigate("StockDetail", {item});
     }
 
     return (
@@ -147,7 +118,7 @@ const ListStockScreen = () =>{
                     </Menu>
                 </View>
                 <View style={styles.listStock}>
-                    {listStock.map((item: StockInfoStyle) => renderStock(item))}
+                    {listStock.map((item: StockInfoProps) => renderStock(item, handlePressItem))}
                 </View>
             </View>
             <View style={{paddingBottom : "15%",}}></View>

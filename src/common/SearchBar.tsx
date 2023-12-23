@@ -1,7 +1,7 @@
 import React from "react";
 import {View, StyleSheet, Text, TextInput, SafeAreaView, Touchable, TouchableOpacity} from 'react-native';
-import IconMicro from "../IconSVG/IconMicro";
-import IconSearch from "../IconSVG/IconSearch";
+import IconMicro from "../iconSVG/IconMicro";
+import IconSearch from "../iconSVG/IconSearch";
 
 
 const SearceBar = () => {
@@ -37,8 +37,8 @@ export default SearceBar;
 
 const styles = StyleSheet.create({
     container: {
-        width: "95%", 
-        height: "65%", 
+        width: "85%", 
+        height: "50%", 
         right: "5%", 
         borderRadius: 100, 
         alignItems: "center",
@@ -48,6 +48,7 @@ const styles = StyleSheet.create({
     subContainer: {
         width: "88%", 
         borderBottomWidth: 1, 
+        borderColor: "grey",
         height: "70%", 
         alignItems:"center",
         flexDirection:"row",

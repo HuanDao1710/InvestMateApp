@@ -1,27 +1,49 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import HomeScreen from './src/screen/home/HomeScreen';
 import StockListScreen from './src/screen/stock-list/StockListScreen';
 import WatchlistScreen from './src/screen/Watchlist/WatchlistScreen';
-import IconTabHome from './src/IconSVG/IconTabHome';
-import IconTabStockList from './src/IconSVG/IconTabStockList';
-import IconTabWatchlist from './src/IconSVG/IconTabWatchlist';
-import IconTabStockFilter from './src/IconSVG/IconTabStockFilter';
+import IconTabHome from './src/iconSVG/IconTabHome';
+import IconTabStockList from './src/iconSVG/IconTabStockList';
+import IconTabWatchlist from './src/iconSVG/IconTabWatchlist';
+import IconTabStockFilter from './src/iconSVG/IconTabStockFilter';
 import SearchBar from './src/common/SearchBar';
 import StockFilterScreen from './src/screen/filter/StockFIlterScreen';
 import { MenuProvider } from 'react-native-popup-menu';
 import { WatchlistHeader } from './src/screen/Watchlist/WatchlistScreen';
+import { createStackNavigator } from '@react-navigation/stack';
+import StockDetail from './src/screen/details/StockDetail';
+import CompanyInfo from './src/screen/details/CompanyInfo';
+import ListLargeShareHolder from './src/screen/details/ListLargeShareHolder';
+import SubList from './src/screen/Watchlist/SubList';
+
 
 
 const Tab = createBottomTabNavigator();
-
+const Stack = createStackNavigator();
 
 const App = () => {
   return (
     <MenuProvider>
-  <NavigationContainer>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
+          <Stack.Screen name="StockDetail" component={StockDetail}/>
+          <Stack.Screen name="CompanyInfo" component={CompanyInfo}/>
+          <Stack.Screen name="ListLargeShareHolder" component={ListLargeShareHolder}/>
+          <Stack.Screen name="SubList" component={SubList}/>
+        </Stack.Navigator>
+      </NavigationContainer>
+    </MenuProvider>
+  );
+}
+export default App;
+
+const HomeTabs = () => {
+  return (
+    <>
     <Tab.Navigator 
         screenOptions={{
           tabBarStyle: {borderTopLeftRadius: 30,borderTopRightRadius: 30, position: "absolute", overflow:"hidden"},
@@ -74,14 +96,15 @@ const App = () => {
           }}
         />
       </Tab.Navigator>
-  </NavigationContainer>
-  </MenuProvider>
+    </>
   );
 }
-export default App;
 
 const styles = StyleSheet.create({
   tiltle: {
-      color: "black", fontSize: 20, fontWeight: "bold", fontFamily:"Roboto"
+      color: "black", 
+      fontSize: 20, 
+      fontWeight: "bold", 
+      fontFamily:"Roboto"
   }
 })
