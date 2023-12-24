@@ -6,8 +6,13 @@ import StockAnanlysis from "./StockAnalysis";
 import StockNews from "./StockNews";
 import IconSearch from '../../iconSVG/IconSearch';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { ParamList } from "../../type";
 import { StockInfoProps } from "../../type";
+
+export type ParamList = {
+    stockinfo: {
+        item : StockInfoProps
+    },
+};
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,17 +29,16 @@ const StockDetail = () => {
     const navigation = useNavigation<any>();
     const route = useRoute<RouteProp<ParamList>>();
     const {item} = route.params;
-    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA")
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: () => <Header name={item.name} exchange={item.exchange}/>, 
             headerTitleStyle: {fontSize: 18},
             headerRight: () => (
-            <TouchableOpacity
-                style={{margin: 15}}
-                onPress={()=>{console.log("do something!")}}>
-                <IconSearch style={{width: 30, aspectRatio: 1}}/>                
-            </TouchableOpacity> 
+                <TouchableOpacity
+                    style={{margin: 15}}
+                    onPress={()=>navigation.navigate("SearchScreen")}>
+                    <IconSearch style={{width: 30, aspectRatio: 1}}/>                
+                </TouchableOpacity> 
             ),
             headerStyle: {
                 borderBottomColor: '#F0F0F0', // Màu sắc của ranh giới

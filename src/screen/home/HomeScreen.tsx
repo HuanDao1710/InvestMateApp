@@ -287,26 +287,16 @@ const HomeScreen = () =>{
                     </Text>
                 </View>
                 <View style={styles.index}>
-                    <View style={{height: "auto", width: "100%", marginBottom: "1%", marginTop: '1%'}}>
-                        <Text style={{color: "black", fontSize : 16, fontFamily: "roboto",  fontWeight:"600",marginLeft: 20 }}>
-                            Chỉ số
-                        </Text>
-                    </View>
-                    <View style={{height: "74%", backgroundColor :"#f4f5f7", flexDirection: "row", alignItems: "center", width: "100%",}}>
+                    <View style={{height: "83%", backgroundColor :"#f4f5f7", flexDirection: "row", alignItems: "center", width: "100%", }}>
                         {indexOverViewData[0] != undefined? indexContent(indexOverViewData[0]) : <View style={styles.indexContent}/>}
                         <View style={{height: "50%", borderWidth: 0.5, borderColor:"#727272", borderStyle: 'dashed'}}/>                       
                         {indexOverViewData[0] != undefined?  indexContent(indexOverViewData[1]) : <View style={styles.indexContent}/>}
                     </View>
                 </View>
                 <View style={styles.topStock}>
-                    <View style={{height: "auto", width: "100%",marginBottom: '1%', marginTop: "1%"}}>
-                        <Text style={{color: "black", fontSize : 16, fontFamily: "roboto",  fontWeight:"600", marginLeft: 20, }}>
-                            Top cổ phiếu
-                        </Text>
-                    </View>
                     <View style={styles.tableContainer}>
                         <View style={{margin: "2%", alignSelf:'baseline', backgroundColor: "#b8c4ff", borderRadius: 10}}>
-                            <Text style={{marginLeft: 6, marginRight: 6, fontWeight:"600", fontSize: 12, color: "#141ffc"}}>
+                            <Text style={{marginLeft: 6, marginRight: 6, fontWeight:"600", fontSize: 14, color: "#141ffc"}}>
                                 Top cổ phiếu mạnh nhất
                             </Text>
                         </View>
@@ -322,11 +312,12 @@ const HomeScreen = () =>{
                                     <DataTable.Title style={styles.cell}>%M</DataTable.Title> 
                                 </DataTable.Header>
                                 {listTopStock.map((item : TopStockPropsStyle) => renderItemTopStock(item))}
+                                {listTopStock.map((item : TopStockPropsStyle) => renderItemTopStock(item))}
                             </DataTable>
                         </View>
                     </View>           
                 </View>
-                <View style={styles.topStock}>
+                {/* <View style={styles.topStock}>
                     <View style={{height: "auto", width: "100%",marginBottom: '1%', marginTop: "1%"}}>
                         <Text style={{color: "black", fontSize : 16, fontFamily: "roboto",  fontWeight:"600", marginLeft: 20, }}>
                             Top ngành
@@ -351,7 +342,7 @@ const HomeScreen = () =>{
                             </DataTable>
                         </View>
                     </View>           
-                </View>
+                </View> */}
             </View>
             <View style={{paddingBottom : "15%"}}></View>
         </ScrollView>
@@ -388,6 +379,8 @@ const styles = StyleSheet.create({
         height: windowHeight * 0.3,
         margin: "1%",
         borderRadius: 20,
+        justifyContent: "center",
+        alignItems: "center"
     },
     indexContent : {
         height: "100%",
@@ -415,7 +408,7 @@ const styles = StyleSheet.create({
         height: "auto",
         borderRadius: 10,
         borderColor : "#b4b4b3",
-        marginBottom: 30
+        marginVertical: 20
     },
     textCell : {
         color : "#1DC787",

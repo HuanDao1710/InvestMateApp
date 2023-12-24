@@ -20,7 +20,7 @@ const listStock =[
     {
         name: "Chứng khoán SSI",
         code: "SSI",
-        chart: <IconChart style={{height: "90%"}}/>,
+        chart: [],
         smg : 85,
         price: 28150.0,
         changePrice: 900.0,
@@ -31,7 +31,7 @@ const listStock =[
     {
         name: "Chứng khoán SSI",
         code: "AAA",
-        chart: <IconChart style={{height: "90%"}}/>,
+        chart: [],
         smg : 85,
         price: 28150.0,
         changePrice: -800.0,
@@ -54,7 +54,8 @@ const renderStock = (item : StockInfoProps, onPress : any) => {
                     <Text style={{color:"#646464", fontWeight: "500"}}>Mã CP: {item.code}</Text>
                 </View>
                 <View style={{width:"20%",  justifyContent: 'center'}}>
-                    {item.chart}
+                    {/* {item.chart} */}
+                    <IconChart style={{height: "90%"}}/>
                 </View>
                 <View style={{width:"15%",  justifyContent: 'center', alignItems: 'center'}}>
                     <SMG smg={item.smg} style={{width:"55%", aspectRatio: 1}}/>

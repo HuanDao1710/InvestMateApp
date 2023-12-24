@@ -1,30 +1,34 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import {View, StyleSheet, Text, TextInput, SafeAreaView, Touchable, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, Text, TextInput, SafeAreaView, Touchable, TouchableOpacity, ViewStyle} from 'react-native';
 import IconMicro from "../iconSVG/IconMicro";
 import IconSearch from "../iconSVG/IconSearch";
 
 
-const SearceBar = () => {
+const SearceBar = (props: {enable?: boolean, style? : ViewStyle ,handleTextChange?: any}) => {
+    const navigation = useNavigation<any> ();
     const [text, setText] = React.useState('');
     const handleTextChange = (inputText: string) => {
         setText(inputText);
-        console.log("Text Change!");
+        props.handleTextChange(inputText)
     }
 
     return (
-    <View style={styles.container}>
+    <View style={[styles.container, props.style]}>
         <View style={styles.subContainer}>
-            <IconSearch style={{width: "9%", aspectRatio: 1, marginRight: "5%"}}/>      
+            <IconSearch style={{height: "90%", aspectRatio: 1, marginRight: "5%"}}/>      
             <TextInput
                 style={styles.input}
                 onChangeText={handleTextChange}
                 value={text}
+                editable={props.enable? props.enable : false}
                 placeholder="Tìm kiếm..."
                 placeholderTextColor={"#7D7C7C"}
                 cursorColor="black"
+                autoFocus={props.enable? props.enable : false}
             />
             <TouchableOpacity 
-                style={{width: "9%", aspectRatio: 1, position: "absolute", right: 0,}}
+                style={{height: "90%", aspectRatio: 1, position: "absolute", right: 0,}}
                 onPress={()=> {console.log("mic pressed!")}}>
                 <IconMicro style={{width: "100%", aspectRatio: 1,}}/>
             </TouchableOpacity>   
@@ -38,7 +42,7 @@ export default SearceBar;
 const styles = StyleSheet.create({
     container: {
         width: "85%", 
-        height: "50%", 
+        height: "60%", 
         right: "5%", 
         borderRadius: 100, 
         alignItems: "center",

@@ -10,7 +10,7 @@ export interface Response<T> {
 export type ParamList = {
     stockinfo: {
         item : StockInfoProps
-    }
+    },
 };
 
 export interface StockInfoProps {
@@ -23,4 +23,15 @@ export interface StockInfoProps {
     changePricePercent: number,
     exchange: string,
     time: number
+}
+
+export interface WatchlistEntity {
+    id: number
+    name : string
+}
+
+export interface TrackingStockEntity {
+    id: number,
+    code : string,
+    watchlist : number
 }

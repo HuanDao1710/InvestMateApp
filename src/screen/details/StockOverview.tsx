@@ -14,7 +14,6 @@ const StockOverview = () => {
     const navigation = useNavigation<any>();
     const route = useRoute<RouteProp<ParamList>>();
     const {item} = route.params;
-    console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBb")
 
     useLayoutEffect(() => {
         navigation.setOptions({ 
