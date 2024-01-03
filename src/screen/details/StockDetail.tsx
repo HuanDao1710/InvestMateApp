@@ -6,11 +6,13 @@ import StockAnanlysis from "./StockAnalysis";
 import StockNews from "./StockNews";
 import IconSearch from '../../iconSVG/IconSearch';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { StockInfoProps } from "../../type";
+// import { StockInfoProps } from "../../type";
+import { StockTemporary, Industry } from '../../type';
+
 
 export type ParamList = {
     stockinfo: {
-        item : StockInfoProps
+        item : StockTemporary
     },
 };
 
@@ -31,7 +33,7 @@ const StockDetail = () => {
     const {item} = route.params;
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: () => <Header name={item.name} exchange={item.exchange}/>, 
+            headerTitle: () => <Header name={item.shortName} exchange={item.exchange}/>, 
             headerTitleStyle: {fontSize: 18},
             headerRight: () => (
                 <TouchableOpacity

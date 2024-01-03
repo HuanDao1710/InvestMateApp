@@ -20,6 +20,9 @@ import SubList from './src/screen/Watchlist/SubList';
 import SQLiteContextProvider from './src/sqlite/SQLiteContextProvider';
 import SearchScreen from './src/screen/search';
 import { useHeaderHeight,} from '@react-navigation/elements';
+import CreateFilter from './src/screen/filter/CreateFilter';
+import CriteriaList from './src/screen/filter/CriteriaList';
+import { NewsView } from './src/screen/details/StockNews';
 
 
 const windowWidth = Dimensions.get("window").width;
@@ -38,6 +41,9 @@ const App = () => {
             <Stack.Screen name="ListLargeShareHolder" component={ListLargeShareHolder}/>
             <Stack.Screen name="SubList" component={SubList}/>
             <Stack.Screen name="SearchScreen" component={SearchScreen} />
+            <Stack.Screen name="CreateFilter" component={CreateFilter} />
+            <Stack.Screen name='CriteriaList' component={CriteriaList}/>
+            <Stack.Screen name="NewsView" component={NewsView} />
           </Stack.Navigator>
         </NavigationContainer> 
       </MenuProvider>

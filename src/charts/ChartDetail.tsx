@@ -7,7 +7,7 @@ import Svg, { Line } from 'react-native-svg';
 
 const width = Dimensions.get('screen').width;
 
-const LineChartExample = (props : {data : number[], lineColor : string}) => {
+const LineChartDetail = (props : {data : number[], changePrice : number}) => {
   const data = {
     labels: [],
     datasets: [
@@ -18,16 +18,18 @@ const LineChartExample = (props : {data : number[], lineColor : string}) => {
     ],
   };
 
-  const rgb = hexToRgb(props.lineColor);
+  const lineColor = props.changePrice >= 0? "#37c284" : "#fc8181";
+
+  const rgb = hexToRgb(lineColor);
 
   return (
-    <View style={{width: width / 2 - 5, height: "auto", }}>
-        <Svg height="100%" width="100%" style={{position: "absolute"}}>
+    <View style={{width: width * 0.7, height: "auto", }}>
+      <Svg height="100%" width="100%" style={{position: "absolute"}}>
         {/* Đường thẳng nằm ngang với trục y */}
       </Svg>
       <LineChart
         data={data}
-        width={width / 2 - 10}
+        width={width * 0.7}
         height={100}
         chartConfig={{
           backgroundColor: '#f4f5f7',
@@ -53,4 +55,4 @@ const LineChartExample = (props : {data : number[], lineColor : string}) => {
   );
 };
 
-export default LineChartExample;
+export default LineChartDetail;

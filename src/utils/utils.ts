@@ -30,15 +30,15 @@ export const getColorPrice = (changePrice : number) => {
 }
 
 export const getTextChangePrice = (changePrice : number, changePricePercent : number) => {
-    return changePrice >= 0 ? "+" + changePrice + "(" + "+" + (changePricePercent * 100).toFixed(2) + "%)"
-                                            :  changePrice + "(" +  (changePricePercent * 100).toFixed(2) + "%)";
+    return changePrice >= 0 ? "+" + (changePrice * 1000).toFixed(2) + "(" + "+" + (changePricePercent * 100).toFixed(2) + "%)"
+                                            :  (changePrice * 1000).toFixed(2) + "(" +  (changePricePercent * 100).toFixed(2) + "%)";
 }
 
 export const formatPrice = (price: number) => {
     if (typeof price !== 'number') {
       return 'Invalid price';
     }
-    const priceString = price.toString();
+    const priceString = (price * 1000).toString();
     const parts = priceString.split('.');
     const integerPart = parts[0];
     const decimalPart = parts[1] || '0';
@@ -46,7 +46,13 @@ export const formatPrice = (price: number) => {
     const formattedPrice = `${formattedInteger}.${decimalPart}`;
   
     return formattedPrice;
-  }
+}
+
+export const arrayToGraphData = (arr : number[], levelOfDetail : number) => {
+    return arr.filter((_, index) => index % levelOfDetail === 0).map((a, index)=> {
+        return {x: index, y: a}
+    });
+}
 
 
 

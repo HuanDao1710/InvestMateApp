@@ -6,8 +6,13 @@ import IconChart from '../../iconSVG/IconChart';
 import SMG from '../../common/SMG';
 import IconSmallAdd from '../../iconSVG/IconSmallAdd';
 import { API_CORE } from '../../api';
-import { convertEpochToDateString, convertEpochToTimeString } from '../../utils/utils';
+import { arrayToGraphData, convertEpochToDateString, convertEpochToTimeString } from '../../utils/utils';
 import ChartDetail from '../../charts/ChartDetail';
+import ShortenedGraph from '../../charts/GhortenedChart';
+import DetailChart2 from '../../charts/DetailChart2';
+import { StockTemporary } from '../../type';
+import { useNavigation } from '@react-navigation/native';
+import { IP } from '../../constants';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
@@ -17,142 +22,13 @@ interface IndexPropsStyle {
     comGroupCode : string,
     updateTime: number,
     priceTimeSeries : number[],
-    open: number,
+    preferencePrice: number,
     price: number,
     volume: number,
     transactionValue: number,
     priceChange: number,
 }
 
-interface TopStockPropsStyle {
-    code : string,
-    chart: any,
-    smg : any,
-    price: number,
-    changeD : number,
-    changeW : number,
-    changeM : number    
-}
-
-interface TopIndustryPropsStyle {
-    id: string,
-    name: string,
-    smg : number,
-    changeD : number,
-    changeW : number,
-    changeM : number
-}
-
-const listStockIndexs = [
-    {
-        name: "VN INDEX",
-        updateTime: "14:58:04",
-        price:1125.53,
-        volume: 687.40,
-        transactionValue: 14.78,
-        change: 3.03,
-        percentChange: "0.27%"
-    },
-    {
-        name: "HNX30",
-        updateTime: "14:58:04",
-        price:1125.53,
-        volume: 687.40,
-        transactionValue: 14.78,
-        change: -3.03,
-        percentChange: "-0.27%"
-    },
-]
-const listTopStock = [
-    {
-        code : "EVF",
-        chart: <IconChart style={{width: "90%", height: "75%"}}/>,
-        smg : 100,
-        price: 15400,
-        changeD : 0.034,
-        changeW : 0.189,
-        changeM : 0.363
-    },
-    {
-        code : "NHH",
-        chart: <IconChart style={{width: "90%", height: "75%"}}/>,
-        smg : 99,
-        price: 15400,
-        changeD : -0.034,
-        changeW : 0.189,
-        changeM : -0.363
-    },
-    {
-        code : "VGS",
-        chart: <IconChart style={{width: "90%", height: "75%"}}/>,
-        smg : 99,
-        price: 15400,
-        changeD : 0.034,
-        changeW : -0.189,
-        changeM : 0.363
-    },
-    {
-        code : "PDR",
-        chart: <IconChart style={{width: "90%", height: "75%"}}/>,
-        smg : 98,
-        price: 15400,
-        changeD : 0.034,
-        changeW : 0.189,
-        changeM : 0.363
-    },
-    {
-        code : "CTD",
-        chart: <IconChart style={{width: "90%", height: "75%"}}/>,
-        smg : 97,
-        price: 15400,
-        changeD : 0.034,
-        changeW : -0.189,
-        changeM : 0.363
-    },
-]
-
-const listTopIndustry= [
-    {
-        id: "0",
-        name: "Dịch vụ viễn thông và truyền hình số",
-        smg : 93,
-        changeD : 0.034,
-        changeW : 0.189,
-        changeM : 0.363
-    },
-    {
-        id: "1",
-        name: "Mô giới chứng khoán",
-        smg : 89,
-        changeD : -0.034,
-        changeW : 0.189,
-        changeM : 0.019
-    },
-    {
-        id: "2",
-        name: "Hoá chất",
-        smg : 89,
-        changeD : 0.034,
-        changeW : 0.189,
-        changeM : -0.019
-    },
-    {
-        id: "3",
-        name: "Kim loại và khai thác",
-        smg : 89,
-        changeD : 0.034,
-        changeW : 0.189,
-        changeM : 0.019
-    },
-    {
-        id: "4",
-        name: "thiết bị và dịch vụ",
-        smg : 89,
-        changeD : 0.034,
-        changeW : -0.189,
-        changeM : 0.019
-    }
-]
 
 const indexContent = (data : IndexPropsStyle) =>{
     const priceColor = data.priceChange > 0 ? {color: "#37c284"} : {color : "#f65959"}
@@ -167,7 +43,8 @@ const indexContent = (data : IndexPropsStyle) =>{
     return (
         <View style={styles.indexContent}>
             <View style={{height:"60%", width: "100%", borderBottomWidth: 0.5, alignItems: "center", justifyContent: "center",}}>
-                <ChartDetail data={data.priceTimeSeries} lineColor={priceColor.color}/>
+                {/* <ChartDetail data={data.priceTimeSeries} lineColor={priceColor.color}/> */}
+                <DetailChart2 data={arrayToGraphData(data.priceTimeSeries, 2)} width={windowWidth / 2 - 20} height={windowHeight * 0.13} referencePrices={data.preferencePrice} changePrice={data.priceChange}/>
             </View>
             <View style={{width: "100%", height: "40%", justifyContent: "center", alignItems: "center"}}>
                 <View style={styles.indexContentDetail}>
@@ -190,75 +67,83 @@ const indexContent = (data : IndexPropsStyle) =>{
     )
 }
 
-const renderItemTopStock = (props : TopStockPropsStyle) : React.JSX.Element => {
+const renderItemTopStock = (props : StockTemporary) : React.JSX.Element => {
     const colorStyle = (n : number) => {
         if( n < 0) return {color: "#f65959"}
         return {}
     }
+    console.log(props.code);
     return (
         <DataTable.Row key={props.code}> 
             <DataTable.Cell style={styles.cell}>
                 <TouchableOpacity style={{flexDirection: 'row', justifyContent: "center", alignItems: "center",}}>
-                    <Text style={[styles.textCell, {color: "black", width: "55%"}]}>{props.code}</Text>
-                    <IconSmallAdd style={{width: 12, height: 12, margin: "10%"}}/>
+                    <Text style={[styles.textCell, {color: "black", width: "60%", fontWeight: "500"}]}>{props.code}</Text>
+                    <IconSmallAdd style={{width: 13, aspectRatio: 1, margin: "6%"}}/>
                 </TouchableOpacity>
             </DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>{props.chart}</DataTable.Cell> 
+            <DataTable.Cell style={styles.cell}>
+                <ShortenedGraph data={arrayToGraphData(props.timeSeries, 2)} width={35} height={25} priceReference={props.pricePreference} exchange={props.exchange}/>
+            </DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>
                 <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
-                <Text style={styles.textCell}>{props.price}</Text>
+                <Text style={[styles.textCell, ]}>{props.price.toFixed(1)}</Text>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
+                <Text style={[styles.textCell, colorStyle(props.percentChangeDay)]}>{(props.percentChangeDay * 100).toFixed(2)}%</Text>
             </DataTable.Cell> 
             <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
+                <Text style={[styles.textCell, colorStyle(props.percentChangeWeek)]}>{(props.percentChangeWeek * 100).toFixed(2)}%</Text>
             </DataTable.Cell>
             <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
+                <Text style={[styles.textCell, colorStyle(props.percentChangeMonth)]}>{(props.percentChangeMonth * 100).toFixed(2)}%</Text>
             </DataTable.Cell>
         </DataTable.Row> 
     );
 }
 
-const renderItemTopIndustry = (props : TopIndustryPropsStyle) : React.JSX.Element => {
-    const colorStyle = (n : number) => {
-        if( n < 0) return {color: "#f65959"}
-        return {}
-    }
-    return (
-        <DataTable.Row key={props.id}> 
-            <DataTable.Cell style={[styles.cell, {flex: 3}]}>
-                <TouchableOpacity style={{flexDirection: 'row', justifyContent: "center", alignItems: "center",}}>
-                    <Text style={[styles.textCell, {color: "black"}]}>{props.name}</Text>
-                </TouchableOpacity>
-            </DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>
-                <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
-            </DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
-            </DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
-            </DataTable.Cell>
-            <DataTable.Cell style={styles.cell}>
-                <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
-            </DataTable.Cell>
-        </DataTable.Row> 
-    );
-}
+// const renderItemTopIndustry = (props : TopIndustryPropsStyle) : React.JSX.Element => {
+//     const colorStyle = (n : number) => {
+//         if( n < 0) return {color: "#f65959"}
+//         return {}
+//     }
+//     return (
+//         <DataTable.Row key={props.id}> 
+//             <DataTable.Cell style={[styles.cell, {flex: 3}]}>
+//                 <TouchableOpacity style={{flexDirection: 'row', justifyContent: "center", alignItems: "center",}}>
+//                     <Text style={[styles.textCell, {color: "black"}]}>{props.name}</Text>
+//                 </TouchableOpacity>
+//             </DataTable.Cell>
+//             <DataTable.Cell style={styles.cell}>
+//                 <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
+//             </DataTable.Cell>
+//             <DataTable.Cell style={styles.cell}>
+//                 <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
+//             </DataTable.Cell>
+//             <DataTable.Cell style={styles.cell}>
+//                 <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
+//             </DataTable.Cell>
+//             <DataTable.Cell style={styles.cell}>
+//                 <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
+//             </DataTable.Cell>
+//         </DataTable.Row> 
+//     );
+// }
 
 const HomeScreen = () =>{
     const [updateTime, setUpdateTime] = React.useState<String|undefined>("");
     const [indexOverViewData, setIndexOverViewData] = React.useState<IndexPropsStyle[]>([]);
+    const [top10Stock, setTop10Stock] = React.useState<StockTemporary[]>([]);
 
-    const getData = async () => {
+    const navigation = useNavigation<any>();
+    // navigation.navigate("StockNews");
+    
+
+    const getDataIndex = async () => {
         try {
             const res = await API_CORE.get<any>(
-              "http://192.168.0.103:8080/invest_mate/api/home/index",
+              `http://${IP}:8080/invest_mate/api/home/index`,
             );
             if (res.status === 200) {
               setIndexOverViewData(res.data);
@@ -271,8 +156,26 @@ const HomeScreen = () =>{
           }
     };
 
+    const getDataStock = async () => {
+        try {
+            const res = await API_CORE.get<any>(
+              `http://${IP}:8080/invest_mate/api/home/top_smg`,
+            );
+            if (res.status === 200) {
+              setTop10Stock(res.data);
+            //   console.log(res.data)
+            //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
+            } else {
+              console.log("FETCH FAIL! Status Code: " + res.status);
+            }
+          } catch (error) {
+            console.error("Error fetching data:", error);
+          }
+    };
+
     useEffect(()=> {
-        getData();
+        getDataIndex();
+        getDataStock();
     }, [])
 
     return (
@@ -311,8 +214,7 @@ const HomeScreen = () =>{
                                     <DataTable.Title style={styles.cell}>%W</DataTable.Title> 
                                     <DataTable.Title style={styles.cell}>%M</DataTable.Title> 
                                 </DataTable.Header>
-                                {listTopStock.map((item : TopStockPropsStyle) => renderItemTopStock(item))}
-                                {listTopStock.map((item : TopStockPropsStyle) => renderItemTopStock(item))}
+                                {top10Stock.map((item : StockTemporary) => renderItemTopStock(item))}
                             </DataTable>
                         </View>
                     </View>           
@@ -403,7 +305,7 @@ const styles = StyleSheet.create({
         alignItems : "center",
     },
     tableContainer: {
-        width: "90%",
+        width: "96%",
         borderWidth: 1,
         height: "auto",
         borderRadius: 10,
@@ -415,7 +317,7 @@ const styles = StyleSheet.create({
         fontSize: 11
     },
     cell: {
-        alignItems: "center"
+        alignItems: "center",
     },
     industyCell: {
         alignItems: "center"

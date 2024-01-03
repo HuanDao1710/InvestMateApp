@@ -67,9 +67,14 @@ const highlightText = (text : string, key : string) => {
 
 const ItemResult = (props : {item : StockInfoProps, keyword : string}) => {
     const {item, keyword} = props;
+    const navigation = useNavigation<any> ();
+    const handlePressItem = () => {
+        navigation.navigate("StockDetail", {item});
+    }
 
     return (
-        <View style={{width: "100%", height: 65, borderBottomWidth: 1, flexDirection: "row"}}>
+        <TouchableOpacity style={{width: "100%", height: 65, borderBottomWidth: 1, flexDirection: "row", borderColor: "#DFDFDF"}}
+            onPress={handlePressItem}>
             <View style={{height: '100%', width: "85%", alignItems: "flex-start", justifyContent: "space-around"}}>
                 <Text style={{color: "black", marginLeft: 15, fontSize: 16, fontWeight: "600"}}>
                     {highlightText(item.name, keyword)}
@@ -81,7 +86,7 @@ const ItemResult = (props : {item : StockInfoProps, keyword : string}) => {
             <View style={{height: "100%", width: "15%",}}>
                 
             </View>            
-        </View>
+        </TouchableOpacity>
     )
 }
 
@@ -93,25 +98,26 @@ const SearchScreen = () => {
     useLayoutEffect(() => {
         navigation.setOptions({
             cardStyleInterpolator: forFade,
-            headerShown: false
+            headerShown: true,
+            header : () => (
+            <View style={{borderWidth: 1, height: 60, width: "100%", flexDirection: "row", alignItems: "center", borderBottomColor:"#DFDFDF"}}>
+                <TouchableOpacity
+                    onPress={()=> navigation.goBack()}>
+                    <IconBack style={{width: 23, aspectRatio: 1, margin: 15}}/>
+                </TouchableOpacity>
+                <SearceBar enable={true} handleTextChange={onTextChange} />
+            </View>),
+            
         }
     );})
 
     const onTextChange = (text : string) => {
-        console.log("text change :" + text);
         setKey(text)
     }
 
     return (
         <View style={{flex: 1}}>
             <ScrollView>
-                <View style={{borderWidth: 1, height: 60, width: "100%", flexDirection: "row", alignItems: "center", borderBottomColor:"#DFDFDF"}}>
-                    <TouchableOpacity
-                        onPress={()=> navigation.goBack()}>
-                        <IconBack style={{width: 23, aspectRatio: 1, margin: 15}}/>
-                    </TouchableOpacity>
-                    <SearceBar enable={true} handleTextChange={onTextChange}/>
-                </View>
                 <View style={{height: "auto", width: "100%", marginTop: 5, borderWidth: 0}}>
                     {listStock.length > 0 ? 
                         listStock.map((item, index)=> <ItemResult key={index} item={item} keyword={key}/>)

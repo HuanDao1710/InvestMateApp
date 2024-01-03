@@ -6,12 +6,14 @@ import IconPersonalFilter from '../../iconSVG/IconPersonalFilter';
 import SMG from '../../common/SMG';
 import IconSuggestFilter from '../../iconSVG/IconSuggestFilter';
 import IconCreateFilter from '../../iconSVG/IconCreateFilter';
+import { useNavigation } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get("window").height;
 const windowWidth = Dimensions.get("window").width;
 
 
 const StockFilterScreen = () =>{
+    const navigation = useNavigation<any>();
     
     return (
         <ScrollView>
@@ -22,7 +24,8 @@ const StockFilterScreen = () =>{
                     </Text>
                 </View>
                 <View style={styles.filterContainer}>
-                    <TouchableOpacity style={styles.filter}>
+                    <TouchableOpacity style={styles.filter} 
+                        onPress={()=> navigation.navigate("CreateFilter")}>
                         <IconCreateFilter style={{width: 55, aspectRatio: 1}}/>
                         <Text style={{color: "black", fontSize: 14}}>Tạo bộ lọc</Text>
                     </TouchableOpacity>

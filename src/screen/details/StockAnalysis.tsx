@@ -15,6 +15,14 @@ const StockAnanlysis = () => {
         navigation.setOptions({ title: 'Phân tích'});
     })
 
+    const handleModeChart = () => {
+        setViewMode(ViewModeType.CHART)
+    }
+
+    const handleModeData = () => {
+        setViewMode(ViewModeType.DATA)
+    }
+
 
     return (
         <View style={{width: "100%", height: "100%",}}>
@@ -27,11 +35,13 @@ const StockAnanlysis = () => {
                 <View style={{width: "100%", marginTop: 20, alignItems: "center" , paddingBottom: 30}}>
                     <View style={{width: "90%", }}>
                         <View style={{flexDirection:"row", height: 40, width: 150, backgroundColor:"white", borderRadius: 50, elevation: 2, overflow: "hidden", marginBottom: 10}}>
-                            <TouchableOpacity style={[styles.btnObtions, {backgroundColor: "#DFE8FF"}]}>
+                            <TouchableOpacity style={[styles.btnObtions, viewMode === ViewModeType.CHART&&{backgroundColor: "#A6C4FF"}]}
+                                onPress={handleModeChart}>
                                 <Text style={styles.txtOptions}>Biểu đồ</Text>
                             </TouchableOpacity>
                             <View style={{borderLeftWidth: 1, borderColor: "#9F9F9F", height: "100%"}}/>
-                            <TouchableOpacity style={styles.btnObtions}>
+                            <TouchableOpacity style={[styles.btnObtions, viewMode === ViewModeType.DATA&&{backgroundColor: "#A6C4FF"}]}
+                                onPress={handleModeData}>
                                 <Text style={styles.txtOptions}>Số liệu</Text>
                             </TouchableOpacity>
                         </View>
