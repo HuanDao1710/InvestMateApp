@@ -54,5 +54,15 @@ export const arrayToGraphData = (arr : number[], levelOfDetail : number) => {
     });
 }
 
+export const filterFinancialData = (rawData : any[], yearly : number) => {
+    return rawData.filter(item => item.yearly === yearly).sort((a : any, b: any) => {
+        if (a.year === b.year) {
+            return a.quarter - b.quarter;
+        } else {
+            return a.year - b.year;
+        }
+    });
+}
+
 
 

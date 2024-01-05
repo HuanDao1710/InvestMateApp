@@ -23,6 +23,7 @@ import { useHeaderHeight,} from '@react-navigation/elements';
 import CreateFilter from './src/screen/filter/CreateFilter';
 import CriteriaList from './src/screen/filter/CriteriaList';
 import { NewsView } from './src/screen/details/StockNews';
+import StockAnanlysis from './src/screen/details/StockAnalysis';
 
 
 const windowWidth = Dimensions.get("window").width;
@@ -35,6 +36,7 @@ const App = () => {
       <MenuProvider>
         <NavigationContainer>
           <Stack.Navigator>
+            <Stack.Screen name="StockAnanlysis" component={StockAnanlysis} options={{ headerShown: true,}} />
             <Stack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false,}} />
             <Stack.Screen name="StockDetail" component={StockDetail}/>
             <Stack.Screen name="CompanyInfo" component={CompanyInfo}/>

@@ -151,4 +151,44 @@ export interface FinancialRatioDTO {
     creditGrowth: number | null;
     code: string;
 }
+
+
+export interface CashFlowDataChartDTO {
+    ticker: string | null;
+    yearly: number | null;
+    quarter: number | null;
+    year: number | null;
+    investCost: number | null;
+    fromInvest: number | null;
+    fromFinancial: number | null;
+    fromSale: number | null;
+    freeCashFlow: number | null;
+}
+
+export interface BalanceSheetDataChartDTO {
+    yearly: number;
+    quarter: number;
+    year: number;
+    shortAsset: number | null;
+    longAsset: number | null;
+}
+
+export interface FinancialRatioChartDataDTO {
+    yearly: number;
+    quarter: number;
+    year: number;
+    earningPerShare: number | null;
+}
+
+export interface IncomeStatementDataChartDTO {
+    revenue: number | null;
+    yearRevenueGrowth: number | null;
+    quarterRevenueGrowth: number | null;
+    preTaxProfit: number | null;
+    postTaxProfit: number | null;
+    quarter: number | null;
+    year: number | null;
+    yearly: number | null;
+}
+  
   

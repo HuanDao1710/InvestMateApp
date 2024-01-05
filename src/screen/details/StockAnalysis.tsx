@@ -1,18 +1,68 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect, useState } from 'react';
-import {ScrollView, Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {ScrollView, Text, View, TouchableOpacity, StyleSheet, Dimensions, processColor} from 'react-native';
+// import { StackedBarChart, BarChart } from "react-native-chart-kit";
+import { LineChart,BarChart, CombinedChart } from 'react-native-charts-wrapper';
+import RevenueChart from '../../charts/ReveneuChart';
 
+
+
+
+// const data = [50, 10, -40, 95, -30, 85, 91, -35, 53, -53, 24, 50, -20, -80];
+const revenue = []
 enum ViewModeType{
     CHART = 1,
     DATA = 2
 }
+/* 
+doanh thu : revenue , postTaxProfit
+Tài sản : shortAsset + longAsset
+dòng tiền : fromInvest, fromFinancial, fromSale
+
+*/
+
+
 
 const StockAnanlysis = () => {
     const navigation = useNavigation<any>();
     const [viewMode, setViewMode] = useState<ViewModeType>(ViewModeType.CHART);
+    const [data, setData] = useState({});
+    
+    React.useEffect(() => {
+        setData({
+        lineData: {
+            dataSets: [{
+                values: [{y: 30}, {y: 20}, {y: -10}, {y: -10}],
+                label: 'Line dataset',
+                config: {
+                    drawValues: false,
+                    colors: [processColor('red')],
+                    axisDependency: 'RIGHT',
+                    mode : "CUBIC_BEZIER",
+                    lineWidth: 2
+                },
+            }],
+        },
+        barData: {
+            dataSets: [{
+            values: [{y: 1}, {y: 2}, {y: 1}, {y: 1}],
+            label: 'Bar dataset',
+            config: {
+                drawValues: false,
+                colors: [processColor('blue')],
+                axisDependency: 'LEFT',
+            }
+            }],
+            config: {
+                barWidth: 0.6, // Set the bar width here
+            }
+        },
+        
+        });
+    }, []);
 
     useLayoutEffect(() => {
-        navigation.setOptions({ title: 'Phân tích'});
+        navigation.setOptions({ title: 'Tài chính'});
     })
 
     const handleModeChart = () => {
@@ -22,6 +72,7 @@ const StockAnanlysis = () => {
     const handleModeData = () => {
         setViewMode(ViewModeType.DATA)
     }
+    
 
 
     return (
@@ -46,10 +97,23 @@ const StockAnanlysis = () => {
                             </TouchableOpacity>
                         </View>
                         <View style={styles.chartContainer}>
-
+                            <RevenueChart/>
+                            {/* <BarChart
+                                style={{width: "100%", height: "80%",}}
+                                xAxis={{
+                                valueFormatter: ['Q1', 'Q2', 'Q3'],
+                                granularityEnabled: true,
+                                granularity: 1,
+                                }}
+                                chartDescription={{ text: '' }}
+                                legend={{ enabled: true , textSize: 12}}
+                                data={data}
+                                drawValueAboveBar={false}
+                                drawBarShadow={false}
+                            />     */}
                         </View>
                         <View style={styles.chartContainer}>
-
+                            
                         </View>
                         <View style={styles.chartContainer}>
 
@@ -89,6 +153,8 @@ const styles = StyleSheet.create({
         height: 300,
         backgroundColor: "white",
         borderRadius: 10,
-        marginVertical: 8
+        marginVertical: 8,
+        justifyContent:"center",
+        alignItems:"center"
     }
 });

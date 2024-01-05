@@ -4,7 +4,7 @@ export interface BasicIndexType {
     explain: string
 }
 
-export const FinanacialRatios = {
+export const FinancialRatios = {
     percentDay : {
         code : "% Thay đổi trong tuần",
         name : "% Thay đổi trong ngày",
@@ -35,6 +35,11 @@ export const FinanacialRatios = {
         name: "Tỉ lệ cổ tức",
         explain: "- Tỉ lệ cổ tức, còn được gọi là tỷ lệ chi trả, là một chỉ số quan trọng trong lĩnh vực tài chính, phản ánh mức độ mà doanh nghiệp chia sẻ lợi nhuận với các cổ đông. Đây chính là tỷ lệ phần trăm của thu nhập công ty mà được trả cho cổ đông dưới dạng cổ tức.\n- Tỉ lệ cổ tức có thể được tính bằng cách chia cổ tức trên mỗi đơn vị cổ phiếu cho lợi nhuận trên mỗi đơn vị cổ phiếu (EPS)"
     },
+    valueBeforeEbitda: {
+        code :"",
+        name : "",
+        explain: ""
+    },
     roe : {
         code: "ROE",
         name: "Return on Equity",
@@ -46,7 +51,7 @@ export const FinanacialRatios = {
         explain : "ROA, hay Tỷ suất lợi nhuận trên Tài sản, đo lường khả năng sinh lời của một công ty bằng cách so sánh lợi nhuận thu được với tổng giá trị tài sản. ROA cao tượng trưng cho hiệu suất quản lý tài sản tích cực và khả năng tạo ra lợi nhuận hiệu quả từ tài sản. Ngược lại, ROA thấp có thể là dấu hiệu của quản lý tài sản không hiệu quả hoặc hiệu suất kinh doanh kém."
     },
     daysReceivable : {
-        code : "DR",
+        code : "Số ngày phải thu",
         name : "Days Receivable",
         explain: "Days Receivable, hay số ngày phải thu, là một chỉ số tài chính đo lường thời gian mà một công ty mất để thu hồi tiền từ khách hàng sau khi đã bán hàng hoặc cung cấp dịch vụ. Chỉ số này giúp đánh giá hiệu suất quản lý và khả năng quản lý nợ của doanh nghiệp. Days Receivable được tính bằng cách chia tổng số nợ phải thu cho doanh nghiệp cho doanh số bán hàng hàng ngày và sau đó nhân 365 (số ngày trong một năm)."
     },
@@ -73,18 +78,18 @@ export const FinanacialRatios = {
     bookValuePerShare: {
         code: "BVPS",
         name: "Book Value Per Share",
-        explain: "- Book Value Per Share (BVPS) là chỉ số tài chính đo lường giá trị sổ sách trung bình mà mỗi cổ đông có thể mong đợi nhận được trên mỗi cổ phiếu nếu công ty bị thanh lý.\n- BVPS được tính bằng cách chia giá trị tài sản ròng của công ty cho số lượng cổ phiếu trung bình.\n- Một BVPS cao thường cho thấy giá trị tài sản ròng của công ty đang cao, có thể làm tăng giá trị cổ phiếu và thu hút sự quan tâm của nhà đầu tư."
+        explain: "- Giá trị sổ sách trên mỗi cổ phiếu (BVPS) là chỉ số tài chính đo lường giá trị sổ sách trung bình mà mỗi cổ đông có thể mong đợi nhận được trên mỗi cổ phiếu nếu công ty bị thanh lý.\n- BVPS được tính bằng cách chia giá trị tài sản ròng của công ty cho số lượng cổ phiếu trung bình.\n- Một BVPS cao thường cho thấy giá trị tài sản ròng của công ty đang cao, có thể làm tăng giá trị cổ phiếu và thu hút sự quan tâm của nhà đầu tư."
     },    
     interestMargin: {
         code: "IM",
         name: "Interest Margin",
-        explain: "- Interest Margin (IM) là chỉ số tài chính đo lường lợi nhuận mà một tổ chức tài chính hay ngân hàng có được từ việc cung cấp các sản phẩm và dịch vụ tài chính, đặc biệt là từ lãi suất.\n- IM thường được tính bằng cách chia lợi nhuận từ lãi suất cho tổng doanh thu từ lãi suất.\n- Một IM cao thường cho thấy ngân hàng hoặc tổ chức tài chính đang có hiệu suất lợi nhuận cao từ hoạt động cung cấp dịch vụ tài chính."
+        explain: "- Lãi suất ròng (IM) là chỉ số tài chính đo lường lợi nhuận mà một tổ chức tài chính hay ngân hàng có được từ việc cung cấp các sản phẩm và dịch vụ tài chính, đặc biệt là từ lãi suất.\n- IM thường được tính bằng cách chia lợi nhuận từ lãi suất cho tổng doanh thu từ lãi suất.\n- Một IM cao thường cho thấy ngân hàng hoặc tổ chức tài chính đang có hiệu suất lợi nhuận cao từ hoạt động cung cấp dịch vụ tài chính."
     
     },
     nonInterestOnToi: {
         code: "NITOI",
         name: "Non-Interest on Total Operating Income",
-        explain: "- Non-Interest on Total Operating Income (NITOI) là chỉ số đo lường tỷ lệ chi phí không phải lãi suất trên tổng doanh thu hoạt động của một tổ chức tài chính hay ngân hàng.\n- NITOI thường được tính bằng cách chia tổng chi phí không phải lãi suất cho tổng doanh thu hoạt động.\n- Một NITOI thấp thường cho thấy hiệu suất quản lý chi phí tốt, còn NITOI cao có thể là dấu hiệu của chi phí quản lý không hiệu quả."
+        explain: "- Tổng thu nhập không lãi trên tổng tài sản (NITOI) là chỉ số đo lường tỷ lệ chi phí không phải lãi suất trên tổng doanh thu hoạt động của một tổ chức tài chính hay ngân hàng.\n- NITOI thường được tính bằng cách chia tổng chi phí không phải lãi suất cho tổng doanh thu hoạt động.\n- Một NITOI thấp thường cho thấy hiệu suất quản lý chi phí tốt, còn NITOI cao có thể là dấu hiệu của chi phí quản lý không hiệu quả."
     
     },
     badDebtPercentage: {
@@ -96,12 +101,12 @@ export const FinanacialRatios = {
     provisionOnBadDebt: {
         code: "PBD",
         name: "Provision on Bad Debt",
-        explain: "- Provision on Bad Debt (PBD) là số tiền mà một tổ chức tài chính hay ngân hàng dự trữ để đối phó với rủi ro nợ xấu trong tương lai.\n- PBD thường được tính bằng cách dự trữ một phần nhỏ của lợi nhuận hoặc doanh thu để tạo ra quỹ dự phòng cho rủi ro tín dụng.\n- Một PBD cao có thể là dấu hiệu của sự cẩn trọng và quản lý rủi ro tốt."
+        explain: "- Dự phòng nợ xấu (PBD) là số tiền mà một tổ chức tài chính hay ngân hàng dự trữ để đối phó với rủi ro nợ xấu trong tương lai.\n- PBD thường được tính bằng cách dự trữ một phần nhỏ của lợi nhuận hoặc doanh thu để tạo ra quỹ dự phòng cho rủi ro tín dụng.\n- Một PBD cao có thể là dấu hiệu của sự cẩn trọng và quản lý rủi ro tốt."
     },
     costOfFinancing: {
         code: "COF",
         name: "Cost of Financing",
-        explain: "- Cost of Financing (COF) là chi phí mà một tổ chức tài chính hay ngân hàng phải chi trả để có được nguồn vốn và thực hiện các hoạt động tài chính của mình.\n- COF thường bao gồm lãi suất trả cho người vay, chi phí hoạt động tín dụng, và các chi phí khác liên quan đến việc huy động và quản lý vốn.\n- Một COF thấp thường làm tăng lợi nhuận ròng và hiệu suất tài chính của tổ chức."
+        explain: "- Chi phí tài chính (COF) là chi phí mà một tổ chức tài chính hay ngân hàng phải chi trả để có được nguồn vốn và thực hiện các hoạt động tài chính của mình.\n- COF thường bao gồm lãi suất trả cho người vay, chi phí hoạt động tín dụng, và các chi phí khác liên quan đến việc huy động và quản lý vốn.\n- Một COF thấp thường làm tăng lợi nhuận ròng và hiệu suất tài chính của tổ chức."
     
     },
     equityOnTotalAsset: {
@@ -111,9 +116,9 @@ export const FinanacialRatios = {
     
     },
     equityOnLoan: {
-        code: "Equity on Loan",
+        code: "EOL",
         name: "Equity on Loan",
-        explain: "- Equity on Loan (EOL) là tỷ lệ giữa vốn chủ sở hữu của một tổ chức tài chính hay ngân hàng và tổng số tiền cho vay.\n- EOL thường được tính bằng cách chia vốn chủ sở hữu cho tổng số tiền cho vay và nhân 100 để biểu diễn dưới dạng phần trăm.\n- Một EOL cao thường cho thấy tỷ lệ vốn chủ sở hữu đối với tổng số tiền cho vay là lớn, có thể là dấu hiệu của sự ổn định và an toàn trong hoạt động cho vay."
+        explain: "- Vốn cổ phần trên dư nợ cho vay (EOL) là tỷ lệ giữa vốn chủ sở hữu của một tổ chức tài chính hay ngân hàng và tổng số tiền cho vay.\n- EOL thường được tính bằng cách chia vốn chủ sở hữu cho tổng số tiền cho vay và nhân 100 để biểu diễn dưới dạng phần trăm.\n- Một EOL cao thường cho thấy tỷ lệ vốn chủ sở hữu đối với tổng số tiền cho vay là lớn, có thể là dấu hiệu của sự ổn định và an toàn trong hoạt động cho vay."
     },
     
     costToIncome: {
@@ -137,12 +142,12 @@ export const FinanacialRatios = {
         explain: "- Thanh toán nhanh chóng (QP) là tỷ lệ giữa số tiền thanh toán nhanh chóng và tổng nghĩa vụ của một tổ chức tài chính.\n- QP được tính bằng cách chia số tiền thanh toán nhanh chóng cho tổng nghĩa vụ, sau đó nhân với 100 để biểu diễn nó dưới dạng phần trăm.\n- Một QP cao có thể là dấu hiệu của khả năng thanh toán nhanh chóng và hiệu suất tài chính tích cực.",
     },
     epsChange: {
-        code: "EPS Change",
+        code: "Thay đổi EPS",
         name: "Earnings Per Share Change",
         explain: "- Sự thay đổi Earnings Per Share (EPS Change) là sự thay đổi phần trăm trong Earnings Per Share (EPS) so với kỳ trước đó.\n- EPS Change được tính bằng cách lấy sự khác biệt giữa EPS hiện tại và EPS trước đó, sau đó chia cho EPS trước đó và nhân với 100 để biểu diễn nó dưới dạng phần trăm.\n- Một EPS Change tích cực có thể là dấu hiệu của sự tăng trưởng lợi nhuận của doanh nghiệp.",
     },
     ebitdaOnStock: {
-        code: "EBITDA on Stock",
+        code: "EBITDA trên cổ phiếu",
         name: "EBITDA on Stock",
         explain: "- EBITDA trên Cổ phiếu (EBITDA on Stock) là tỷ lệ giữa Lợi nhuận trước Lãi suất, Thuế, Khấu hao và Amortization (EBITDA) và số lượng cổ phiếu trên thị trường.\n -EBITDA on Stock được tính bằng cách chia EBITDA cho số lượng cổ phiếu và nhân với 100 để biểu diễn nó dưới dạng phần trăm.\n- Một EBITDA on Stock cao có thể là dấu hiệu của hiệu suất tài chính tích cực và giá trị cổ phiếu."
     },

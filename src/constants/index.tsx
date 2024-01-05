@@ -3,4 +3,5 @@ export enum STORAGE {
 }
 
 
-export const IP = "192.168.76.88";
+// export const IP = "192.168.76.88";
+export const IP = "192.168.0.103";
