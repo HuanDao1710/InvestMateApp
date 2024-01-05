@@ -1,8 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useLayoutEffect } from 'react';
 import {View, Text, TouchableOpacity} from 'react-native';
-import IconBlackAdd from '../../iconSVG/IconBlackAdd';
-import IconLeft from '../../iconSVG/IconLeft';
+import IconBlackAdd from '../../icons/IconBlackAdd';
+import IconLeft from '../../icons/IconLeft';
 
 interface DiscreteValue {
     lable : string,

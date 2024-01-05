@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import {Text, View, StyleSheet, ScrollView, Dimensions, Touchable, TouchableOpacity} from 'react-native';
 import { DataTable } from 'react-native-paper';
-import IconTime from '../../iconSVG/IconTime';
-import IconChart from '../../iconSVG/IconChart';
+import IconTime from '../../icons/IconTime';
+import IconChart from '../../icons/IconChart';
 import SMG from '../../common/SMG';
-import IconSmallAdd from '../../iconSVG/IconSmallAdd';
+import IconSmallAdd from '../../icons/IconSmallAdd';
 import { API_CORE } from '../../api';
 import { arrayToGraphData, convertEpochToDateString, convertEpochToTimeString } from '../../utils/utils';
 import ChartDetail from '../../charts/ChartDetail';

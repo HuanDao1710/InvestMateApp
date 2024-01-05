@@ -1,11 +1,11 @@
 import React, { cloneElement } from 'react';
 import {Text, View, StyleSheet, ScrollView, Dimensions, Modal, TouchableOpacity, TouchableHighlight} from 'react-native';
 import { DataTable, IconButton } from 'react-native-paper';
-import IconTime from '../../iconSVG/IconTime';
-import IconPersonalFilter from '../../iconSVG/IconPersonalFilter';
+import IconTime from '../../icons/IconTime';
+import IconPersonalFilter from '../../icons/IconPersonalFilter';
 import SMG from '../../common/SMG';
-import IconSuggestFilter from '../../iconSVG/IconSuggestFilter';
-import IconCreateFilter from '../../iconSVG/IconCreateFilter';
+import IconSuggestFilter from '../../icons/IconSuggestFilter';
+import IconCreateFilter from '../../icons/IconCreateFilter';
 import { useNavigation } from '@react-navigation/native';
 
 const windowHeight = Dimensions.get("window").height;

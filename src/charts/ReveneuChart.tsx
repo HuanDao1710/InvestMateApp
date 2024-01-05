@@ -28,7 +28,7 @@ const extractLineData  = (listItem : IncomeStatementDataChartDTO[], yearly : num
     for(let i = 1; i < lineData.length; i ++) {
         let temp1 = listItem[i - 1].revenue;
         let temp2 = listItem[i].revenue;
-        if(temp1 === null || temp2 === null) continue;
+        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 == undefined) continue;
         lineData[i] = (temp2 - temp1) / temp1;
     }
     return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))

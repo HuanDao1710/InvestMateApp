@@ -2,9 +2,9 @@ import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import React, { useLayoutEffect } from "react";
 import {View, Text, TouchableOpacity} from 'react-native'
 import { TrackingStockEntity } from "../../type";
-import IconBlackAdd from '../../iconSVG/IconBlackAdd';
-import IconEdit from '../../iconSVG/IconEdit';
-import IconAddWhite from '../../iconSVG/IconAddWhite';
+import IconBlackAdd from '../../icons/IconBlackAdd';
+import IconEdit from '../../icons/IconEdit';
+import IconAddWhite from '../../icons/IconAddWhite';
 import { Colors } from "react-native/Libraries/NewAppScreen";
 
 

@@ -1,9 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useLayoutEffect, useState } from "react";
 import {Text, TouchableOpacity, View} from 'react-native';
-import IconSave from '../../iconSVG/IconSave';
-import IconEdit from '../../iconSVG/IconEdit';
-import IconLeft from '../../iconSVG/IconLeft';
+import IconSave from '../../icons/IconSave';
+import IconEdit from '../../icons/IconEdit';
+import IconLeft from '../../icons/IconLeft';
 import { ScrollView } from "react-native";
 
 

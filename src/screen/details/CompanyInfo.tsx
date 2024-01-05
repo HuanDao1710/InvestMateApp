@@ -4,7 +4,7 @@ import {View, Text, SafeAreaView, ScrollView, Dimensions, StyleSheet,} from 'rea
 import { API_CORE } from "../../api";
 import { CompanyOverviewDTO } from "../../type";
 import RenderHTML from "react-native-render-html";
-import CollapseIcon from '../../iconSVG/CollapseIcon';
+import CollapseIcon from '../../icons/CollapseIcon';
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { PieChart } from "react-native-chart-kit";

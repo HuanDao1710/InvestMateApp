@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import StockOverview from "./StockOverview";
 import StockAnanlysis from "./StockAnalysis";
 import StockNews from "./StockNews";
-import IconSearch from '../../iconSVG/IconSearch';
+import IconSearch from '../../icons/IconSearch';
 import { NavigationProp, RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 // import { StockInfoProps } from "../../type";
 import { StockTemporary, Industry } from '../../type';

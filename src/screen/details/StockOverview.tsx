@@ -4,11 +4,11 @@ import {View, Text, Dimensions, ScrollView, StyleSheet, Modal, SafeAreaView, Tou
 import DetailChart2 from '../../charts/DetailChart2';
 import ListedComponent from '../../common/ListedComponent';
 import SMG from '../../common/SMG';
-import IconAddWhite from '../../iconSVG/IconAddWhite';
+import IconAddWhite from '../../icons/IconAddWhite';
 import { FinancialRatioDTO, ParamList, } from '../../type';
 import { BasicIndexType, FinancialRatios } from './FinanacialRatioObject';
 import { arrayToGraphData, convertEpochToDateString, formatPrice, getColorPrice, getTextChangePrice } from '../../utils/utils';
-import IconQuestionMark from '../../iconSVG/IconQuestionMark';
+import IconQuestionMark from '../../icons/IconQuestionMark';
 import { API_CORE } from '../../api';
 import { IP } from '../../constants';
 

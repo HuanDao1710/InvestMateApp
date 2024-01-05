@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import {View, StyleSheet, Text, TextInput, SafeAreaView, Touchable, TouchableOpacity, ViewStyle} from 'react-native';
-import IconMicro from "../iconSVG/IconMicro";
-import IconSearch from "../iconSVG/IconSearch";
+import IconMicro from "../icons/IconMicro";
+import IconSearch from "../icons/IconSearch";
 
 
 const SearceBar = (props: {enable?: boolean, style? : ViewStyle ,handleTextChange?: any}) => {

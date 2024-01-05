@@ -181,14 +181,18 @@ export interface FinancialRatioChartDataDTO {
 }
 
 export interface IncomeStatementDataChartDTO {
-    revenue: number | null;
-    yearRevenueGrowth: number | null;
-    quarterRevenueGrowth: number | null;
-    preTaxProfit: number | null;
-    postTaxProfit: number | null;
-    quarter: number | null;
-    year: number | null;
-    yearly: number | null;
-}
+    revenue?: number;
+    yearRevenueGrowth?: number;
+    quarterRevenueGrowth?: number;
+    yearShareHolderIncomeGrowth?: number;
+    quarterShareHolderIncomeGrowth?: number;
+    shareHolderIncome?: number;
+    preTaxProfit?: number;
+    postTaxProfit?: number;
+    quarter?: number;
+    year?: number;
+    yearly?: number;
+  }
+  
   
   

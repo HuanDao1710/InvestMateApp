@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from "react";
 import {View, Text, TextInput, TouchableOpacity, StyleSheet} from 'react-native';
 import { ScrollView } from "react-native";
 import SearceBar from "../../common/SearchBar";
-import IconBack from '../../iconSVG/IconBack';
+import IconBack from '../../icons/IconBack';
 import { StockInfoProps } from "../../type";
 
 const forFade = ( current : any) => ({
