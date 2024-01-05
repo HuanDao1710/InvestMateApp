@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, View, StyleSheet, ScrollView, Dimensions, Modal, TouchableOpacity, TouchableHighlight} from 'react-native';
 import SMG from '../../common/SMG';
-import IconSort from '../../iconSVG/IconSort';
+import IconSort from '../../IconSVG/IconSort';
 import { Menu, MenuOptions, MenuTrigger, MenuOption } from 'react-native-popup-menu';
 import { useNavigation } from '@react-navigation/native';
 import { listSortOption } from './ListSortOptions';
