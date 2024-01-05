@@ -228,3 +228,167 @@ export const incomeStatmentData = [
         "yearly": 1
     }
 ]
+
+export const BalanceData = [
+    {
+        "yearly": 0,
+        "quarter": 3,
+        "year": 2023,
+        "shortAsset": 5859.0,
+        "longAsset": 5752.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 2,
+        "year": 2023,
+        "shortAsset": 6040.0,
+        "longAsset": 5190.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 1,
+        "year": 2023,
+        "shortAsset": 5675.0,
+        "longAsset": 5227.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 4,
+        "year": 2022,
+        "shortAsset": 5623.0,
+        "longAsset": 5158.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 3,
+        "year": 2022,
+        "shortAsset": 6139.0,
+        "longAsset": 5139.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 2,
+        "year": 2022,
+        "shortAsset": 5808.0,
+        "longAsset": 5120.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 1,
+        "year": 2022,
+        "shortAsset": 5562.0,
+        "longAsset": 4915.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 4,
+        "year": 2021,
+        "shortAsset": 5337.0,
+        "longAsset": 4655.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 3,
+        "year": 2021,
+        "shortAsset": 5461.0,
+        "longAsset": 4496.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 2,
+        "year": 2021,
+        "shortAsset": 5468.0,
+        "longAsset": 4175.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 1,
+        "year": 2021,
+        "shortAsset": 5280.0,
+        "longAsset": 3900.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 4,
+        "year": 2020,
+        "shortAsset": 4451.0,
+        "longAsset": 4119.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 3,
+        "year": 2020,
+        "shortAsset": 4206.0,
+        "longAsset": 4001.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 2,
+        "year": 2020,
+        "shortAsset": 4345.0,
+        "longAsset": 3442.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 1,
+        "year": 2020,
+        "shortAsset": 4557.0,
+        "longAsset": 3211.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 4,
+        "year": 2019,
+        "shortAsset": 4974.0,
+        "longAsset": 3016.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 3,
+        "year": 2019,
+        "shortAsset": 5114.0,
+        "longAsset": 2824.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 2,
+        "year": 2019,
+        "shortAsset": 5567.0,
+        "longAsset": 2785.0
+    },
+    {
+        "yearly": 0,
+        "quarter": 1,
+        "year": 2019,
+        "shortAsset": 5618.0,
+        "longAsset": 2364.0
+    },
+    {
+        "yearly": 1,
+        "quarter": 5,
+        "year": 2022,
+        "shortAsset": 5659.0,
+        "longAsset": 5137.0
+    },
+    {
+        "yearly": 1,
+        "quarter": 5,
+        "year": 2021,
+        "shortAsset": 5355.0,
+        "longAsset": 4655.0
+    },
+    {
+        "yearly": 1,
+        "quarter": 5,
+        "year": 2020,
+        "shortAsset": 4496.0,
+        "longAsset": 4073.0
+    },
+    {
+        "yearly": 1,
+        "quarter": 5,
+        "year": 2019,
+        "shortAsset": 4971.0,
+        "longAsset": 3016.0
+    }
+]

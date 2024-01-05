@@ -4,6 +4,8 @@ import {ScrollView, Text, View, TouchableOpacity, StyleSheet, Dimensions, proces
 // import { StackedBarChart, BarChart } from "react-native-chart-kit";
 import { LineChart,BarChart, CombinedChart } from 'react-native-charts-wrapper';
 import RevenueChart from '../../charts/ReveneuChart';
+import ProfitChart from '../../charts/ProfitChart';
+import AssetChart from '../../charts/AssetChart';
 
 
 
@@ -15,7 +17,7 @@ enum ViewModeType{
     DATA = 2
 }
 /* 
-doanh thu : revenue , postTaxProfit
+doanh thu : revenue , shareHolder
 Tài sản : shortAsset + longAsset
 dòng tiền : fromInvest, fromFinancial, fromSale
 
@@ -84,7 +86,7 @@ const StockAnanlysis = () => {
                     </Text>
                 </View>
                 <View style={{width: "100%", marginTop: 20, alignItems: "center" , paddingBottom: 30}}>
-                    <View style={{width: "90%", }}>
+                    <View style={{width: "96%", }}>
                         <View style={{flexDirection:"row", height: 40, width: 150, backgroundColor:"white", borderRadius: 50, elevation: 2, overflow: "hidden", marginBottom: 10}}>
                             <TouchableOpacity style={[styles.btnObtions, viewMode === ViewModeType.CHART&&{backgroundColor: "#A6C4FF"}]}
                                 onPress={handleModeChart}>
@@ -113,10 +115,10 @@ const StockAnanlysis = () => {
                             />     */}
                         </View>
                         <View style={styles.chartContainer}>
-                            
+                            <ProfitChart/>                            
                         </View>
                         <View style={styles.chartContainer}>
-
+                            <AssetChart/>
                         </View>
                         <View style={styles.chartContainer}>
 
@@ -149,12 +151,11 @@ const styles = StyleSheet.create({
         fontWeight: "600"
     },
     chartContainer:{
-        width: "100%",
-        height: 300,
-        backgroundColor: "white",
+        width: "auto",
+        height: "auto",
+        backgroundColor: "transparent",
         borderRadius: 10,
         marginVertical: 8,
         justifyContent:"center",
-        alignItems:"center"
     }
 });
