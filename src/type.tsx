@@ -163,6 +163,7 @@ export interface CashFlowDataChartDTO {
     fromFinancial: number | null;
     fromSale: number | null;
     freeCashFlow: number | null;
+    cash : number | null;
 }
 
 export interface BalanceSheetDataChartDTO {
@@ -177,6 +178,7 @@ export interface FinancialRatioChartDataDTO {
     yearly: number;
     quarter: number;
     year: number;
+    epsChange: number | null;
     earningPerShare: number | null;
 }
 

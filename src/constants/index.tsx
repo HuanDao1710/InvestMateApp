@@ -5,3 +5,4 @@ export enum STORAGE {
 
 // export const IP = "192.168.76.88";
 export const IP = "192.168.0.103";
+export const ROOT_PATH = "http://192.168.0.103:8080"

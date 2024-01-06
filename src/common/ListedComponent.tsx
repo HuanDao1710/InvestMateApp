@@ -18,7 +18,7 @@ const ListedComponent : React.FC<ListedComponentProps> = (props: ListedComponent
             <View style={{width: '100%', height: "auto", borderBottomStartRadius: 15, borderBottomEndRadius: 15, overflow:"hidden", backgroundColor:'white', justifyContent:'center', alignItems:'center' }}>
                 {props.children}
             </View>
-        <View style={{height: 5}}/>
+        <View style={{height: 3}}/>
     </View>
     )
 }

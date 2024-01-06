@@ -1,42 +1,28 @@
 import { LineChart,BarChart, CombinedChart } from 'react-native-charts-wrapper';
 import { ImageBackground, View , processColor, Dimensions, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import { IncomeStatementDataChartDTO } from '../type';
+import { CashFlowDataChartDTO, IncomeStatementDataChartDTO } from '../type';
 import { filterFinancialData } from '../utils/utils';
 import React from 'react';
 import { DataTable } from 'react-native-paper';
-import TextInputAffix from 'react-native-paper/lib/typescript/components/TextInput/Adornment/TextInputAffix';
 
 const screenWidth = Dimensions.get("screen").width;
 
-const extractRevenueData = (listItem: IncomeStatementDataChartDTO[]): any[] =>  {
-    return listItem.map(item => ({ y: item.revenue }));
+const extractCashFlowData = (listItem: CashFlowDataChartDTO[]): any[] =>  {
+    return listItem.map(item => ({ y: [item.fromSale, item.fromFinancial, item.fromInvest]}));
 }
 
-const extractLableColumn = (listItem : IncomeStatementDataChartDTO[],  yearly : number) : any[] => {
+const extractCashData = (listItem: CashFlowDataChartDTO[]): any[] =>  {
+    return listItem.map(item => item.cash);
+}
+
+const extractLableColumn = (listItem : CashFlowDataChartDTO[],  yearly : number) : any[] => {
     if(yearly === 0) {
         return listItem.map(item => ("Q"+item.quarter+"/"+ (item.year &&(item.year % 2000))))
     }
     return listItem.map(item => (item.year + ""))        
 }
 
-const extractLineData  = (listItem : IncomeStatementDataChartDTO[], yearly : number) : any[] => {
-    let lineData : any[];
-    if(yearly === 0) {
-        lineData = listItem.map(i => i.quarterRevenueGrowth);
-    } else {
-        lineData = listItem.map(i => i.yearRevenueGrowth);
-    }
-    for(let i = 1; i < lineData.length; i ++) {
-        let temp1 = listItem[i - 1].revenue;
-        let temp2 = listItem[i].revenue;
-        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 == undefined) continue;
-        lineData[i] = (temp2 - temp1) / temp1;
-    }
-    return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))
-}
-
 const renderTable = (lables : any[], ...params: any[][]) => {
-
     return (
       <View style={styles.tableContainer}>
         <DataTable>
@@ -71,120 +57,39 @@ const renderTable = (lables : any[], ...params: any[][]) => {
 
 }
 
-const getABC = (x: number) => {
-  let i = 1;
-  while (x > 10) {
-    i = i * 10;
-    x = x / 10;
-  }
-  return i;
-};
 
-function findGCD(a : number, b : number) {
-  // Chắc chắn rằng a và b là số nguyên dương
-  a = Math.abs(a);
-  b = Math.abs(b);
-
-  while (b !== 0) {
-    let temp = b;
-    b = a % b;
-    a = temp;
-  }
-
-  return a;
-}
-
-
-
-
-const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
-    const [incomeStatmentData, setInComeStatementData] = React.useState<any[]>([]);
+const CashFlowChart = (props: {raws : CashFlowDataChartDTO[]}) => {
     const [yearly, setYearly] = React.useState<number>(0);
+    const [hasData, setHasData] = React.useState(false);
     const [lables, setLables] = React.useState<any[]>([]);
     const [data, setData] = React.useState({});
-    const [yAxisLeft, setYAxisLeft] = React.useState({});
-    const [yAxisRight, setYAxisRight] = React.useState({});
-    const [lines, setLines] = React.useState<any[]>([]);
-    const [revenues, setRevenues] = React.useState<any[]>([]);
-    const [hasData, setHasData] = React.useState(false);
+    const [fromSale, setFromSale] = React.useState<any[]>([]);
+    const [fromInvest, setFromInvest] = React.useState<any[]>([]);
+    const [fromFinancial, setFromFinancial] = React.useState<any[]>([]);
+    const [cash, setCash] = React.useState<any[]>([]);
+
 
     React.useEffect(()=> {
         const raws = filterFinancialData(props.raws, yearly);
         if(raws.length > 0) setHasData(true);
         const size = yearly === 1 ? raws.length - 4 : raws.length - 7;
         setLables(extractLableColumn(raws, yearly).slice(size,));
-        const _lines = extractLineData(raws, yearly).slice(size);
-        const _revenues = extractRevenueData(raws).slice(size);
-        setLines(['Doanh thu(TT C.Kỳ)', ..._lines.map(item => item.y + '%')]);
-        setRevenues(['Doanh thu', ..._revenues.map(item => item.y)]);
-       
-
-        const minLine = Math.floor(Math.min(..._lines.map(obj => obj.y)));
-        const maxLine = Math.ceil(Math.max(..._lines.map(obj => obj.y)));
-        const maxRevenue = Math.max(..._revenues.map(obj => obj.y));
-        const minRevenue = Math.min(
-          Math.min(..._revenues.map(obj => obj.y)),
-          0,
-        );
-
-        const minLinestandardized = Math.floor(
-          minLine / getABC(maxLine - minLine),
-        );
-        const maxLinestandardized = Math.ceil(
-          maxLine / getABC(maxLine - minLine),
-        );
-        const minRevenuestandardized = Math.floor(
-          minRevenue / getABC(maxRevenue - minRevenue),
-        );
-        const maxRevenuestandardized = Math.ceil(
-          maxRevenue / getABC(maxRevenue - minRevenue),
-        );
-
-        // console.log(
-        //   minLinestandardized,
-        //   maxLinestandardized,
-        //   minRevenuestandardized,
-        //   maxRevenuestandardized,
-        // );
-
-        const rangeLine = maxLinestandardized - minLinestandardized;
-        const rangeRevenue = maxRevenuestandardized - minRevenuestandardized;
-
-        let results = rangeRevenue * rangeLine;
-        for (
-          let i = rangeLine;
-          i < Math.max(rangeLine * 2, rangeRevenue);
-          i++
-        ) {
-          if ((i % rangeRevenue === 0 )) {
-            results = i;
-            break;
-          }
-        }
-        // console.log(
-        //   minRevenuestandardized * getABC(maxRevenue - minRevenue),
-        //   maxRevenuestandardized * getABC(maxRevenue - minRevenue),
-        // );
-        setYAxisLeft({
-          axisMinimum: minRevenuestandardized * getABC(maxRevenue - minRevenue),
-          axisMaximum: maxRevenuestandardized * getABC(maxRevenue - minRevenue),
-        });
-        setYAxisRight({
-          axisMinimum: minLinestandardized * getABC(maxLine - minLine),
-          axisMaximum:
-            (minLinestandardized + results) * getABC(maxLine - minLine),
-          valueFormatter: 'percent',
-        });
+        const cashFlow = extractCashFlowData(raws).slice(size);
+        setFromSale(["Kinh doanh",...cashFlow.map(a => a.y[0])])
+        setFromFinancial(["Tài chính",...cashFlow.map(a => a.y[1])])
+        setFromInvest(["Đầu tư",...cashFlow.map(a => a.y[2])])
+        const cash = extractCashData(raws).slice(size,);
+        setCash(["Tiền TĐ C.Kỳ", ...cash]);
         setData(
             {
                 lineData: {
                     dataSets: [{
-                        values: _lines,
-                        label: 'Doanh thu thuần(TT C.Kỳ)',
+                        values: cash,
+                        label: 'Tiền và tương đương cuối kì',
                         config: {
                             drawValues: false,
                             colors: [processColor('#e43753')],
-                            axisDependency: 'RIGHT',
+                            axisDependency: 'LEFT',
                             mode : "CUBIC_BEZIER",
                             lineWidth: 2
                         },
@@ -192,12 +97,13 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
                 },
                 barData: {
                     dataSets: [{
-                    values: _revenues,
-                    label: 'Doanh thu thuần',
+                    values: cashFlow,
+                    label: '',
                     config: {
                         drawValues: false,
-                        colors: [processColor('#65bfd3')],
                         axisDependency: 'LEFT',
+                        colors: ['#4062df', '#f7e016',"#17c684"].map((color) => processColor(color)),
+                        stackLabels: ['Từ hoạt động kinh doanh', 'Từ hoạt động tài chính','Từ hoạt động đầu tư']
                     }
                     }],
                     config: {
@@ -220,7 +126,7 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
               marginHorizontal: 15,
               fontSize: 15,
             }}>
-            Doanh thu thuần
+            Lưu chuyển tiền
           </Text>
           <View
             style={{
@@ -263,27 +169,28 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
         </View>
         <View style={styles.contentContainer}>
           <View style={{width: '96%', aspectRatio: 1.8, marginTop: 10, justifyContent:"center", alignItems: 'center'}}>
-            {hasData? 
+            {hasData?
             <CombinedChart
-            style={{width: '96%',aspectRatio: 1.8,}}
+            style={{width: '96%', aspectRatio: 1.8,}}
             data={data}
-            xAxis={{valueFormatter: lables}}
-            yAxis={{
-              left: yAxisLeft,
-              right: yAxisRight,
+            xAxis={{
+              valueFormatter: lables,
+              granularityEnabled: true,
+              granularity: 1,
             }}
             chartDescription={{text: ''}}
             legend={{
               enabled: true,
               horizontalAlignment: 'CENTER',
               verticalAlignment: 'BOTTOM',
+              // form: "SQUARE",
+              wordWrapEnabled: true
             }}
             drawOrder={['BAR', 'LINE']}
-          />:
-          <Text style={{color: "grey"}}>Không có dữ liệu!</Text>}
+          /> : <Text style={{color: "grey"}}>Không có dữ liệu!</Text>}
           </View>
             <View style={{width: "96%", height: "auto", margin : 5, borderTopWidth: 1, borderColor:'#F1F2F3'}}>
-                {renderTable(lables, revenues, lines)}
+                {renderTable(lables, fromSale, fromFinancial, fromInvest, cash)}
             </View>
         </View>
         <View style={{height: 5}} />
@@ -291,7 +198,7 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
     );
 }
 
-export default RevenueChart;
+export default CashFlowChart;
 
 const styles = StyleSheet.create({
   container: {
