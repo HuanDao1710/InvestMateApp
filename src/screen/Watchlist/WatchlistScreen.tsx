@@ -77,7 +77,7 @@ const GroupStock = (props: {
 
   const handleViewSubList = () => {
     const title = item.name;
-    props.navigation.navigate('SubList', {title, listTrackingStock});
+    props.navigation.navigate('SubWatchList', {title, listTrackingStock});
   };
 
   const handleDeleteWatchlist = () => {
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   groupStock: {
     width: '97%',
-    height: 65,
+    height: 56,
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     margin: '1%',

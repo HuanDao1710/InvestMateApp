@@ -42,9 +42,12 @@ const extractLineData  = (listItem : IncomeStatementDataChartDTO[], yearly : num
       lineData = listItem.map(i => i.yearShareHolderIncomeGrowth);
   }
   for(let i = 1; i < lineData.length; i ++) {
-      let temp1 = listItem[i - 1].revenue;
-      let temp2 = listItem[i].revenue;
-      if(temp1 === null || temp2 === null || temp1 === undefined || temp2 == undefined) continue;
+      let temp1 = listItem[i - 1].shareHolderIncome;
+      let temp2 = listItem[i].shareHolderIncome;
+      if(temp1 === null || temp2 === null || temp1 === undefined || temp2 === undefined || temp1 === 0) {
+        lineData[i] = 1;
+        continue;
+      }
       lineData[i] = (temp2 - temp1) / temp1;
   }
   return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))
@@ -108,8 +111,8 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
     if(raws.length > 0) setHasData(true);
     const size = yearly === 1 ? raws.length - 4 : raws.length - 7;
     setLables(extractLableColumn(raws, yearly).slice(size,));
-    const _lines = extractLineData(raws, yearly).slice(size,);
     const _revenues = extractPostTaxProfitData(raws).slice(size,);
+    const _lines = extractLineData(raws, yearly).slice(size,);
     setLines(['Lợi nhuận(TT C.Kỳ)', ..._lines.map(item => item.y + '%')]);
     setRevenues(['Lợi nhuận', ..._revenues.map(item => item.y)]);
 
@@ -117,16 +120,23 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
     const maxLine = Math.ceil(Math.max(..._lines.map(obj => obj.y)));
     const maxRevenue = Math.max(..._revenues.map(obj => obj.y));
     const minRevenue = Math.min(Math.min(..._revenues.map(obj => obj.y)), 0);
+    let unitLine = getABC(maxLine - minLine);
+    let unitRevenue = getABC(maxRevenue - minRevenue);
 
-    const minLinestandardized = Math.floor(minLine / getABC(maxLine - minLine) );
-    const maxLinestandardized = Math.ceil(maxLine / getABC(maxLine - minLine) );
-    const minRevenuestandardized = Math.floor(
-      minRevenue / getABC(maxRevenue - minRevenue),
-    );;
-    const maxRevenuestandardized = Math.ceil(
-      maxRevenue / getABC(maxRevenue - minRevenue),
+    if(unitLine === 0 || unitRevenue === 0) return;
+
+    const minLinestandardized = Math.floor(
+      minLine / unitLine,
     );
-
+    const maxLinestandardized = Math.ceil(
+      maxLine / unitLine,
+    );
+    const minRevenuestandardized = Math.floor(
+      minRevenue / unitRevenue,
+    );
+    const maxRevenuestandardized = Math.ceil(
+      maxRevenue / unitRevenue,
+    );
     // console.log(minLinestandardized, maxLinestandardized, minRevenuestandardized, maxRevenuestandardized);
 
     const rangeLine = maxLinestandardized - minLinestandardized;
@@ -141,12 +151,12 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
       }
     }
     setYAxisLeft({
-      axisMinimum: minRevenuestandardized * getABC(maxRevenue - minRevenue),
-      axisMaximum: maxRevenuestandardized * getABC(maxRevenue - minRevenue),
+      axisMinimum: minRevenuestandardized * unitRevenue,
+      axisMaximum: maxRevenuestandardized * unitRevenue,
     });
     setYAxisRight({
-      axisMinimum: minLinestandardized * getABC(maxLine - minLine),
-      axisMaximum: (minLinestandardized + results) * getABC(maxLine - minLine),
+      axisMinimum: minLinestandardized * unitLine,
+      axisMaximum: (minLinestandardized + results) * unitLine,
       valueFormatter: 'percent',
     });
     setData({

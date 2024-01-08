@@ -1,18 +1,13 @@
-import React, {cloneElement} from 'react';
+import React from 'react';
 import {
   Text,
   View,
   StyleSheet,
   ScrollView,
   Dimensions,
-  Modal,
   TouchableOpacity,
-  TouchableHighlight,
 } from 'react-native';
-import {DataTable, IconButton} from 'react-native-paper';
-import IconTime from '../../icons/IconTime';
 import IconPersonalFilter from '../../icons/IconPersonalFilter';
-import SMG from '../../common/SMG';
 import IconSuggestFilter from '../../icons/IconSuggestFilter';
 import IconCreateFilter from '../../icons/IconCreateFilter';
 import {useNavigation} from '@react-navigation/native';
@@ -39,16 +34,18 @@ const StockFilterScreen = () => {
           <TouchableOpacity
             style={styles.filter}
             onPress={() => navigation.navigate('CreateFilter')}>
-            <IconCreateFilter style={{width: 55, aspectRatio: 1}} />
+            <IconCreateFilter style={{width: 55, aspectRatio: 1,}} />
             <Text style={{color: 'black', fontSize: 14}}>Tạo bộ lọc</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filter}>
+          <TouchableOpacity style={styles.filter}
+            onPress={() => navigation.navigate('SuggestFilter')}>
             <IconSuggestFilter style={{width: 55, aspectRatio: 1}} />
             <Text style={{color: 'black', fontSize: 14}}>Bộ lọc gợi ý</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filter}>
+          <TouchableOpacity style={styles.filter}
+            onPress={() => navigation.navigate('PersonalFilter')}>
             <IconPersonalFilter style={{width: 55, aspectRatio: 1}} />
             <Text style={{color: 'black', fontSize: 14}}>Bộ lọc cá nhân</Text>
           </TouchableOpacity>

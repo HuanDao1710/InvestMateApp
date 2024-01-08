@@ -29,7 +29,10 @@ const extractLineData  = (listItem : IncomeStatementDataChartDTO[], yearly : num
     for(let i = 1; i < lineData.length; i ++) {
         let temp1 = listItem[i - 1].revenue;
         let temp2 = listItem[i].revenue;
-        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 == undefined) continue;
+        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 === undefined || temp1 === 0) {
+          lineData[i] = 1;
+          continue;
+        }
         lineData[i] = (temp2 - temp1) / temp1;
     }
     return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))
@@ -80,25 +83,7 @@ const getABC = (x: number) => {
   return i;
 };
 
-function findGCD(a : number, b : number) {
-  // Chắc chắn rằng a và b là số nguyên dương
-  a = Math.abs(a);
-  b = Math.abs(b);
-
-  while (b !== 0) {
-    let temp = b;
-    b = a % b;
-    a = temp;
-  }
-
-  return a;
-}
-
-
-
-
 const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
-    const [incomeStatmentData, setInComeStatementData] = React.useState<any[]>([]);
     const [yearly, setYearly] = React.useState<number>(0);
     const [lables, setLables] = React.useState<any[]>([]);
     const [data, setData] = React.useState({});
@@ -118,26 +103,27 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
         setLines(['Doanh thu(TT C.Kỳ)', ..._lines.map(item => item.y + '%')]);
         setRevenues(['Doanh thu', ..._revenues.map(item => item.y)]);
        
-
         const minLine = Math.floor(Math.min(..._lines.map(obj => obj.y)));
         const maxLine = Math.ceil(Math.max(..._lines.map(obj => obj.y)));
+
         const maxRevenue = Math.max(..._revenues.map(obj => obj.y));
-        const minRevenue = Math.min(
-          Math.min(..._revenues.map(obj => obj.y)),
-          0,
-        );
+        const minRevenue = Math.min(Math.min(0,..._revenues.map(obj => obj.y)));
+        let unitLine = getABC(maxLine - minLine);
+        let unitRevenue = getABC(maxRevenue - minRevenue);
+
+        if(unitLine === 0 || unitRevenue === 0) return;
 
         const minLinestandardized = Math.floor(
-          minLine / getABC(maxLine - minLine),
+          minLine / unitLine,
         );
         const maxLinestandardized = Math.ceil(
-          maxLine / getABC(maxLine - minLine),
+          maxLine / unitLine,
         );
         const minRevenuestandardized = Math.floor(
-          minRevenue / getABC(maxRevenue - minRevenue),
+          minRevenue / unitRevenue,
         );
         const maxRevenuestandardized = Math.ceil(
-          maxRevenue / getABC(maxRevenue - minRevenue),
+          maxRevenue / unitRevenue,
         );
 
         // console.log(
@@ -166,44 +152,44 @@ const RevenueChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
         //   maxRevenuestandardized * getABC(maxRevenue - minRevenue),
         // );
         setYAxisLeft({
-          axisMinimum: minRevenuestandardized * getABC(maxRevenue - minRevenue),
-          axisMaximum: maxRevenuestandardized * getABC(maxRevenue - minRevenue),
+          axisMinimum: minRevenuestandardized *unitRevenue,
+          axisMaximum: maxRevenuestandardized * unitRevenue,
         });
         setYAxisRight({
-          axisMinimum: minLinestandardized * getABC(maxLine - minLine),
+          axisMinimum: minLinestandardized * unitLine,
           axisMaximum:
-            (minLinestandardized + results) * getABC(maxLine - minLine),
+            (minLinestandardized + results) * unitLine,
           valueFormatter: 'percent',
         });
         setData(
             {
-                lineData: {
-                    dataSets: [{
-                        values: _lines,
-                        label: 'Doanh thu thuần(TT C.Kỳ)',
-                        config: {
-                            drawValues: false,
-                            colors: [processColor('#e43753')],
-                            axisDependency: 'RIGHT',
-                            mode : "CUBIC_BEZIER",
-                            lineWidth: 2
-                        },
-                    }],
-                },
-                barData: {
-                    dataSets: [{
-                    values: _revenues,
-                    label: 'Doanh thu thuần',
-                    config: {
-                        drawValues: false,
-                        colors: [processColor('#65bfd3')],
-                        axisDependency: 'LEFT',
-                    }
-                    }],
-                    config: {
-                        barWidth: 0.5, // Set the bar width here
-                    }
-                },
+              lineData: {
+                  dataSets: [{
+                      values: _lines,
+                      label: 'Doanh thu thuần(TT C.Kỳ)',
+                      config: {
+                          drawValues: false,
+                          colors: [processColor('#e43753')],
+                          axisDependency: 'RIGHT',
+                          mode : "CUBIC_BEZIER",
+                          lineWidth: 2
+                      },
+                  }],
+              },
+              barData: {
+                  dataSets: [{
+                  values: _revenues,
+                  label: 'Doanh thu thuần',
+                  config: {
+                      drawValues: false,
+                      colors: [processColor('#65bfd3')],
+                      axisDependency: 'LEFT',
+                  }
+                  }],
+                  config: {
+                      barWidth: 0.5, // Set the bar width here
+                  }
+              },
             }
         )
     },[yearly])

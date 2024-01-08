@@ -21,7 +21,6 @@ const SearceBar = (props: {
   const navigation = useNavigation<any>();
   const [text, setText] = React.useState('');
   const handleTextChange = (inputText: string) => {
-    setText(inputText);
     props.handleTextChange(inputText);
   };
 
@@ -33,7 +32,8 @@ const SearceBar = (props: {
         />
         <TextInput
           style={styles.input}
-          onChangeText={handleTextChange}
+          onChangeText={setText}
+          onBlur={() => handleTextChange(text)}
           value={text}
           editable={props.enable ? props.enable : false}
           placeholder="Tìm kiếm..."

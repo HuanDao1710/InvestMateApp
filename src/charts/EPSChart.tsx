@@ -28,7 +28,10 @@ const extractEPSChangeData  = (listItem : FinancialRatioChartDataDTO[], yearly :
     for(let i = 1; i < lineData.length; i ++) {
         let temp1 = listItem[i - 1].earningPerShare;
         let temp2 = listItem[i].earningPerShare;
-        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 == undefined) continue;
+        if(temp1 === null || temp2 === null || temp1 === undefined || temp2 === undefined || temp1 === 0) {
+          lineData[i] = 1;
+          continue;
+        }
         lineData[i] = (temp2 - temp1) / temp1;
     }
     return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))
@@ -124,18 +127,22 @@ const EPSChart = (props: {raws : FinancialRatioChartDataDTO[]}) => {
           Math.min(..._eps.map(obj => obj.y)),
           0,
         );
+        let unitLine = getABC(maxLine - minLine);
+        let unitRevenue = getABC(maxRevenue - minRevenue);
+
+        if(unitLine === 0 || unitRevenue === 0) return;
 
         const minLinestandardized = Math.floor(
-          minLine / getABC(maxLine - minLine),
+          minLine / unitLine,
         );
         const maxLinestandardized = Math.ceil(
-          maxLine / getABC(maxLine - minLine),
+          maxLine / unitLine,
         );
         const minRevenuestandardized = Math.floor(
-          minRevenue / getABC(maxRevenue - minRevenue),
+          minRevenue / unitRevenue,
         );
         const maxRevenuestandardized = Math.ceil(
-          maxRevenue / getABC(maxRevenue - minRevenue),
+          maxRevenue / unitRevenue,
         );
 
         // console.log(
@@ -164,13 +171,13 @@ const EPSChart = (props: {raws : FinancialRatioChartDataDTO[]}) => {
         //   maxRevenuestandardized * getABC(maxRevenue - minRevenue),
         // );
         setYAxisLeft({
-          axisMinimum: minRevenuestandardized * getABC(maxRevenue - minRevenue),
-          axisMaximum: maxRevenuestandardized * getABC(maxRevenue - minRevenue),
+          axisMinimum: minRevenuestandardized * unitRevenue,
+          axisMaximum: maxRevenuestandardized * unitRevenue,
         });
         setYAxisRight({
-          axisMinimum: minLinestandardized * getABC(maxLine - minLine),
+          axisMinimum: minLinestandardized * unitLine,
           axisMaximum:
-            (minLinestandardized + results) * getABC(maxLine - minLine),
+            (minLinestandardized + results) * unitLine,
           valueFormatter: 'percent',
         });
         setData(

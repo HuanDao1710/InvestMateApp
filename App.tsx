@@ -16,14 +16,15 @@ import {createStackNavigator} from '@react-navigation/stack';
 import StockDetail from './src/screen/details/StockDetail';
 import CompanyInfo from './src/screen/details/CompanyInfo';
 import ListLargeShareHolder from './src/screen/details/ListLargeShareHolder';
-import SubList from './src/screen/Watchlist/SubList';
+import SubWatchList from './src/screen/Watchlist/SubWatchList';
 import SQLiteContextProvider from './src/sqlite/SQLiteContextProvider';
 import SearchScreen from './src/screen/search';
 import {useHeaderHeight} from '@react-navigation/elements';
 import CreateFilter from './src/screen/filter/CreateFilter';
-import CriteriaList from './src/screen/filter/CriteriaList';
+import FilterResults from './src/screen/filter/FilterResults';
 import {NewsView} from './src/screen/details/StockNews';
-import StockAnanlysis from './src/screen/details/StockAnalysis';
+import PersonalFilter from './src/screen/filter/PersonalFilter';
+import SuggestFilter from './src/screen/filter/SuggestFilter';
 
 const windowWidth = Dimensions.get('window').width;
 const Tab = createBottomTabNavigator();
@@ -51,10 +52,12 @@ const App = () => {
               name="ListLargeShareHolder"
               component={ListLargeShareHolder}
             />
-            <Stack.Screen name="SubList" component={SubList} />
+            <Stack.Screen name="SubWatchList" component={SubWatchList} />
             <Stack.Screen name="SearchScreen" component={SearchScreen} />
             <Stack.Screen name="CreateFilter" component={CreateFilter} />
-            <Stack.Screen name="CriteriaList" component={CriteriaList} />
+            <Stack.Screen name="PersonalFilter" component={PersonalFilter}/>
+            <Stack.Screen name="SuggestFilter" component={SuggestFilter}/>
+            <Stack.Screen name="FilterResults" component={FilterResults} options={{title: "Kết quả lọc"}} />
             <Stack.Screen name="NewsView" component={NewsView} />
           </Stack.Navigator>
         </NavigationContainer>

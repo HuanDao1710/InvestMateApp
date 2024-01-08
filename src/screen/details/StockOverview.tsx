@@ -183,13 +183,14 @@ const temp = {
 const StockOverview = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<ParamList>>();
+  const {item} = route.params;
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [currentFinancial, setCurrentFinancial] = useState<BasicIndexType>({
     code: '',
     name: '',
     explain: '',
   });
-  const {item} = route.params;
+  
   const [financialData, setFinancialData] =
     React.useState<FinancialRatioDTO>(temp);
 

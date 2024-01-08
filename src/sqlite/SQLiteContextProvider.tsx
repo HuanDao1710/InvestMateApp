@@ -87,6 +87,8 @@ const SQLiteContextProvider = ({children}: {children: React.ReactNode}) => {
       tx.executeSql(`DELETE FROM watchlist WHERE id = ?1`, [value.id]),
     );
   };
+  //Stock FIlter
+  
 
 
 
@@ -107,6 +109,18 @@ const SQLiteContextProvider = ({children}: {children: React.ReactNode}) => {
       `CREATE TABLE IF NOT EXISTS tracking_stocks 
       (id INTEGER PRIMARY KEY AUTOINCREMENT, code TEXT, watchlist INTEGER)`,
     );
+
+    // db.executeSql(
+    //   `CREATE TABLE IF NOT EXISTS stock_filter 
+    //   (id INTEGER PRIMARY KEY AUTOINCREMENT, 
+    //    name TEXT, 
+    //    watchlist INTEGER, 
+    //    key TEXT, 
+    //    min_value DOUBLE(10, 2), 
+    //    max_value DOUBLE(10, 2), 
+    //    current_min_value DOUBLE(10, 2), 
+    //    current_max_value DOUBLE(10, 2))`,
+    // );
 
     const check = async()=> {
       const isFirstLaunchApp = await AsyncStorage.getItem(STORAGE.IS_FIRST_LAUNCH_APP);

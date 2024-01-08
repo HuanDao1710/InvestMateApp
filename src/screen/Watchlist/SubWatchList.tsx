@@ -5,7 +5,7 @@ import {TrackingStockEntity} from '../../type';
 import IconBlackAdd from '../../icons/IconBlackAdd';
 import IconEdit from '../../icons/IconEdit';
 import IconAddWhite from '../../icons/IconAddWhite';
-import {Colors} from 'react-native/Libraries/NewAppScreen';
+
 
 export type ParamList = {
   trackingStocks: {
@@ -35,7 +35,7 @@ export const SublistHeader = (props: {onPressAdd: any; onPressEdit: any}) => {
   );
 };
 
-const SubList = () => {
+const SubWatchList = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<ParamList>>();
   const {title, listTrackingStock} = route.params;
@@ -60,14 +60,15 @@ const SubList = () => {
       }}>
       <TouchableOpacity
         style={{
-          minWidth: 80,
+          minWidth: 100,
           height: 'auto',
           flexDirection: 'row',
           justifyContent: 'space-around',
           alignItems: 'center',
-          backgroundColor: '#3961F8',
-          borderRadius: 10,
-          padding: 3
+          backgroundColor: '#B8C4FF',
+          borderRadius: 5,
+          padding: 3,
+          bottom: 50
         }}
         onPress={()=> {navigation.navigate("SearchScreen")}}>
         <IconAddWhite style={{height: 12, aspectRatio: 1, margin: 5}} />
@@ -87,4 +88,4 @@ const SubList = () => {
   );
 };
 
-export default SubList;
+export default SubWatchList;

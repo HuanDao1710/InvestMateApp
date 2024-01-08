@@ -194,7 +194,51 @@ export interface IncomeStatementDataChartDTO {
     quarter?: number;
     year?: number;
     yearly?: number;
-  }
-  
+}
+
+export interface SearchDTO {
+    name: string;
+    code: string;
+    exchange:string;
+}
+
+export interface StockFilterDTO {
+    id: number;
+    eps: number;
+    epsGrowth1Year: number;
+    lastQuarterProfitGrowth: number;
+    roe: number;
+    priceNearRealtime: number;
+    // beta?: number; // Uncomment this line if beta is optional
+    grossMargin: number;
+    // netMargin?: number; // Uncomment this line if netMargin is optional
+    doe: number;
+    pe: number;
+    pb: number;
+    evEbitda: number;
+    code: string;
+    percentChangeDay: number;
+    percentChangeWeek: number;
+    percentChangeMonth: number;
+    marketCap: number;
+    avgTradingValue20Day: number;
+    smg: number;
+}
+
+export interface ConditionType {
+    value : string,
+    from : number,
+    to : number
+}
+
+export interface CriteriaType {
+    name : string,
+    key : string,
+    minValue: number,
+    maxValue: number,
+    currentMinValue: number,
+    currentMaxValue : number
+}
+
   
   

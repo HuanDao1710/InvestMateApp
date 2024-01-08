@@ -1581,6 +1581,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@ozziedave/react-native-multi-slider@^2.2.5":
+  version "2.2.5"
+  resolved "https://registry.npmjs.org/@ozziedave/react-native-multi-slider/-/react-native-multi-slider-2.2.5.tgz"
+  integrity sha512-I0tADk3OqY1d+1kad+Je3RdaEgHnWSSMxM0eL4Otx8mETeUsodUMgrpH6eULYHo+LHgr5la9TSEXUxroUYGcdA==
+
 "@rainbow-me/animated-charts@^1.0.0-alpha.6":
   version "1.0.0-alpha.6"
   resolved "https://registry.npmjs.org/@rainbow-me/animated-charts/-/animated-charts-1.0.0-alpha.6.tgz"

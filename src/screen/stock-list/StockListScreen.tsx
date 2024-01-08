@@ -40,7 +40,7 @@ const removeDuplicates = (list: any[]) => {
   });
 };
 
-const renderStock = (item: StockTemporary, onPress: any, index: number) => {
+export const renderStock = (item: StockTemporary, onPress: any, index: number) => {
   const colorStyle = getColorPrice(item.priceChange);
   const textChange = getTextChangePrice(
     item.priceChange,
@@ -116,9 +116,7 @@ const ListStockScreen = () => {
         `${ROOT_PATH}/invest_mate/api/stock_list/list_industry`,
       );
       if (res.status === 200) {
-        // console.log(res.data)
         setListIndustry([{industry: 'Tất cả', industryId: ''}, ...res.data]);
-        //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -151,7 +149,6 @@ const ListStockScreen = () => {
         replace
           ? setListStock(res.data.content)
           : setListStock(removeDuplicates([...listStock, ...res.data.content]));
-        //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -161,9 +158,7 @@ const ListStockScreen = () => {
   };
 
   React.useEffect(() => {
-    // console.log(page)
     getListIndustry();
-    // getListStock(0, "highest_RS", 0, 20, true);
   }, []);
 
   const handleSelectSortOption = (item: any) => {

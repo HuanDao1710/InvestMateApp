@@ -1,8 +1,7 @@
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import {ScrollView, Text, View, TouchableOpacity, StyleSheet, Dimensions, processColor} from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import {ScrollView, Text, View, StyleSheet} from 'react-native';
 // import { StackedBarChart, BarChart } from "react-native-chart-kit";
-import { LineChart,BarChart, CombinedChart } from 'react-native-charts-wrapper';
 import RevenueChart from '../../charts/ReveneuChart';
 import ProfitChart from '../../charts/ProfitChart';
 import AssetChart from '../../charts/AssetChart';
@@ -11,23 +10,6 @@ import EPSChart from '../../charts/EPSChart';
 import { API_CORE } from '../../api';
 import { ParamList } from './StockDetail';
 import { IP, ROOT_PATH } from '../../constants';
-
-
-
-// const data = [50, 10, -40, 95, -30, 85, 91, -35, 53, -53, 24, 50, -20, -80];
-const revenue = []
-enum ViewModeType{
-    CHART = 1,
-    DATA = 2
-}
-/* 
-doanh thu : revenue , shareHolder
-Tài sản : shortAsset + longAsset
-dòng tiền : fromInvest, fromFinancial, fromSale
-
-*/
-
-
 
 const StockAnanlysis = () => {
     const route = useRoute<RouteProp<ParamList>>();
@@ -66,7 +48,7 @@ const StockAnanlysis = () => {
             );
             if (res.status === 200) {
                 setCashFlowData(res.data)
-                console.log(res.data)
+                // console.log(res.data)
               //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
             } else {
               console.log('FETCH FAIL! Status Code: ' + res.status);

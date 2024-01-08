@@ -6,42 +6,21 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  FlatList,
+  ToastAndroid,
 } from 'react-native';
 import {ScrollView} from 'react-native';
+import { API_CORE } from '../../api';
 import SearceBar from '../../common/SearchBar';
+import { ROOT_PATH } from '../../constants';
 import IconBack from '../../icons/IconBack';
-import {StockInfoProps} from '../../type';
+import {SearchDTO, StockInfoProps} from '../../type';
 
 const forFade = (current: any) => ({
   cardStyle: {
     opacity: current.progress,
   },
 });
-
-const listStock = [
-  {
-    name: 'Chứng khoán SSI',
-    code: 'SSI',
-    chart: [],
-    smg: 85,
-    price: 28150.0,
-    changePrice: 900.0,
-    changePricePercent: 0.0328,
-    exchange: 'HOSE',
-    time: 1703325162,
-  },
-  {
-    name: 'Chứng khoán SSI',
-    code: 'AAA',
-    chart: [],
-    smg: 85,
-    price: 28150.0,
-    changePrice: -800.0,
-    changePricePercent: -0.0328,
-    exchange: 'HOSE',
-    time: 1703325162,
-  },
-];
 
 const HighlightedText = (props: {text: string; keyword: string}) => {
   const {text, keyword} = props;
@@ -70,11 +49,30 @@ const highlightText = (text: string, key: string) => {
   return <HighlightedText text={text} keyword={key} />;
 };
 
-const ItemResult = (props: {item: StockInfoProps; keyword: string}) => {
-  const {item, keyword} = props;
+const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
+  const {company, keyword} = props;
   const navigation = useNavigation<any>();
-  const handlePressItem = () => {
-    navigation.navigate('StockDetail', {item});
+
+  const handlePressItem = async () => {
+    try {
+      const res = await API_CORE.get<any>(
+        `${ROOT_PATH}/invest_mate/api/home/get_stock`,
+        {
+          params: {
+            code: company.code,
+          },
+        },
+      );
+      if (res.status === 200) {
+        const item = res.data;
+        navigation.navigate('StockDetail', {item});
+      } else {
+        console.log('FETCH FAIL! Status Code: ' + res.status);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+    
   };
 
   return (
@@ -101,11 +99,14 @@ const ItemResult = (props: {item: StockInfoProps; keyword: string}) => {
             fontSize: 16,
             fontWeight: '600',
           }}>
-          {highlightText(item.name, keyword)}
+            {/* {item.name} */}
+          {highlightText(company.name, keyword)}
         </Text>
         <Text style={{color: 'black', marginLeft: 15}}>
-          Sàn: {highlightText(item.exchange, keyword)} | Mã CP:{' '}
-          {highlightText(item.code, keyword)}
+          Sàn: {highlightText(company.exchange, keyword)} | Mã CP:{' '}
+          {/* Sàn: {item.exchange} | Mã CP:{' '} */}
+          {highlightText(company.code, keyword)}
+          {/* {item.code} */}
         </Text>
       </View>
       <View style={{height: '100%', width: '15%'}}></View>
@@ -117,6 +118,29 @@ const SearchScreen = () => {
   const navigation = useNavigation<any>();
   const [results, setResults] = useState<StockInfoProps[]>([]);
   const [key, setKey] = useState<string>('');
+
+  const getData = async (keyword : string) => {
+    try {
+      const res = await API_CORE.get<any>(
+        `${ROOT_PATH}/invest_mate/api/home/search`,
+        {
+          params: {
+            keyword: keyword,
+          },
+        },
+      );
+      if (res.status === 200) {
+        setResults(res.data);
+      } else {
+        console.log('FETCH FAIL! Status Code: ' + res.status);
+        if(res.status === 400) {
+          ToastAndroid.show("Không có dữ liệu!", ToastAndroid.SHORT)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  }
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -143,22 +167,28 @@ const SearchScreen = () => {
 
   const onTextChange = (text: string) => {
     setKey(text);
+    getData(text);
   };
 
   return (
     <View style={{flex: 1}}>
-      <ScrollView>
+      
         <View
           style={{height: 'auto', width: '100%', marginTop: 5, borderWidth: 0}}>
-          {listStock.length > 0 ? (
-            listStock.map((item, index) => (
-              <ItemResult key={index} item={item} keyword={key} />
-            ))
+          {results.length > 0 ? (
+            <FlatList
+            data={results}
+            renderItem={({item, index})=>(
+              <ItemResult key={index} company={item} keyword={key} />
+            )}
+            />
           ) : (
-            <View style={{width: '100%', height: '100%'}}></View>
+            <View style={{width: '100%', height: '100%'}}>
+              <Text></Text>
+            </View>
           )}
         </View>
-      </ScrollView>
+ 
     </View>
   );
 };
