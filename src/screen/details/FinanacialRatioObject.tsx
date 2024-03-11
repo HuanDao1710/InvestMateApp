@@ -36,7 +36,7 @@ export const FinancialRatios = {
         explain: "- Tỉ lệ cổ tức, còn được gọi là tỷ lệ chi trả, là một chỉ số quan trọng trong lĩnh vực tài chính, phản ánh mức độ mà doanh nghiệp chia sẻ lợi nhuận với các cổ đông. Đây chính là tỷ lệ phần trăm của thu nhập công ty mà được trả cho cổ đông dưới dạng cổ tức.\n- Tỉ lệ cổ tức có thể được tính bằng cách chia cổ tức trên mỗi đơn vị cổ phiếu cho lợi nhuận trên mỗi đơn vị cổ phiếu (EPS)"
     },
     valueBeforeEbitda: {
-        code :"",
+        code :"EV/EBITDA",
         name : "",
         explain: ""
     },
