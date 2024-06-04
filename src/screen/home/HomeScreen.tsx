@@ -24,7 +24,7 @@ import ShortenedGraph from '../../charts/GhortenedChart';
 import DetailChart2 from '../../charts/DetailChart2';
 import {StockTemporary} from '../../type';
 import {useNavigation} from '@react-navigation/native';
-import {IP, ROOT_PATH} from '../../constants';
+import {ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -247,6 +247,7 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
+    console.log(`${ROOT_PATH}/invest_mate/api/home/top_smg`)
     getDataIndex();
     getDataStock();
   }, []);
