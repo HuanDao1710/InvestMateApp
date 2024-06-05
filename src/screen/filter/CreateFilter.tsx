@@ -1,169 +1,423 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useLayoutEffect, useState} from 'react';
-import {Dimensions, Modal, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import IconSave from '../../icons/IconSave';
 import {ScrollView} from 'react-native';
-import { Dropdown } from 'react-native-element-dropdown';
-import { CriteriaType, Industry } from '../../type';
-import { ROOT_PATH } from '../../constants';
-import { API_CORE } from '../../api';
-import { FlatList } from 'react-native-gesture-handler';
-import MultiSlider from '@ozziedave/react-native-multi-slider';
+import {Dropdown} from 'react-native-element-dropdown';
+import {CriteriaType, Industry} from '../../type';
+import {ROOT_PATH} from '../../constants';
+import {API_CORE} from '../../api';
+import {FlatList} from 'react-native-gesture-handler';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import IconGreyX from '../../icons/IconGeyX';
 import IconGreyV from '../../icons/IconGeyV';
 import IconGreyAdd from '../../icons/IconGreyAdd';
+import {ModalBaseRefType} from '../../common/ModalBase';
+import ModalBaseSlide from '../../common/ModalBaseSlide';
+import AddWatchListModal from '../Watchlist/AddWatchListModal';
+import AddConditionModal from './AddConditionModal';
 
+const exchangeData = [
+  {exchange: 'Tất cả sản', exchangeId: ''},
+  {exchange: 'HOSE', exchangeId: 'HOSE'},
+  {exchange: 'HNX', exchangeId: 'HNX'},
+  {exchange: 'UPCOME', exchangeId: 'UPCOM'},
+];
 
-const  exchangeData = [
-  {exchange: "Tất cả sản", exchangeId : ""},
-  {exchange:"HOSE", exchangeId : "HOSE"},
-  {exchange:"HNX", exchangeId:"HNX"},
-  {exchange: "UPCOME", exchangeId: "UPCOM"},
-]
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
-const screenHeight = Dimensions.get("window").height;
-const screenWidth = Dimensions.get("window").width;
+const CriteriaItem = (props: {
+  item: CriteriaType;
+  removeSelf: () => void;
+  updateItem: () => void;
+}) => {
+  const minValue = props.item.minValue;
+  const maxValue = props.item.maxValue;
+  const step = (maxValue - minValue) / 200;
+  const [values, setValues] = useState([
+    props.item.currentMinValue,
+    props.item.currentMaxValue,
+  ]);
 
-const CriteriaItem = (props : {item : any, removeSelf: any, updateItem : any}) => {
-
-  const [values, setValues] = useState([props.item.minValue, props.item.maxValue]);
-  const multiSliderValuesChange = (values : any) => {
-    setValues(values)
+  
+  const multiSliderValuesChange = (values: any) => {
+    setValues(values);
   };
   const handleUpdateItem = () => {
-    props.updateItem(props.item, values)
-  } 
+    props.updateItem();
+  };
 
   return (
-    <View style={{width: "100%", alignItems:'center', borderBottomWidth: 1, borderBottomColor: "#DADADA", paddingVertical: 5, flexDirection:"row"}}>
+    <View
+      style={{
+        width: '100%',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        borderBottomColor: '#DADADA',
+        paddingVertical: 5,
+        flexDirection: 'row',
+        paddingHorizontal: 10,
+      }}
+      key={props.item.key}>
       <View style={{flex: 1}}>
-        <View style={{width: "90%", height: "auto", justifyContent: "center", alignItems: "center"}}>
-              <Text style={{color:'black', textAlign:"center", fontSize: 12}}>{props.item.name}</Text>
+        <View
+          style={{
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={{color: 'black', textAlign: 'center', fontSize: 12}}>
+            {props.item.name}
+          </Text>
         </View>
-        <View style={{width: "100%", overflow: 'hidden', flexDirection:'row', alignItems: "center"}}>
-          <View style={{width: "15%"}}>
-            <Text style={{width: "100%", textAlign:"right", color:'black'}}>{values[0]}</Text>
-          </View>
-          <View style={{width:"65%"}}>
-            <View style={{height:20, justifyContent:"center", alignItems:"center", transform:[{scale: 1.2}]}}>
-              <MultiSlider
-                values={values}
-                sliderLength={screenWidth - 250}
-                onValuesChange={multiSliderValuesChange}
-                onValuesChangeFinish={handleUpdateItem}
-                markerStyle={{backgroundColor: "#B8C4FF"}}              
-                selectedStyle={{backgroundColor:"#B8C4FF"}}       
-                min={props.item.minValue}
-                max={props.item.maxValue}
-                step={1}
-              />
-            </View>
-          </View>
-          <View style={{width: "20%"}}>
-            <Text style={{width: "100%", textAlign: "left", color:"black"}}>{values[1]}</Text>
-          </View>
+        <View
+          style={{
+            width: '100%',
+            // borderWidth: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+          }}>
+          <Text
+            style={{
+              textAlign: 'right',
+              color: 'black',
+              width: 50,
+              fontSize: 12,
+            }}>
+            {values[0]}
+          </Text>
+          <MultiSlider
+            values={values}
+            sliderLength={200}
+            onValuesChange={val => setValues(val)}
+            min={0}
+            max={200}
+            step={step}
+            selectedStyle={{
+              backgroundColor: '#B8C4FF',
+            }}
+            // unselectedStyle={{
+            //   backgroundColor: '#ecf0f1',
+            // }}
+            markerStyle={{
+              height: 20,
+              width: 20,
+              backgroundColor: '#B8C4FF',
+            }}
+          />
+
+          <Text
+            style={{
+              textAlign: 'left',
+              color: 'black',
+              width: 50,
+              fontSize: 12,
+            }}>
+            {values[1]}
+          </Text>
         </View>
       </View>
-      <TouchableOpacity style={{height: 22, aspectRatio : 1, margin: 10, backgroundColor:"#D1D2D3", justifyContent: "center", alignItems: 'center', borderRadius: 5,}}
-          onPress={() => props.removeSelf(props.item)}>
-          <IconGreyX style={{width: "30%", aspectRatio :  1}}/>
+      <TouchableOpacity
+        style={{
+          height: 22,
+          aspectRatio: 1,
+          margin: 10,
+          backgroundColor: '#D1D2D3',
+          justifyContent: 'center',
+          alignItems: 'center',
+          borderRadius: 5,
+        }}
+        onPress={() => props.removeSelf()}>
+        <IconGreyX style={{width: '30%', aspectRatio: 1}} />
       </TouchableOpacity>
     </View>
   );
-
-}
-
-const ModalAddCondition = (props: {
-  isModalVisible: boolean;
-  toggleModal: any;
-  smallList: any[];
-  addItem : any;
-  removeItem : any;
-  criteriaList : CriteriaType[];
-}) => {
-  const {isModalVisible, toggleModal, smallList, addItem, removeItem, criteriaList} = props;
-
-  const isAlreadyExist = (item : CriteriaType) => {
-    return smallList.some(i => i.name === item.name);
-  }
-
-  const RenderItem =  (item : any, index : any)=>{
-    const isExst = isAlreadyExist(item);
-    return (
-      <View key={index} style={{borderBottomWidth: 1, borderColor: "#EAEAEA", 
-        flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-      <View style={{flex: 1, justifyContent: "center"}}>
-        <Text style={{color: "gray", fontWeight: "500", marginHorizontal: 15}}>{item.name}</Text>
-      </View>
-      <View style={{height: "60%", borderLeftWidth: 1, borderColor: "#DADADA"}}/>
-      <View style={{height: 40, backgroundColor:"#FBFBFB", aspectRatio: 1,}}>
-        {isExst? 
-        <TouchableOpacity
-          style={{width: 40, aspectRatio : 1, justifyContent: "center", 
-          alignItems:"center"}}
-          onPress={()=> removeItem(item)}>
-          <IconGreyV style={{height: 20, aspectRatio: 1}}/>
-        </TouchableOpacity> 
-        : 
-        <TouchableOpacity style={{width: 40, aspectRatio: 1, justifyContent:'center',}}
-          onPress={()=> addItem(item)}>
-            <IconGreyAdd style={{height: 15}}/>
-        </TouchableOpacity>}
-      </View>
-    </View>
-    )
-  }
-
-  return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={isModalVisible}
-      onRequestClose={toggleModal}>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View
-            style={{
-              height: 55,
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: "100%",
-              borderBottomWidth: 0.5,
-              borderBottomColor: "#DADADA",
-              backgroundColor:"#F1F1F1",
-            }}>
-            <Text style={styles.modalText}>Thêm tiêu chí</Text>
-            <TouchableOpacity style={{position:"absolute", right: 5, 
-              aspectRatio: 1, height: 25, borderRadius: 100,  justifyContent:'center', 
-              alignItems:'center', top: 10, backgroundColor:"#DADADA"}}
-              onPress={toggleModal}>
-                <IconGreyX style={{width: 12, aspectRatio: 1}}/>
-            </TouchableOpacity>
-          </View>
-          <View style={{width: "100%", height: screenHeight * 0.7 - 75, backgroundColor:"white" }}>
-            <FlatList
-              data={criteriaList}
-              renderItem={({item, index}) => RenderItem(item, index)}
-              extraData={criteriaList}
-            />
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
 };
+
+// const ModalAddCondition = (props: {
+//   isModalVisible: boolean;
+//   toggleModal: any;
+//   smallList: any[];
+//   addItem: any;
+//   removeItem: any;
+//   criteriaList: CriteriaType[];
+// }) => {
+//   const {
+//     isModalVisible,
+//     toggleModal,
+//     smallList,
+//     addItem,
+//     removeItem,
+//     criteriaList,
+//   } = props;
+
+//   const isAlreadyExist = (item: CriteriaType) => {
+//     return smallList.some(i => i.name === item.name);
+//   };
+
+//   const RenderItem = (item: any, index: any) => {
+//     const isExst = isAlreadyExist(item);
+//     return (
+//       <View
+//         key={index}
+//         style={{
+//           borderBottomWidth: 1,
+//           borderColor: '#EAEAEA',
+//           flexDirection: 'row',
+//           justifyContent: 'space-between',
+//           alignItems: 'center',
+//         }}>
+//         <View style={{flex: 1, justifyContent: 'center'}}>
+//           <Text
+//             style={{color: 'gray', fontWeight: '500', marginHorizontal: 15}}>
+//             {item.name}
+//           </Text>
+//         </View>
+//         <View
+//           style={{height: '60%', borderLeftWidth: 1, borderColor: '#DADADA'}}
+//         />
+//         <View style={{height: 40, backgroundColor: '#FBFBFB', aspectRatio: 1}}>
+//           {isExst ? (
+//             <TouchableOpacity
+//               style={{
+//                 width: 40,
+//                 aspectRatio: 1,
+//                 justifyContent: 'center',
+//                 alignItems: 'center',
+//               }}
+//               onPress={() => removeItem(item)}>
+//               <IconGreyV style={{height: 20, aspectRatio: 1}} />
+//             </TouchableOpacity>
+//           ) : (
+//             <TouchableOpacity
+//               style={{width: 40, aspectRatio: 1, justifyContent: 'center'}}
+//               onPress={() => addItem(item)}>
+//               <IconGreyAdd style={{height: 15}} />
+//             </TouchableOpacity>
+//           )}
+//         </View>
+//       </View>
+//     );
+//   };
+
+//   return (
+//     <Modal
+//       animationType="slide"
+//       transparent={true}
+//       visible={isModalVisible}
+//       onRequestClose={toggleModal}>
+//       <View style={styles.modalContainer}>
+//         <View style={styles.modalContent}>
+//           <View
+//             style={{
+//               height: 55,
+//               justifyContent: 'center',
+//               alignItems: 'center',
+//               width: '100%',
+//               borderBottomWidth: 0.5,
+//               borderBottomColor: '#DADADA',
+//               backgroundColor: '#F1F1F1',
+//             }}>
+//             <Text style={styles.modalText}>Thêm tiêu chí</Text>
+//             <TouchableOpacity
+//               style={{
+//                 position: 'absolute',
+//                 right: 5,
+//                 aspectRatio: 1,
+//                 height: 25,
+//                 borderRadius: 100,
+//                 justifyContent: 'center',
+//                 alignItems: 'center',
+//                 top: 10,
+//                 backgroundColor: '#DADADA',
+//               }}
+//               onPress={toggleModal}>
+//               <IconGreyX style={{width: 12, aspectRatio: 1}} />
+//             </TouchableOpacity>
+//           </View>
+//           <View
+//             style={{
+//               width: '100%',
+//               height: screenHeight * 0.7 - 75,
+//               backgroundColor: 'white',
+//             }}>
+//             <FlatList
+//               data={criteriaList}
+//               renderItem={({item, index}) => RenderItem(item, index)}
+//               extraData={criteriaList}
+//             />
+//           </View>
+//         </View>
+//       </View>
+//     </Modal>
+//   );
+// };
+
+const criteriaList = [
+  {
+    currentMaxValue: 52700,
+    currentMinValue: -16919,
+    key: 'sf.eps',
+    maxValue: 52700,
+    minValue: -16919,
+    name: 'EPS',
+  },
+  {
+    currentMaxValue: 364,
+    currentMinValue: -83696,
+    key: 'sf.epsGrowth1Year',
+    maxValue: 364,
+    minValue: -83696,
+    name: 'Tăng tưởng EPS 1 năm',
+  },
+  {
+    currentMaxValue: 110,
+    currentMinValue: -1,
+    key: 'sf.lastQuarterProfitGrowth',
+    maxValue: 110,
+    minValue: -1,
+    name: 'Tăng trưởng lợi nhuận quý',
+  },
+  {
+    currentMaxValue: 13,
+    currentMinValue: -11,
+    key: 'sf.roe',
+    maxValue: 13,
+    minValue: -11,
+    name: 'ROE',
+  },
+  {
+    currentMaxValue: 1,
+    currentMinValue: -2,
+    key: 'sf.grossMargin',
+    maxValue: 1,
+    minValue: -2,
+    name: 'Tỉ suất lợi nhuận gộp',
+  },
+  {
+    currentMaxValue: 35,
+    currentMinValue: 0,
+    key: 'sf.doe',
+    maxValue: 35,
+    minValue: 0,
+    name: 'DOE',
+  },
+  {
+    currentMaxValue: 4145,
+    currentMinValue: -9469,
+    key: 'sf.pe',
+    maxValue: 4145,
+    minValue: -9469,
+    name: 'PE',
+  },
+  {
+    currentMaxValue: 234,
+    currentMinValue: -6,
+    key: 'sf.pb',
+    maxValue: 234,
+    minValue: -6,
+    name: 'PB',
+  },
+  {
+    currentMaxValue: 5958,
+    currentMinValue: -2452,
+    key: 'sf.evEbitda',
+    maxValue: 5958,
+    minValue: -2452,
+    name: 'EV/EBITDA',
+  },
+  {
+    currentMaxValue: 1,
+    currentMinValue: -1,
+    key: 'tp.percentChangeDay',
+    maxValue: 1,
+    minValue: -1,
+    name: '% Giá trong ngày',
+  },
+  {
+    currentMaxValue: 1,
+    currentMinValue: -1,
+    key: 'tp.percentChangeWeek',
+    maxValue: 1,
+    minValue: -1,
+    name: '% Giá so với đầu tuần',
+  },
+  {
+    currentMaxValue: 2,
+    currentMinValue: -1,
+    key: 'tp.percentChangeMonth',
+    maxValue: 2,
+    minValue: -1,
+    name: '% Giá so với đầu tháng',
+  },
+  {
+    currentMaxValue: 495754,
+    currentMinValue: 1,
+    key: 'tp.marketCap',
+    maxValue: 495754,
+    minValue: 1,
+    name: 'Vốn hoá thị trường',
+  },
+  {
+    currentMaxValue: 839268227,
+    currentMinValue: 50,
+    key: 'tp.avgTradingValue20Day',
+    maxValue: 839268227,
+    minValue: 50,
+    name: 'Trung bình giá trị giao dịch 20 ngày',
+  },
+  {
+    currentMaxValue: 99,
+    currentMinValue: 0,
+    key: 'tp.smg',
+    maxValue: 99,
+    minValue: 0,
+    name: 'SMG',
+  },
+  {
+    currentMaxValue: 554,
+    currentMinValue: 0,
+    key: 'tp.price',
+    maxValue: 554,
+    minValue: 0,
+    name: 'Giá đóng cửa gần nhất',
+  },
+  {
+    currentMaxValue: 2077615,
+    currentMinValue: 0,
+    key: 'sf.asset',
+    maxValue: 2077615,
+    minValue: 0,
+    name: 'Tổng tài sản',
+  },
+];
 
 const CreateFilter = () => {
   const navigation = useNavigation<any>();
   const [isModalVisible, setModalVisible] = React.useState(false);
-  const [criteriaList, setCriteriaList] = useState<any[]>([1, 2, 3]);
+  // const [criteriaList, setCriteriaList] = useState<CriteriaType[]>([]);
   const [listIndustry, setListIndustry] = React.useState<Industry[]>([
     {industry: 'Tất cả ngành', industryId: ''},
   ]);
-  const [currentExchange, setCurrentExchange] = React.useState({exchange: 'Tất cả sàn', exchangeId: ''})
-  const [currentIndustry, setCurrentIndustry] = React.useState({industry: 'Tất cả ngành', industryId: ''});
-  const [smallList, setSmallList] = useState<any[]>([]);
-  const [loading, setLoading] = React.useState(false);
+  const [currentExchange, setCurrentExchange] = React.useState({
+    exchange: 'Tất cả sàn',
+    exchangeId: '',
+  });
+  const [currentIndustry, setCurrentIndustry] = React.useState({
+    industry: 'Tất cả ngành',
+    industryId: '',
+  });
+  // const [smallList, setSmallList] = useState<any[]>([]);
+  // const [loading, setLoading] = React.useState(false);
+  const addConditionModalRef = React.useRef<ModalBaseRefType | null>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -200,12 +454,13 @@ const CreateFilter = () => {
 
   const getListCriteria = async () => {
     try {
-      const res = await API_CORE.get<any>(
+      const res = await API_CORE.get<CriteriaType[]>(
         `${ROOT_PATH}/invest_mate/api/stock_filter/list_criteria`,
       );
       if (res.status === 200) {
-        setCriteriaList(res.data);
-        setSmallList(res.data.slice(0,3))
+        console.log(res.data);
+        // setCriteriaList(res.data);
+        // setSmallList(res.data.slice(0, 3));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -213,124 +468,136 @@ const CreateFilter = () => {
       console.error('Error fetching data:', error);
     }
 
-    setLoading(true)
+    // setLoading(true)
   };
 
-  const addItem = (item : any) => {
-    setSmallList([...smallList, item]);
-  };
+  // const addItem = (item: any) => {
+  //   setSmallList([...smallList, item]);
+  // };
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
-  
-  const removeItem = (item : CriteriaType) =>{
-    setSmallList(smallList.filter(i => i.name !== item.name));
-  }
+  // const removeItem = (item: CriteriaType) => {
+  //   setSmallList(smallList.filter(i => i.name !== item.name));
+  // };
 
-  const udpateValueItem = (item : any, values: any) => {
-    setSmallList(smallList.map(i => {
-      if (i.name === item.name) {
-        return { ...i, currentMinValue: values[0], currentMaxValue : values[1] };
-      }
-      return i;
-    }))
-  }
-  
-  React.useEffect(()=>{
+  const udpateValueItem = (item: any, values: any) => {
+    // setSmallList(
+    //   smallList.map(i => {
+    //     if (i.name === item.name) {
+    //       return {...i, currentMinValue: values[0], currentMaxValue: values[1]};
+    //     }
+    //     return i;
+    //   }),
+    // );
+  };
+
+  React.useEffect(() => {
     getListIndustry();
     getListCriteria();
-  },[])
+  }, []);
 
   const handleFilter = () => {
-    const item = {
-      exchange : currentExchange.exchangeId,
-      industry : currentIndustry.industryId,
-      conditions: smallList.map(i => {
-        return {
-          value : i.key,
-          from : i.currentMinValue,
-          to : i.currentMaxValue
-        }
-      })
-    }
-    navigation.navigate("FilterResults", {item});
-  }
+    // const item = {
+    //   exchange: currentExchange.exchangeId,
+    //   industry: currentIndustry.industryId,
+    //   conditions: smallList.map(i => {
+    //     return {
+    //       value: i.key,
+    //       from: i.currentMinValue,
+    //       to: i.currentMaxValue,
+    //     };
+    //   }),
+    // };
+    // navigation.navigate('FilterResults', {item});
+  };
 
   return (
-    (loading?(
-      <View style={{flex: 1}}>
-      <ModalAddCondition 
+    <View style={{flex: 1}}>
+      {/* <ModalAddCondition 
         isModalVisible={isModalVisible} 
         toggleModal={toggleModal} 
         smallList={smallList} 
         addItem={addItem} 
         removeItem ={removeItem} 
         criteriaList={criteriaList}
-        />
+        /> */}
+      <ModalBaseSlide ref={addConditionModalRef} showClose>
+        <AddConditionModal />
+      </ModalBaseSlide>
       <View style={{flex: 1, paddingBottom: 100}}>
-        <ScrollView >
-          <View style={{width: "100%", height: 50, borderBottomWidth: 0.5, flexDirection:"row", justifyContent:"space-around", alignItems: "center", borderColor:'#DADADA'}}>
-            <Dropdown 
-                style={[styles.dropdown,]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                itemTextStyle={styles.itemTextDropdown}
-                iconStyle={styles.iconStyle}
-                data={exchangeData}
-                search
-                maxHeight={300}
-                labelField="exchange"
-                valueField="exchangeId"
-                placeholder={'Tất cả sàn'}
-                searchPlaceholder="Search..."
-                value={"abc"}
-                onChange={setCurrentExchange}
-              />
-              <Dropdown 
-                style={[styles.dropdown,]}
-                placeholderStyle={styles.placeholderStyle}
-                selectedTextStyle={styles.selectedTextStyle}
-                inputSearchStyle={styles.inputSearchStyle}
-                itemTextStyle={styles.itemTextDropdown}
-                iconStyle={styles.iconStyle}
-                data={listIndustry}
-                search
-                maxHeight={300}
-                labelField="industry"
-                valueField="industryId"
-                placeholder={'Tất cả ngành'}
-                searchPlaceholder="Search..."
-                value={"abc"}
-                onChange={setCurrentIndustry}
-              />
+        <ScrollView>
+          <View
+            style={{
+              width: '100%',
+              height: 50,
+              borderBottomWidth: 0.5,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              borderColor: '#DADADA',
+            }}>
+            <Dropdown
+              style={[styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              itemTextStyle={styles.itemTextDropdown}
+              iconStyle={styles.iconStyle}
+              data={exchangeData}
+              search
+              maxHeight={300}
+              labelField="exchange"
+              valueField="exchangeId"
+              placeholder={'Tất cả sàn'}
+              searchPlaceholder="Search..."
+              value={'abc'}
+              onChange={setCurrentExchange}
+            />
+            <Dropdown
+              style={[styles.dropdown]}
+              placeholderStyle={styles.placeholderStyle}
+              selectedTextStyle={styles.selectedTextStyle}
+              inputSearchStyle={styles.inputSearchStyle}
+              itemTextStyle={styles.itemTextDropdown}
+              iconStyle={styles.iconStyle}
+              data={listIndustry}
+              search
+              maxHeight={300}
+              labelField="industry"
+              valueField="industryId"
+              placeholder={'Tất cả ngành'}
+              searchPlaceholder="Search..."
+              value={'abc'}
+              onChange={setCurrentIndustry}
+            />
           </View>
           <View style={{width: '100%', height: 'auto', alignItems: 'center'}}>
-          {smallList.map((item, index) => (
-            <CriteriaItem 
-              key={index} 
-              item={item} 
-              removeSelf={removeItem} 
-              updateItem={udpateValueItem}
+            {criteriaList.map((item, index) => (
+              <CriteriaItem
+                key={index}
+                item={item}
+                updateItem={() => {}}
+                removeSelf={() => {}}
               />
-          ))}
-          
-          <TouchableOpacity
-            style={{
-              height: 40,
-              width: '90%',
-              borderWidth: 1,
-              marginTop: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderColor:"#999999"
-            }}
-            onPress={toggleModal}>
-            <Text style={{color: 'black'}}>+Thêm tiêu chí</Text>
-          </TouchableOpacity>
-        </View>
+            ))}
+
+            <TouchableOpacity
+              style={{
+                height: 40,
+                width: '90%',
+                borderWidth: 1,
+                marginTop: 30,
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderColor: '#999999',
+              }}
+              onPress={() => addConditionModalRef.current?.show()}>
+              <Text style={{color: 'black'}}>+Thêm tiêu chí</Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
       <View
@@ -340,9 +607,9 @@ const CreateFilter = () => {
           alignItems: 'center',
           height: 100,
           bottom: 0,
-          position:"absolute",
-          backgroundColor:'white',
-          elevation: 1
+          position: 'absolute',
+          backgroundColor: 'white',
+          elevation: 1,
         }}>
         <TouchableOpacity
           style={{
@@ -352,7 +619,7 @@ const CreateFilter = () => {
             alignItems: 'center',
             backgroundColor: '#B8C4FF',
             elevation: 1,
-            borderRadius: 10
+            borderRadius: 10,
           }}
           onPress={handleFilter}>
           <Text style={{color: 'white', fontSize: 16, fontWeight: '500'}}>
@@ -360,14 +627,10 @@ const CreateFilter = () => {
           </Text>
         </TouchableOpacity>
       </View>
-            
     </View>
-    ) :
-    <View></View>)
   );
 };
 export default CreateFilter;
-
 
 const styles = StyleSheet.create({
   dropdown: {
@@ -377,12 +640,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 8,
     color: 'black',
-    width: "40%"
+    width: '40%',
   },
   itemTextDropdown: {
     fontSize: 15,
-    fontWeight:"500",
-    color: "black"
+    fontWeight: '500',
+    color: 'black',
   },
   label: {
     position: 'absolute',
@@ -397,12 +660,12 @@ const styles = StyleSheet.create({
   placeholderStyle: {
     fontSize: 15,
     color: 'black',
-    fontWeight:"500"
+    fontWeight: '500',
   },
   selectedTextStyle: {
     fontSize: 15,
     color: 'black',
-    fontWeight:"500"
+    fontWeight: '500',
   },
   iconStyle: {
     width: 20,
@@ -445,4 +708,4 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
-})
+});

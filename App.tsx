@@ -35,7 +35,7 @@ const App = () => {
     <SQLiteContextProvider>
       <MenuProvider>
         <NavigationContainer>
-          <Stack.Navigator>
+          <Stack.Navigator initialRouteName={"CreateFilter"}>
             {/* <Stack.Screen
               name="StockAnanlysis"
               component={StockAnanlysis}
