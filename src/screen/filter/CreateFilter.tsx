@@ -21,7 +21,7 @@ import IconGreyV from '../../icons/IconGeyV';
 import IconGreyAdd from '../../icons/IconGreyAdd';
 import {ModalBaseRefType} from '../../common/ModalBase';
 import ModalBaseSlide from '../../common/ModalBaseSlide';
-import AddWatchListModal from '../Watchlist/AddWatchListModal';
+// import AddWatchListModal from '../Watchlist/AddWatchListModal';
 import AddConditionModal from './AddConditionModal';
 
 const exchangeData = [
@@ -43,11 +43,14 @@ const CriteriaItem = (props: {
   const maxValue = props.item.maxValue;
   const step = (maxValue - minValue) / 200;
   const [values, setValues] = useState([
-    props.item.currentMinValue,
-    props.item.currentMaxValue,
+    (props.item.currentMinValue - minValue) / step,
+    (props.item.currentMaxValue - minValue) / step,
   ]);
 
-  
+  const calculateRealValue = (value: number) => {
+    return (value * step + minValue).toFixed(2);
+  };
+
   const multiSliderValuesChange = (values: any) => {
     setValues(values);
   };
@@ -92,7 +95,7 @@ const CriteriaItem = (props: {
               width: 50,
               fontSize: 12,
             }}>
-            {values[0]}
+            {calculateRealValue(values[0])}
           </Text>
           <MultiSlider
             values={values}
@@ -100,7 +103,7 @@ const CriteriaItem = (props: {
             onValuesChange={val => setValues(val)}
             min={0}
             max={200}
-            step={step}
+            step={1}
             selectedStyle={{
               backgroundColor: '#B8C4FF',
             }}
@@ -121,7 +124,7 @@ const CriteriaItem = (props: {
               width: 50,
               fontSize: 12,
             }}>
-            {values[1]}
+            {calculateRealValue(values[1])}
           </Text>
         </View>
       </View>
@@ -261,149 +264,10 @@ const CriteriaItem = (props: {
 //   );
 // };
 
-const criteriaList = [
-  {
-    currentMaxValue: 52700,
-    currentMinValue: -16919,
-    key: 'sf.eps',
-    maxValue: 52700,
-    minValue: -16919,
-    name: 'EPS',
-  },
-  {
-    currentMaxValue: 364,
-    currentMinValue: -83696,
-    key: 'sf.epsGrowth1Year',
-    maxValue: 364,
-    minValue: -83696,
-    name: 'Tăng tưởng EPS 1 năm',
-  },
-  {
-    currentMaxValue: 110,
-    currentMinValue: -1,
-    key: 'sf.lastQuarterProfitGrowth',
-    maxValue: 110,
-    minValue: -1,
-    name: 'Tăng trưởng lợi nhuận quý',
-  },
-  {
-    currentMaxValue: 13,
-    currentMinValue: -11,
-    key: 'sf.roe',
-    maxValue: 13,
-    minValue: -11,
-    name: 'ROE',
-  },
-  {
-    currentMaxValue: 1,
-    currentMinValue: -2,
-    key: 'sf.grossMargin',
-    maxValue: 1,
-    minValue: -2,
-    name: 'Tỉ suất lợi nhuận gộp',
-  },
-  {
-    currentMaxValue: 35,
-    currentMinValue: 0,
-    key: 'sf.doe',
-    maxValue: 35,
-    minValue: 0,
-    name: 'DOE',
-  },
-  {
-    currentMaxValue: 4145,
-    currentMinValue: -9469,
-    key: 'sf.pe',
-    maxValue: 4145,
-    minValue: -9469,
-    name: 'PE',
-  },
-  {
-    currentMaxValue: 234,
-    currentMinValue: -6,
-    key: 'sf.pb',
-    maxValue: 234,
-    minValue: -6,
-    name: 'PB',
-  },
-  {
-    currentMaxValue: 5958,
-    currentMinValue: -2452,
-    key: 'sf.evEbitda',
-    maxValue: 5958,
-    minValue: -2452,
-    name: 'EV/EBITDA',
-  },
-  {
-    currentMaxValue: 1,
-    currentMinValue: -1,
-    key: 'tp.percentChangeDay',
-    maxValue: 1,
-    minValue: -1,
-    name: '% Giá trong ngày',
-  },
-  {
-    currentMaxValue: 1,
-    currentMinValue: -1,
-    key: 'tp.percentChangeWeek',
-    maxValue: 1,
-    minValue: -1,
-    name: '% Giá so với đầu tuần',
-  },
-  {
-    currentMaxValue: 2,
-    currentMinValue: -1,
-    key: 'tp.percentChangeMonth',
-    maxValue: 2,
-    minValue: -1,
-    name: '% Giá so với đầu tháng',
-  },
-  {
-    currentMaxValue: 495754,
-    currentMinValue: 1,
-    key: 'tp.marketCap',
-    maxValue: 495754,
-    minValue: 1,
-    name: 'Vốn hoá thị trường',
-  },
-  {
-    currentMaxValue: 839268227,
-    currentMinValue: 50,
-    key: 'tp.avgTradingValue20Day',
-    maxValue: 839268227,
-    minValue: 50,
-    name: 'Trung bình giá trị giao dịch 20 ngày',
-  },
-  {
-    currentMaxValue: 99,
-    currentMinValue: 0,
-    key: 'tp.smg',
-    maxValue: 99,
-    minValue: 0,
-    name: 'SMG',
-  },
-  {
-    currentMaxValue: 554,
-    currentMinValue: 0,
-    key: 'tp.price',
-    maxValue: 554,
-    minValue: 0,
-    name: 'Giá đóng cửa gần nhất',
-  },
-  {
-    currentMaxValue: 2077615,
-    currentMinValue: 0,
-    key: 'sf.asset',
-    maxValue: 2077615,
-    minValue: 0,
-    name: 'Tổng tài sản',
-  },
-];
-
 const CreateFilter = () => {
   const navigation = useNavigation<any>();
   const [isModalVisible, setModalVisible] = React.useState(false);
-  // const [criteriaList, setCriteriaList] = useState<CriteriaType[]>([]);
+  const [criteriaList, setCriteriaList] = useState<CriteriaType[]>([]);
   const [listIndustry, setListIndustry] = React.useState<Industry[]>([
     {industry: 'Tất cả ngành', industryId: ''},
   ]);
@@ -459,7 +323,7 @@ const CreateFilter = () => {
       );
       if (res.status === 200) {
         console.log(res.data);
-        // setCriteriaList(res.data);
+        setCriteriaList(res.data);
         // setSmallList(res.data.slice(0, 3));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
