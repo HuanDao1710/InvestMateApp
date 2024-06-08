@@ -1,14 +1,23 @@
-import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useLayoutEffect} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {TrackingStockEntity} from '../../type';
+import {
+  RouteProp,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import React, {useContext, useEffect, useLayoutEffect} from 'react';
+import {View, Text, TouchableOpacity, ScrollView} from 'react-native';
+import {StockInfoProps, StockTemporary, TrackingStockEntity} from '../../type';
 import IconBlackAdd from '../../icons/IconBlackAdd';
 import IconEdit from '../../icons/IconEdit';
 import IconAddWhite from '../../icons/IconAddWhite';
-
+import SQLiteContext from '../../sqlite/SQLContext';
+import {API_CORE} from '../../api';
+import {ROOT_PATH} from '../../constants';
+import {renderStock} from '../stock-list/StockListScreen';
 
 export type ParamList = {
   trackingStocks: {
+    id: number;
     title: string;
     listTrackingStock: TrackingStockEntity[];
   };
@@ -18,18 +27,19 @@ export const SublistHeader = (props: {onPressAdd: any; onPressEdit: any}) => {
   return (
     <View
       style={{
-        height: '100%',
+     
         width: 'auto',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
+        gap: 10,
+        marginRight: 15
       }}>
-      <TouchableOpacity
-        onPress={props.onPressAdd}>
-        <IconBlackAdd style={{height: '35%', aspectRatio: 1, margin: '3%'}} />
+      <TouchableOpacity onPress={props.onPressAdd}>
+        <IconBlackAdd width={25} height={25} />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <IconEdit style={{height: '35%', aspectRatio: 1, margin: '3%'}} />
+      <TouchableOpacity onPress={props.onPressEdit}>
+        <IconEdit width={25} height={25} />
       </TouchableOpacity>
     </View>
   );
@@ -38,14 +48,54 @@ export const SublistHeader = (props: {onPressAdd: any; onPressEdit: any}) => {
 const SubWatchList = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<ParamList>>();
-  const {title, listTrackingStock} = route.params;
+  const {id, title} = route.params;
+  const sqlite = useContext(SQLiteContext);
+  const [listTrackingStock, setListTrackingStock] = React.useState<
+    TrackingStockEntity[]
+  >([]);
+  const focus = useIsFocused();
+  const [listStockInfo, setListStockInfo] = React.useState<StockTemporary[]>(
+    [],
+  );
+
+  const fetchData = async () => {
+    const _listTrackingStock = await sqlite.findAllTrackingStocks(id);
+    setListTrackingStock(_listTrackingStock.reverse());
+    try {
+      const res = await API_CORE.post<StockTemporary[]>(
+        `${ROOT_PATH}/invest_mate/api/watchlist/list_stock_watchlist`,
+        {
+          listCode: _listTrackingStock.map(item => item.code),
+        },
+      );
+      if (res.status === 200) {
+        setListStockInfo(res.data);
+      } else {
+        console.log('FETCH FAIL! Status Code: ' + res.status);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (focus) fetchData();
+  }, [focus]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
       title: title,
       headerTitleStyle: {fontSize: 18},
       headerRight: () => (
-        <SublistHeader onPressAdd={() => {navigation.navigate("SearchScreen")}} onPressEdit={() => {}} />
+        <SublistHeader
+          onPressAdd={() => {
+            navigation.navigate('WatchListSearch', {
+              id: id,
+              listTrackingStock: listTrackingStock,
+            });
+          }}
+          onPressEdit={() => {}}
+        />
       ),
     });
   });
@@ -63,28 +113,49 @@ const SubWatchList = () => {
           minWidth: 100,
           height: 'auto',
           flexDirection: 'row',
-          justifyContent: 'space-around',
+          justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: '#B8C4FF',
           borderRadius: 5,
-          padding: 3,
-          bottom: 50
+          bottom: 50,
+          paddingHorizontal: 10,
+          paddingVertical: 5,
+          gap: 10
+          
         }}
-        onPress={()=> {navigation.navigate("SearchScreen")}}>
-        <IconAddWhite style={{height: 12, aspectRatio: 1, margin: 5}} />
+        onPress={() => {
+          navigation.navigate('WatchListSearch', {
+            id: id,
+            listTrackingStock: listTrackingStock,
+          });
+        }}>
+        <IconAddWhite width={15}  height={15} />
         <Text
           style={{
             color: 'white',
-            fontSize: 12,
+            fontSize: 14,
             marginRight: 5,
             marginVertical: 5,
+            fontWeight:'bold'
           }}>
           Thêm mã
         </Text>
       </TouchableOpacity>
     </View>
   ) : (
-    <View></View>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 20,
+      }}>
+      <ScrollView
+        style={{flex: 1, width: '100%'}}
+        contentContainerStyle={{alignItems: 'center'}}>
+        {listStockInfo.map((item, index) => renderStock(item, () => {}, index))}
+      </ScrollView>
+    </View>
   );
 };
 

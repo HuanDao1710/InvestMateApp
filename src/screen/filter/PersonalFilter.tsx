@@ -27,8 +27,8 @@ const PersonalFilter = () => {
       headerTitleStyle: {fontSize: 18},
       headerRight: () => (
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={{margin: 15}} onPress={() => {navigation.navigate("CreateFilter  ")}}>
-            <IconBlackAdd style={{height: 20, aspectRatio: 1}} />
+          <TouchableOpacity style={{margin: 15}} onPress={() => {navigation.navigate("CreateFilter")}}>
+            <IconBlackAdd height={30} width={30}/>
           </TouchableOpacity>
         </View>
       ),
@@ -42,44 +42,48 @@ const PersonalFilter = () => {
 
 
   return (
-      <View style={{flex: 1}}>
-            {listFilterName.length > 0? 
-            <View>
-                
-            </View> 
-            : 
-            <View
-        style={{
+    <View style={{flex: 1}}>
+      {listFilterName.length > 0 ? (
+        <View></View>
+      ) : (
+        <View
+          style={{
             width: '100%',
             height: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-        }}>
-        <TouchableOpacity
+          }}>
+          <TouchableOpacity
             style={{
-            minWidth: 100,
-            height: 'auto',
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-            backgroundColor: '#B8C4FF',
-            borderRadius: 5,
-            padding: 3,
-            bottom: 50
+              minWidth: 100,
+              height: 'auto',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: '#B8C4FF',
+              borderRadius: 5,
+              bottom: 50,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              gap: 10,
             }}
-            onPress={()=> {navigation.navigate("CreateFilter")}}>
-            <IconAddWhite style={{height: 12, aspectRatio: 1, margin: 5}} />
+            onPress={() => {
+              navigation.navigate('CreateFilter');
+            }}>
+            <IconAddWhite width={15} height={15} />
             <Text
-            style={{
+              style={{
                 color: 'white',
-                fontSize: 12,
+                fontSize: 14,
                 marginRight: 5,
                 marginVertical: 5,
-            }}>
-            Tạo bộ lọc
+                fontWeight: 'bold',
+              }}>
+              Tạo bộ lọc
             </Text>
-        </TouchableOpacity>
-        </View>}
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 };

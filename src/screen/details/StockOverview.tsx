@@ -25,7 +25,7 @@ import {
 } from '../../utils/utils';
 import IconQuestionMark from '../../icons/IconQuestionMark';
 import {API_CORE} from '../../api';
-import {IP, ROOT_PATH} from '../../constants';
+import { ROOT_PATH} from '../../constants';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;

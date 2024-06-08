@@ -1,24 +1,22 @@
 import * as React from "react"
-import Svg, { Path, SvgProps } from "react-native-svg"
+import Svg, { Circle, Path, SvgProps } from "react-native-svg"
 
-function SvgComponent(props : SvgProps) {
+function IconAddWhite(props : SvgProps) {
   return (
     <Svg
-      style={props.style}
-      viewBox="0 0 15 16"
-      fill="none"
-      {...props}
-    >
+      // xmlns="http://www.w3.org/2000/svg"
+      width={512}
+      height={512}
+      viewBox="0 0 469.333 469.333"
+      // enableBackground="new 0 0 512 512"
+      {...props}>
       <Path
-        d="M7.5 15.81a.725.725 0 01-.518-.22.755.755 0 01-.214-.528V1.248c0-.199.077-.389.214-.53a.725.725 0 011.036 0c.137.141.214.331.214.53v13.814a.755.755 0 01-.214.528.725.725 0 01-.518.22z"
+        d="M437.332 192h-160V32c0-17.664-14.336-32-32-32H224c-17.664 0-32 14.336-32 32v160H32c-17.664 0-32 14.336-32 32v21.332c0 17.664 14.336 32 32 32h160v160c0 17.664 14.336 32 32 32h21.332c17.664 0 32-14.336 32-32v-160h160c17.664 0 32-14.336 32-32V224c0-17.664-14.336-32-32-32zm0 0"
         fill="#fff"
-      />
-      <Path
-        d="M14.268 8.902H.732a.725.725 0 01-.517-.219.755.755 0 010-1.057.725.725 0 01.517-.219h13.536c.194 0 .38.079.518.22a.756.756 0 010 1.056.725.725 0 01-.518.22z"
-        fill="#fff"
+        data-original="#000000"
       />
     </Svg>
-  )
+  );
 }
 
-export default SvgComponent
+export default IconAddWhite;

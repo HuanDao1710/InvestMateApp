@@ -10,7 +10,7 @@ export const saveListNames = async (listNames : string[]) => {
     }
 };
 
-export const    getListNames = async () : Promise<string[]> => {
+export const  getListNames = async () : Promise<string[]> => {
     try {
       const jsonValue = await AsyncStorage.getItem('listNames');
       return jsonValue != null ? JSON.parse(jsonValue) : [];

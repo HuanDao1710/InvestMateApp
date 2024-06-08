@@ -28,7 +28,6 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {TrackingStockEntity, WatchlistEntity} from '../../type';
 import SQLiteContext from '../../sqlite/SQLContext';
 import AddWatchListModal from './AddWatchListModal';
-import {Item} from 'react-native-paper/lib/typescript/components/Drawer/Drawer';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -44,7 +43,7 @@ export const WatchlistHeader = (props: {onPressAdd: any}) => {
         alignItems: 'center',
       }}>
       <TouchableOpacity onPress={props.onPressAdd}>
-        <IconBlackAdd style={{height: '35%', aspectRatio: 1, margin: '3%'}} />
+        <IconBlackAdd style={{margin: '3%'}} width= {30} height={30} />
       </TouchableOpacity>
     </View>
   );
@@ -64,6 +63,8 @@ const GroupStock = (props: {
   const sqlite = useContext(SQLiteContext);
   const item = props.item;
 
+  const focus = useIsFocused();
+
   const fetchData = async () => {
     const _numStock = await sqlite.countTrackingStocks(item.id);
     setNumStock(_numStock);
@@ -72,12 +73,13 @@ const GroupStock = (props: {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (focus) fetchData();
+  }, [focus]);
 
   const handleViewSubList = () => {
+    const id = item.id;
     const title = item.name;
-    props.navigation.navigate('SubWatchList', {title, listTrackingStock});
+    props.navigation.navigate('SubWatchList', {id, title, listTrackingStock});
   };
 
   const handleDeleteWatchlist = () => {

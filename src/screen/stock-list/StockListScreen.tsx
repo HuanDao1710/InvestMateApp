@@ -29,7 +29,7 @@ import {API_CORE} from '../../api';
 import {StockTemporary, Industry} from '../../type';
 import ShortenedGraph from '../../charts/GhortenedChart';
 import {FlatList} from 'react-native-gesture-handler';
-import {IP, ROOT_PATH} from '../../constants';
+import { ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;

@@ -1,27 +1,30 @@
-import * as React from "react"
-import Svg, { G, Path, Defs, ClipPath, SvgProps } from "react-native-svg"
+import * as React from 'react';
+import Svg, {G, Path, Defs, ClipPath, SvgProps} from 'react-native-svg';
 
-function SvgComponent(props : SvgProps) {
+function IconBlackAdd(props: SvgProps) {
   return (
     <Svg
-      style={props.style}
-      viewBox="0 0 16 16"
-      fill="none"
-      {...props}
-    >
-      <G clipPath="url(#clip0_17_395)">
-        <Path
-          d="M14.571 6.571H9.714a.286.286 0 01-.285-.285V1.429a1.429 1.429 0 00-2.858 0v4.857a.286.286 0 01-.285.285H1.429a1.429 1.429 0 000 2.858h4.857a.286.286 0 01.285.285v4.857a1.429 1.429 0 002.858 0V9.714a.286.286 0 01.285-.285h4.857a1.429 1.429 0 000-2.858z"
-          fill="#000"
-        />
-      </G>
-      <Defs>
-        <ClipPath id="clip0_17_395">
-          <Path fill="#fff" d="M0 0H16V16H0z" />
-        </ClipPath>
-      </Defs>
+      // xmlns="http://www.w3.org/2000/svg"
+      width={512}
+      height={512}
+      viewBox="0 0 24 24"
+      fillRule="evenodd"
+      // enableBackground="new 0 0 512 512"
+      {...props}>
+      <Path
+        d="M11.25 6.5a.75.75 0 011.5 0v11a.75.75 0 01-1.5 0z"
+        data-original="#000000"
+      />
+      <Path
+        d="M6.5 12.75a.75.75 0 010-1.5h11a.75.75 0 010 1.5z"
+        data-original="#000000"
+      />
+      <Path
+        d="M22.75 6v12A4.75 4.75 0 0118 22.75H6A4.75 4.75 0 011.25 18V6A4.75 4.75 0 016 1.25h12A4.75 4.75 0 0122.75 6zm-1.5 0A3.247 3.247 0 0018 2.75H6A3.247 3.247 0 002.75 6v12A3.247 3.247 0 006 21.25h12A3.247 3.247 0 0021.25 18z"
+        data-original="#000000"
+      />
     </Svg>
-  )
+  );
 }
 
-export default SvgComponent
+export default IconBlackAdd;

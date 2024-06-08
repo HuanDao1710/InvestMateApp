@@ -9,7 +9,7 @@ import CashFlowChart from '../../charts/CashFlowChart';
 import EPSChart from '../../charts/EPSChart';
 import { API_CORE } from '../../api';
 import { ParamList } from './StockDetail';
-import { IP, ROOT_PATH } from '../../constants';
+import {  ROOT_PATH } from '../../constants';
 
 const StockAnanlysis = () => {
     const route = useRoute<RouteProp<ParamList>>();

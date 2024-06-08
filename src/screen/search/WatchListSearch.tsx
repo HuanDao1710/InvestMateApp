@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
@@ -13,14 +13,23 @@ import {API_CORE} from '../../api';
 import SearceBar from '../../common/SearchBar';
 import {ROOT_PATH} from '../../constants';
 import IconBack from '../../icons/IconBack';
-import {SearchDTO, StockInfoProps} from '../../type';
+import {SearchDTO, StockInfoProps, TrackingStockEntity} from '../../type';
 import {debounce} from 'lodash';
+import IconAddWhite from '../../icons/IconAddWhite';
+import CheckMarkIcon from '../../icons/CheckMarkIcon';
 
 const forFade = (current: any) => ({
   cardStyle: {
     opacity: current.progress,
   },
 });
+
+export type WatchListSearchProps = {
+  params: {
+    id: string;
+    listTrackingStock: TrackingStockEntity[];
+  };
+};
 
 const HighlightedText = (props: {text: string; keyword: string}) => {
   const {text, keyword} = props;
@@ -49,7 +58,12 @@ const highlightText = (text: string, key: string) => {
   return <HighlightedText text={text} keyword={key} />;
 };
 
-const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
+const ItemResult = (props: {
+  company: SearchDTO;
+  keyword: string;
+  watchlistID: string;
+  alreadyExist: boolean;
+}) => {
   const {company, keyword} = props;
   const navigation = useNavigation<any>();
 
@@ -87,9 +101,10 @@ const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
       <View
         style={{
           height: '100%',
-          width: '85%',
+
           alignItems: 'flex-start',
           justifyContent: 'space-around',
+          flex: 1,
         }}>
         <Text
           style={{
@@ -108,15 +123,41 @@ const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
           {/* {item.code} */}
         </Text>
       </View>
-      <View style={{height: '100%', width: '15%'}}></View>
+
+      <View
+        style={{
+          height: '100%',
+          justifyContent: 'center',
+          marginRight: 10,
+          width: 45,
+          alignItems: 'center',
+        }}>
+        {!props.alreadyExist ? (
+          <TouchableOpacity
+            style={{
+              width: 45,
+              height: 20,
+              borderRadius: 20,
+              backgroundColor: '#3961F8',
+              padding: 3,
+              elevation: 3,
+            }}>
+            <IconAddWhite />
+          </TouchableOpacity>
+        ) : (
+          <CheckMarkIcon width={25} height={25} />
+        )}
+      </View>
     </TouchableOpacity>
   );
 };
 
-const SearchScreen = () => {
+const WatchListSearch = () => {
   const navigation = useNavigation<any>();
   const [results, setResults] = useState<StockInfoProps[]>([]);
   const [key, setKey] = useState<string>('');
+  const route = useRoute<RouteProp<WatchListSearchProps>>();
+  const watchlistID = route.params.id;
 
   const search = debounce(async (keyword: string) => {
     try {
@@ -164,6 +205,12 @@ const SearchScreen = () => {
     });
   });
 
+  const checkAlreadyExist = (item: StockInfoProps) => {
+    const r = route.params.listTrackingStock.find(i => i.code === item.code);
+    if (r != null) return true;
+    return false;
+  };
+
   const onTextChange = (text: string) => {
     setKey(text);
     search(text);
@@ -177,7 +224,13 @@ const SearchScreen = () => {
           <FlatList
             data={results}
             renderItem={({item, index}) => (
-              <ItemResult key={index} company={item} keyword={key} />
+              <ItemResult
+                key={index}
+                company={item}
+                keyword={key}
+                watchlistID={watchlistID}
+                alreadyExist={checkAlreadyExist(item)}
+              />
             )}
           />
         ) : (
@@ -190,7 +243,7 @@ const SearchScreen = () => {
   );
 };
 
-export default SearchScreen;
+export default WatchListSearch;
 
 const styles = StyleSheet.create({
   highlight: {

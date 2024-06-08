@@ -25,6 +25,7 @@ import FilterResults from './src/screen/filter/FilterResults';
 import {NewsView} from './src/screen/details/StockNews';
 import PersonalFilter from './src/screen/filter/PersonalFilter';
 import SuggestFilter from './src/screen/filter/SuggestFilter';
+import WatchListSearch from './src/screen/search/WatchListSearch';
 
 const windowWidth = Dimensions.get('window').width;
 const Tab = createBottomTabNavigator();
@@ -35,7 +36,9 @@ const App = () => {
     <SQLiteContextProvider>
       <MenuProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName={"CreateFilter"}>
+          <Stack.Navigator
+          // initialRouteName={"CreateFilter"}
+          >
             {/* <Stack.Screen
               name="StockAnanlysis"
               component={StockAnanlysis}
@@ -54,10 +57,15 @@ const App = () => {
             />
             <Stack.Screen name="SubWatchList" component={SubWatchList} />
             <Stack.Screen name="SearchScreen" component={SearchScreen} />
+            <Stack.Screen name="WatchListSearch" component={WatchListSearch} />
             <Stack.Screen name="CreateFilter" component={CreateFilter} />
-            <Stack.Screen name="PersonalFilter" component={PersonalFilter}/>
-            <Stack.Screen name="SuggestFilter" component={SuggestFilter}/>
-            <Stack.Screen name="FilterResults" component={FilterResults} options={{title: "Kết quả lọc"}} />
+            <Stack.Screen name="PersonalFilter" component={PersonalFilter} />
+            <Stack.Screen name="SuggestFilter" component={SuggestFilter} />
+            <Stack.Screen
+              name="FilterResults"
+              component={FilterResults}
+              options={{title: 'Kết quả lọc'}}
+            />
             <Stack.Screen name="NewsView" component={NewsView} />
           </Stack.Navigator>
         </NavigationContainer>

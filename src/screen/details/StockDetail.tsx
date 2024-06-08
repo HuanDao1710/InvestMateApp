@@ -16,7 +16,7 @@ import {StockTemporary, Industry} from '../../type';
 
 export type ParamList = {
   stockinfo: {
-    item: StockTemporary;
+    item: StockTemporary; 
   };
 };
 

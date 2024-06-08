@@ -18,7 +18,6 @@ const SearceBar = (props: {
   style?: ViewStyle;
   handleTextChange?: any;
 }) => {
-  const navigation = useNavigation<any>();
   const [text, setText] = React.useState('');
   const handleTextChange = (inputText: string) => {
     props.handleTextChange(inputText);
