@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useLayoutEffect, useState} from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -10,7 +10,6 @@ import {
   TouchableHighlight,
   Alert,
 } from 'react-native';
-import {DataTable} from 'react-native-paper';
 import IconTime from '../../icons/IconTime';
 import IconChart from '../../icons/IconChart';
 import SMG from '../../common/SMG';
@@ -24,15 +23,15 @@ import {
   MenuTrigger,
   MenuOption,
 } from 'react-native-popup-menu';
-import {useIsFocused, useNavigation} from '@react-navigation/native';
-import {TrackingStockEntity, WatchlistEntity} from '../../type';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { TrackingStockEntity, WatchlistEntity } from '../../type';
 import SQLiteContext from '../../sqlite/SQLContext';
 import AddWatchListModal from './AddWatchListModal';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
 
-export const WatchlistHeader = (props: {onPressAdd: any}) => {
+export const WatchlistHeader = (props: { onPressAdd: any }) => {
   return (
     <View
       style={{
@@ -43,7 +42,7 @@ export const WatchlistHeader = (props: {onPressAdd: any}) => {
         alignItems: 'center',
       }}>
       <TouchableOpacity onPress={props.onPressAdd}>
-        <IconBlackAdd style={{margin: '3%'}} width= {30} height={30} />
+        <IconBlackAdd style={{ margin: '3%' }} width={30} height={30} />
       </TouchableOpacity>
     </View>
   );
@@ -79,7 +78,7 @@ const GroupStock = (props: {
   const handleViewSubList = () => {
     const id = item.id;
     const title = item.name;
-    props.navigation.navigate('SubWatchList', {id, title, listTrackingStock});
+    props.navigation.navigate('SubWatchList', { id, title, listTrackingStock });
   };
 
   const handleDeleteWatchlist = () => {
@@ -87,7 +86,7 @@ const GroupStock = (props: {
       'Xoá danh mục theo dõi',
       'Bạn có chắc muốn xoá danh mục ' + item.name + ' không?',
       [
-        {text: 'Huỷ', onPress: () => {}},
+        { text: 'Huỷ', onPress: () => { } },
         {
           text: 'Xoá',
           onPress: () => {
@@ -101,12 +100,12 @@ const GroupStock = (props: {
   return (
     <TouchableOpacity style={styles.groupStock} onPress={handleViewSubList}>
       <View style={styles.groupContent}>
-        <IconStar style={{height: '50%', aspectRatio: 1, margin: '5%'}} />
-        <View style={{justifyContent: 'center', alignItems: 'flex-start'}}>
-          <Text style={{color: 'black', fontWeight: '700', fontSize: 15}}>
+        <IconStar style={{ height: '50%', aspectRatio: 1, margin: '5%' }} />
+        <View style={{ justifyContent: 'center', alignItems: 'flex-start' }}>
+          <Text style={{ color: 'black', fontWeight: '700', fontSize: 15 }}>
             {item.name}
           </Text>
-          <Text style={{color: 'black'}}>{numStock} Mã CP</Text>
+          <Text style={{ color: 'black' }}>{numStock} Mã CP</Text>
         </View>
       </View>
       <Menu
@@ -117,19 +116,19 @@ const GroupStock = (props: {
           height: '100%',
         }}>
         <MenuTrigger
-          style={{width: 'auto', height: '100%', justifyContent: 'center'}}>
-          <IconThreeDot style={{height: '35%', aspectRatio: 1, margin: '5%'}} />
+          style={{ width: 'auto', height: '100%', justifyContent: 'center' }}>
+          <IconThreeDot style={{ height: '35%', aspectRatio: 1, margin: '5%' }} />
         </MenuTrigger>
         <MenuOptions
-          customStyles={{optionsContainer: {borderRadius: 10, width: '30%'}}}>
+          customStyles={{ optionsContainer: { borderRadius: 10, width: '30%' } }}>
           <MenuOption
             onSelect={() => {
               props.handleEdit(item.name, item.id);
             }}>
-            <Text style={{color: 'black', fontSize: 14}}>Chỉnh sửa</Text>
+            <Text style={{ color: 'black', fontSize: 14 }}>Chỉnh sửa</Text>
           </MenuOption>
           <MenuOption onSelect={handleDeleteWatchlist}>
-            <Text style={{color: 'black', fontSize: 14}}>Xoá</Text>
+            <Text style={{ color: 'black', fontSize: 14 }}>Xoá</Text>
           </MenuOption>
         </MenuOptions>
       </Menu>
@@ -155,14 +154,14 @@ const WatchlistScreen = () => {
 
   const handleAdd = () => {
     setTitle('Thêm danh mục theo dõi');
-    setButton1({text: 'Huỷ', action: handleCacel});
-    setButton2({text: 'Lưu', action: createWatchList});
+    setButton1({ text: 'Huỷ', action: handleCacel });
+    setButton2({ text: 'Lưu', action: createWatchList });
     setVisible(true);
   };
 
   const handleEdit = (name: string, id: number) => {
     setTitle('Chỉnh sửa danh mục theo dõi');
-    setButton1({text: 'Huỷ', action: handleCacel});
+    setButton1({ text: 'Huỷ', action: handleCacel });
     setButton2({
       text: 'Cập nhật',
       action: (text: string) => editWatchlist(text, id),
@@ -172,14 +171,14 @@ const WatchlistScreen = () => {
   };
 
   const createWatchList = (watchlistName: string) => {
-    sqlite.createWatchlist({id: 1, name: watchlistName});
+    sqlite.createWatchlist({ id: 1, name: watchlistName });
     setVisible(false);
     fetchWatchList();
     setMessage(undefined);
   };
 
   const deleteWatchlist = (watchlistName: string, id: number) => {
-    sqlite.deleteWatchlist({name: watchlistName, id: id});
+    sqlite.deleteWatchlist({ name: watchlistName, id: id });
     setVisible(false);
     fetchWatchList();
   };
@@ -238,7 +237,7 @@ const WatchlistScreen = () => {
           ))}
         </View>
       </View>
-      <View style={{paddingBottom: '15%'}}></View>
+      <View style={{ paddingBottom: '15%' }}></View>
     </ScrollView>
   );
 };

@@ -30,7 +30,7 @@ const AddWatchListModal = (props : WatchListModalProps) => {
 
     return (
         <Modal transparent visible={props.visible} animationType="slide">
-        <View style={styles.modalContainer}>
+            <View style={styles.modalContainer}>
             <View style={styles.innerContainer}>
                 <View style={styles.titleContainer}>
                     <Text style={{color: "black", fontWeight: "600", fontSize: 18}}>

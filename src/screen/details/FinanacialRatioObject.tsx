@@ -6,7 +6,7 @@ export interface BasicIndexType {
 
 export const FinancialRatios = {
     percentDay : {
-        code : "% Thay đổi trong tuần",
+        code : "% Thay đổi trong ngày",
         name : "% Thay đổi trong ngày",
         explain: "Được tính bằng phần trăm sự chênh lệch giá mở cửa và đóng cửa trong ngày."
     },

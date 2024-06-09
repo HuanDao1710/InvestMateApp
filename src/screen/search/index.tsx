@@ -1,5 +1,5 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useState} from 'react';
+import { useNavigation } from '@react-navigation/native';
+import React, { useLayoutEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,12 +9,13 @@ import {
   FlatList,
   ToastAndroid,
 } from 'react-native';
-import {API_CORE} from '../../api';
+import { API_CORE } from '../../api';
 import SearceBar from '../../common/SearchBar';
-import {ROOT_PATH} from '../../constants';
+import { ROOT_PATH } from '../../constants';
 import IconBack from '../../icons/IconBack';
-import {SearchDTO, StockInfoProps} from '../../type';
-import {debounce} from 'lodash';
+import { SearchDTO, StockInfoProps } from '../../type';
+import { debounce } from 'lodash';
+import { ActivityIndicator } from 'react-native-paper';
 
 const forFade = (current: any) => ({
   cardStyle: {
@@ -22,8 +23,8 @@ const forFade = (current: any) => ({
   },
 });
 
-const HighlightedText = (props: {text: string; keyword: string}) => {
-  const {text, keyword} = props;
+const HighlightedText = (props: { text: string; keyword: string }) => {
+  const { text, keyword } = props;
   if (keyword === '') return <Text>{text}</Text>;
   const regex = new RegExp(keyword, 'gi'); // 'gi' để tìm kiếm không phân biệt hoa thường
   const matches = text.match(regex);
@@ -49,8 +50,8 @@ const highlightText = (text: string, key: string) => {
   return <HighlightedText text={text} keyword={key} />;
 };
 
-const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
-  const {company, keyword} = props;
+const ItemResult = (props: { company: SearchDTO; keyword: string }) => {
+  const { company, keyword } = props;
   const navigation = useNavigation<any>();
 
   const handlePressItem = async () => {
@@ -65,7 +66,7 @@ const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
       );
       if (res.status === 200) {
         const item = res.data;
-        navigation.navigate('StockDetail', {item});
+        navigation.navigate('StockDetail', { item });
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -101,14 +102,14 @@ const ItemResult = (props: {company: SearchDTO; keyword: string}) => {
           {/* {item.name} */}
           {highlightText(company.name, keyword)}
         </Text>
-        <Text style={{color: 'black', marginLeft: 15}}>
+        <Text style={{ color: 'black', marginLeft: 15 }}>
           Sàn: {highlightText(company.exchange, keyword)} | Mã CP:{' '}
           {/* Sàn: {item.exchange} | Mã CP:{' '} */}
           {highlightText(company.code, keyword)}
           {/* {item.code} */}
         </Text>
       </View>
-      <View style={{height: '100%', width: '15%'}}></View>
+      <View style={{ height: '100%', width: '15%' }}></View>
     </TouchableOpacity>
   );
 };
@@ -117,9 +118,11 @@ const SearchScreen = () => {
   const navigation = useNavigation<any>();
   const [results, setResults] = useState<StockInfoProps[]>([]);
   const [key, setKey] = useState<string>('');
+  const [loading, setLoading] = useState(false);
 
   const search = debounce(async (keyword: string) => {
     try {
+      setLoading(true)
       const res = await API_CORE.get<any>(
         `${ROOT_PATH}/invest_mate/api/home/search`,
         {
@@ -138,6 +141,8 @@ const SearchScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false)
     }
   }, 200);
 
@@ -156,7 +161,7 @@ const SearchScreen = () => {
             borderBottomColor: '#DFDFDF',
           }}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <IconBack style={{width: 23, aspectRatio: 1, margin: 15}} />
+            <IconBack style={{ width: 23, aspectRatio: 1, margin: 15 }} />
           </TouchableOpacity>
           <SearceBar enable={true} handleTextChange={onTextChange} />
         </View>
@@ -170,19 +175,25 @@ const SearchScreen = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{ flex: 1 }}>
+      {loading && <View style={{ width: '100%', height: "100%", position: 'absolute', backgroundColor: 'white', zIndex: 10, }}>
+        <View style={{ position: "absolute", width: "100%", height: "100%", alignItems: "center", justifyContent: 'center' }}>
+          <ActivityIndicator size="large" color="grey" />
+          <Text style={{ color: "grey", margin: 5, fontSize: 14, fontWeight: "500" }}>Đang tải...</Text>
+        </View>
+      </View>}
       <View
-        style={{height: 'auto', width: '100%', marginTop: 5, borderWidth: 0}}>
+        style={{ height: 'auto', width: '100%', marginTop: 5, borderWidth: 0 }}>
         {results.length > 0 ? (
           <FlatList
             data={results}
-            renderItem={({item, index}) => (
+            renderItem={({ item, index }) => (
               <ItemResult key={index} company={item} keyword={key} />
             )}
           />
         ) : (
-          <View style={{width: '100%', height: '100%'}}>
-            <Text></Text>
+          <View style={{ width: '100%', height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+            <Text style={{ color: '#CDCDCD', fontSize: 16 }}>Nhập từ khoá để tìm kiếm</Text>
           </View>
         )}
       </View>

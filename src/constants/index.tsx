@@ -12,3 +12,10 @@ export type RootRouter = {
     watchlistId: string
   }
 };
+
+export const COLOR = {
+  primaryColor: "#141ffc",
+  secoundaryColor: "#b8c4ff",
+  greenColor: "#1DC787",
+  redColor: "#f65959",
+}

@@ -70,7 +70,7 @@ const PersonalFilter = () => {
             onPress={() => {
               navigation.navigate('CreateFilter');
             }}>
-            <IconAddWhite width={15} height={15} />
+            <IconAddWhite height={15} width={15} fill={'white'}/>
             <Text
               style={{
                 color: 'white',

@@ -408,9 +408,11 @@ const StockOverview = () => {
                 backgroundColor: '#3961F8',
                 padding: 3,
                 margin: 8,
-                elevation: 3
+                elevation: 3,
+                justifyContent:'center',
+                alignItems:'center'
               }}>
-              <IconAddWhite />
+              <IconAddWhite height={12} width={12} fill={'white'}/>
             </TouchableOpacity>
           </View>
         </View>

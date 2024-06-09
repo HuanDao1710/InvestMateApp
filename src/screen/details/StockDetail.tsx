@@ -6,7 +6,6 @@ import StockAnanlysis from './StockAnalysis';
 import StockNews from './StockNews';
 import IconSearch from '../../icons/IconSearch';
 import {
-  NavigationProp,
   RouteProp,
   useNavigation,
   useRoute,

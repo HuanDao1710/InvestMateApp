@@ -73,20 +73,73 @@ const SQLiteContextProvider = ({children}: {children: React.ReactNode}) => {
     });
   }, []);
 
-  const createTrackingStocks = (value: TrackingStockEntity) => {
-    if (!dbRef.current) return;
-    dbRef.current.transaction(tx =>
-      tx.executeSql(`INSERT into tracking_stocks (code, watchlist)
-          VALUES("${value.code}","${value.watchlist}")`),
-    );
+  const createTrackingStocks = (value: TrackingStockEntity) : Promise<TrackingStockEntity | null> => {
+    return new Promise((resolve, reject) => {
+      if (!dbRef.current) return resolve(null);
+  
+      dbRef.current.transaction(tx => {
+        tx.executeSql(
+          `INSERT into tracking_stocks (code, watchlist) VALUES (?, ?)`,
+          [value.code, value.watchlist],
+          (_, result) => {
+            const insertId = result.insertId;
+            tx.executeSql(
+              `SELECT * FROM tracking_stocks WHERE id = ?`,
+              [insertId],
+              (_, { rows }) => {
+                if (rows.length > 0) {
+                  resolve(rows.item(0) as TrackingStockEntity);
+                } else {
+                  resolve(null);
+                }
+              },
+              (tx, error) => {
+                reject(error);
+                return false;
+              }
+            );
+          },
+          (tx, error) => {
+            reject(error);
+            return false;
+          }
+        );
+      });
+    });
   };
+  
 
-  const deleteTrackingStocks = (value: TrackingStockEntity) => {
-    if (!dbRef.current) return;
-    dbRef.current.transaction(tx =>
-      tx.executeSql(`DELETE FROM watchlist WHERE id = ?1`, [value.id]),
-    );
+  const deleteTrackingStocks = (value: TrackingStockEntity): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      if (!dbRef.current) {
+        reject(false);
+        return;
+      }
+  
+      dbRef.current.transaction(
+        tx => {
+          tx.executeSql(
+            'DELETE FROM tracking_stocks WHERE id = ?',
+            [value.id],
+            (_, result) => {
+              if (result.rowsAffected > 0) {
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            },
+            error => {
+              reject(false);
+            }
+          );
+        },
+        error => {
+          reject(false);
+        }
+      );
+    });
   };
+  
   //Stock FIlter
   
 

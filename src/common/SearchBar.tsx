@@ -62,7 +62,7 @@ export default SearceBar;
 const styles = StyleSheet.create({
   container: {
     width: '85%',
-    height: '60%',
+    height: '65%',
     right: '5%',
     borderRadius: 100,
     alignItems: 'center',
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     width: '88%',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     borderColor: 'grey',
     height: '70%',
     alignItems: 'center',
