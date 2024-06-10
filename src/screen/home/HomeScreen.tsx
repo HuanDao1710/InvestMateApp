@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,13 +7,15 @@ import {
   Dimensions,
   Touchable,
   TouchableOpacity,
+  FlatList,
+  ViewToken,
 } from 'react-native';
-import {DataTable} from 'react-native-paper';
+import { DataTable } from 'react-native-paper';
 import IconTime from '../../icons/IconTime';
 import IconChart from '../../icons/IconChart';
 import SMG from '../../common/SMG';
 import IconSmallAdd from '../../icons/IconSmallAdd';
-import {API_CORE} from '../../api';
+import { API_CORE } from '../../api';
 import {
   arrayToGraphData,
   convertEpochToDateString,
@@ -22,9 +24,9 @@ import {
 import ChartDetail from '../../charts/ChartDetail';
 import ShortenedGraph from '../../charts/GhortenedChart';
 import DetailChart2 from '../../charts/DetailChart2';
-import {StockTemporary} from '../../type';
-import {useNavigation} from '@react-navigation/native';
-import {ROOT_PATH} from '../../constants';
+import { StockTemporary } from '../../type';
+import { useNavigation } from '@react-navigation/native';
+import { ROOT_PATH } from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -43,7 +45,7 @@ interface IndexPropsStyle {
 
 const indexContent = (data: IndexPropsStyle) => {
   const priceColor =
-    data.priceChange > 0 ? {color: '#37c284'} : {color: '#f65959'};
+    data.priceChange > 0 ? { color: '#37c284' } : { color: '#f65959' };
   const price = data.price.toFixed(2);
   const volume = (data.volume / 1e6).toFixed(2);
   const priceChange = data.priceChange.toFixed(2);
@@ -51,7 +53,7 @@ const indexContent = (data: IndexPropsStyle) => {
     data.priceChange > 0 ? '+' + priceChange : priceChange;
   const percentChange = ((data.priceChange / data.price) * 100).toFixed(2);
   const percentChangeText =
-    data.priceChange > 0 ? '+' + percentChange + '%' : percentChange;
+    data.priceChange > 0 ? '+' + percentChange + '%' :  percentChange + '%';
   const transactionValue =
     data.transactionValue > 0 ? data.transactionValue : '_._';
   const updateTime = convertEpochToTimeString(data.updateTime);
@@ -82,14 +84,14 @@ const indexContent = (data: IndexPropsStyle) => {
           alignItems: 'center',
         }}>
         <View style={styles.indexContentDetail}>
-          <Text style={{color: 'black', fontSize: 14, fontWeight: '600'}}>
+          <Text style={{ color: 'black', fontSize: 14, fontWeight: '600' }}>
             {data.name}
           </Text>
-          <Text style={[{fontSize: 16, fontWeight: '600'}, priceColor]}>
+          <Text style={[{ fontSize: 16, fontWeight: '600' }, priceColor]}>
             {price}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
+        <View style={[styles.indexContentDetail, { height: '30%' }]}>
           <View
             style={{
               width: 'auto',
@@ -98,16 +100,16 @@ const indexContent = (data: IndexPropsStyle) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <IconTime style={{width: 10, height: 10, marginRight: 5}} />
-            <Text style={{color: '#7e7e7e', fontSize: 10}}>{updateTime}</Text>
+            <IconTime style={{ width: 10, height: 10, marginRight: 5 }} />
+            <Text style={{ color: '#7e7e7e', fontSize: 10 }}>{updateTime}</Text>
           </View>
-          <Text style={[{fontSize: 10, fontWeight: '600'}, priceColor]}>
+          <Text style={[{ fontSize: 10, fontWeight: '600' }, priceColor]}>
             {priceChangeText}/{percentChangeText}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>{volume} triệu</Text>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>
+        <View style={[styles.indexContentDetail, { height: '30%' }]}>
+          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>{volume} triệu</Text>
+          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>
             {transactionValue} nghìn tỷ
           </Text>
         </View>
@@ -118,7 +120,7 @@ const indexContent = (data: IndexPropsStyle) => {
 
 const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
   const colorStyle = (n: number) => {
-    if (n < 0) return {color: '#f65959'};
+    if (n < 0) return { color: '#f65959' };
     return {};
   };
   console.log(props.code);
@@ -134,11 +136,11 @@ const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
           <Text
             style={[
               styles.textCell,
-              {color: 'black', width: '60%', fontWeight: '500'},
+              { color: 'black', width: '60%', fontWeight: '500' },
             ]}>
             {props.code}
           </Text>
-          <IconSmallAdd style={{width: 13, aspectRatio: 1, margin: '6%'}} />
+          <IconSmallAdd style={{ width: 13, aspectRatio: 1, margin: '6%' }} />
         </TouchableOpacity>
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
@@ -151,7 +153,7 @@ const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
         />
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
-        <SMG style={{width: '55%', aspectRatio: 1}} smg={props.smg} />
+        <SMG style={{ width: '55%', aspectRatio: 1 }} smg={props.smg} />
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
         <Text style={[styles.textCell]}>{props.price.toFixed(1)}</Text>
@@ -209,14 +211,32 @@ const HomeScreen = () => {
     IndexPropsStyle[]
   >([]);
   const [top10Stock, setTop10Stock] = React.useState<StockTemporary[]>([]);
+  const flatListRef = React.useRef<FlatList | null>(null);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
 
   const navigation = useNavigation<any>();
   // navigation.navigate("StockNews");
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % 2;
+        if (flatListRef.current) {
+          flatListRef.current.scrollToIndex({ animated: true, index: nextIndex });
+        }
+        return nextIndex;
+      });
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
   const getDataIndex = async () => {
     try {
-      const res = await API_CORE.get<any>(
+      const res = await API_CORE.post<any>(
         `${ROOT_PATH}/invest_mate/api/home/index`,
+        {
+          'indexes': ['VNINDEX', 'VN30', 'HNX', 'HNX30']
+        }
       );
       if (res.status === 200) {
         setIndexOverViewData(res.data);
@@ -252,6 +272,16 @@ const HomeScreen = () => {
     getDataStock();
   }, []);
 
+  const handleOnViewableItemsChanged = React.useRef(
+    ({ viewableItems }: { viewableItems: Array<ViewToken> }) => {
+      // setActive(viewableItems[0].index || 0);
+    },
+  ).current;
+
+  const viewabilityConfig = React.useRef({
+    itemVisiblePercentThreshold: 50,
+  }).current;
+
   return (
     <ScrollView>
       <View
@@ -265,34 +295,84 @@ const HomeScreen = () => {
           <Text style={styles.title}>Tổng quan</Text>
           <Text style={styles.updateTime}>Ngày cập nhật: {updateTime}</Text>
         </View>
-        <View style={styles.index}>
-          <View
-            style={{
-              height: '83%',
-              backgroundColor: '#f4f5f7',
-              flexDirection: 'row',
-              alignItems: 'center',
-              width: '100%',
-            }}>
-            {indexOverViewData[0] != undefined ? (
-              indexContent(indexOverViewData[0])
-            ) : (
-              <View style={styles.indexContent} />
+        <View style={{
+          backgroundColor: 'white',
+          width: '100%',
+          height: windowHeight * 0.3,
+          margin: '1%',
+          borderRadius: 20,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <FlatList
+            snapToAlignment="center"
+            ref={r => {
+              flatListRef.current = r;
+            }}
+            viewabilityConfig={viewabilityConfig}
+            showsHorizontalScrollIndicator={false}
+            horizontal
+            data={[1, 2]}
+            pagingEnabled
+            style={{ flex: 1 }}
+            contentContainerStyle={{ alignItems: 'center' }}
+            progressViewOffset={2}
+            onViewableItemsChanged={handleOnViewableItemsChanged}
+            renderItem={({ item }) => (
+              <View
+                key={item}
+                style={{
+                  height: 220, // Sử dụng chiều cao màn hình với tỷ lệ phần trăm hợp lý
+                  backgroundColor: '#f4f5f7',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: windowWidth, // Đặt chiều rộng của mỗi mục bằng chiều rộng màn hình
+                }}
+              >
+                {item === 1 ?
+                  <>
+                    {indexOverViewData[0] !== undefined ? (
+                      indexContent(indexOverViewData[0])
+                    ) : (
+                      <View style={styles.indexContent} />
+                    )}
+                    <View
+                      style={{
+                        height: '50%',
+                        borderWidth: 0.5,
+                        borderColor: '#727272',
+                        borderStyle: 'dashed',
+                      }}
+                    />
+                    {indexOverViewData[1] !== undefined ? (
+                      indexContent(indexOverViewData[1])
+                    ) : (
+                      <View style={styles.indexContent} />
+                    )}
+                  </> :
+                  <>
+                    {indexOverViewData[2] !== undefined ? (
+                      indexContent(indexOverViewData[2])
+                    ) : (
+                      <View style={styles.indexContent} />
+                    )}
+                    <View
+                      style={{
+                        height: '50%',
+                        borderWidth: 0.5,
+                        borderColor: '#727272',
+                        borderStyle: 'dashed',
+                      }}
+                    />
+                    {indexOverViewData[3] !== undefined ? (
+                      indexContent(indexOverViewData[3])
+                    ) : (
+                      <View style={styles.indexContent} />
+                    )}
+                  </>}
+              </View>
             )}
-            <View
-              style={{
-                height: '50%',
-                borderWidth: 0.5,
-                borderColor: '#727272',
-                borderStyle: 'dashed',
-              }}
-            />
-            {indexOverViewData[0] != undefined ? (
-              indexContent(indexOverViewData[1])
-            ) : (
-              <View style={styles.indexContent} />
-            )}
-          </View>
+          />
         </View>
         <View style={styles.topStock}>
           <View style={styles.tableContainer}>
@@ -314,7 +394,7 @@ const HomeScreen = () => {
                 Top cổ phiếu mạnh nhất
               </Text>
             </View>
-            <View style={{width: '100%', height: 'auto'}}>
+            <View style={{ width: '100%', height: 'auto' }}>
               <DataTable>
                 <DataTable.Header>
                   <DataTable.Title style={styles.cell}>Mã</DataTable.Title>
@@ -359,7 +439,7 @@ const HomeScreen = () => {
                     </View>           
                 </View> */}
       </View>
-      <View style={{paddingBottom: '15%'}}></View>
+      <View style={{ paddingBottom: '15%' }}></View>
     </ScrollView>
   );
 };
