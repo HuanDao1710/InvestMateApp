@@ -1,16 +1,12 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useLayoutEffect} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView, FlatList, ActivityIndicator, Dimensions} from 'react-native';
+import {View, Text, SafeAreaView, FlatList, ActivityIndicator, Dimensions} from 'react-native';
 import { API_CORE } from '../../api';
 import { ROOT_PATH } from '../../constants';
-// import IconBlackAdd from '../../icons/IconBlackAdd';
-// import IconLeft from '../../icons/IconLeft';
 import { StockTemporary } from '../../type';
 import { renderStock } from '../stock-list/StockListScreen';
 
 const screenHeight = Dimensions.get("window").height;
-
-
 
 
 const FilterResults = () => {

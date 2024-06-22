@@ -2,7 +2,6 @@ import {useNavigation} from '@react-navigation/native';
 import React, {useLayoutEffect, useState} from 'react';
 import {
   Dimensions,
-  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -11,17 +10,13 @@ import {
 import IconSave from '../../icons/IconSave';
 import {ScrollView} from 'react-native';
 import {Dropdown} from 'react-native-element-dropdown';
-import {CriteriaType, Industry} from '../../type';
-import {ROOT_PATH} from '../../constants';
+import {CriteriaType, Industry, StockFilterCriteria} from '../../type';
+import {COLOR, ROOT_PATH} from '../../constants';
 import {API_CORE} from '../../api';
-import {FlatList} from 'react-native-gesture-handler';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import IconGreyX from '../../icons/IconGeyX';
-import IconGreyV from '../../icons/IconGeyV';
-import IconGreyAdd from '../../icons/IconGreyAdd';
 import {ModalBaseRefType} from '../../common/ModalBase';
 import ModalBaseSlide from '../../common/ModalBaseSlide';
-// import AddWatchListModal from '../Watchlist/AddWatchListModal';
 import AddConditionModal from './AddConditionModal';
 
 const exchangeData = [
@@ -34,10 +29,20 @@ const exchangeData = [
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
 
+function formatNumber(number: number) {
+  if (number >= 1000000 || number < -1000000) {
+    return (number / 1000000).toFixed(2) + 'M';
+  }
+  if (number >= 1000 || number < -1000) {
+    return (number / 1000).toFixed(2) + 'K';
+  }
+  return number.toFixed(2);
+}
+
 const CriteriaItem = (props: {
   item: CriteriaType;
-  removeSelf: () => void;
-  updateItem: () => void;
+  removeSelf: (item: CriteriaType) => void;
+  updateItem: (item: CriteriaType, value1: number, value2: number) => void;
 }) => {
   const minValue = props.item.minValue;
   const maxValue = props.item.maxValue;
@@ -48,14 +53,7 @@ const CriteriaItem = (props: {
   ]);
 
   const calculateRealValue = (value: number) => {
-    return (value * step + minValue).toFixed(2);
-  };
-
-  const multiSliderValuesChange = (values: any) => {
-    setValues(values);
-  };
-  const handleUpdateItem = () => {
-    props.updateItem();
+    return value * step + minValue;
   };
 
   return (
@@ -95,12 +93,19 @@ const CriteriaItem = (props: {
               width: 50,
               fontSize: 12,
             }}>
-            {calculateRealValue(values[0])}
+            {formatNumber(calculateRealValue(values[0]))}
           </Text>
           <MultiSlider
             values={values}
             sliderLength={200}
             onValuesChange={val => setValues(val)}
+            onValuesChangeFinish={val =>
+              props.updateItem(
+                props.item,
+                calculateRealValue(val[0]),
+                calculateRealValue(val[1]),
+              )
+            }
             min={0}
             max={200}
             step={1}
@@ -124,7 +129,7 @@ const CriteriaItem = (props: {
               width: 50,
               fontSize: 12,
             }}>
-            {calculateRealValue(values[1])}
+            {formatNumber(calculateRealValue(values[1]))}
           </Text>
         </View>
       </View>
@@ -138,7 +143,7 @@ const CriteriaItem = (props: {
           alignItems: 'center',
           borderRadius: 5,
         }}
-        onPress={() => props.removeSelf()}>
+        onPress={() => props.removeSelf(props.item)}>
         <IconGreyX style={{width: '30%', aspectRatio: 1}} />
       </TouchableOpacity>
     </View>
@@ -266,7 +271,6 @@ const CriteriaItem = (props: {
 
 const CreateFilter = () => {
   const navigation = useNavigation<any>();
-  const [isModalVisible, setModalVisible] = React.useState(false);
   const [criteriaList, setCriteriaList] = useState<CriteriaType[]>([]);
   const [listIndustry, setListIndustry] = React.useState<Industry[]>([
     {industry: 'Tất cả ngành', industryId: ''},
@@ -279,9 +283,9 @@ const CreateFilter = () => {
     industry: 'Tất cả ngành',
     industryId: '',
   });
-  // const [smallList, setSmallList] = useState<any[]>([]);
   // const [loading, setLoading] = React.useState(false);
   const addConditionModalRef = React.useRef<ModalBaseRefType | null>(null);
+  const DataCriteriaFilterRef = React.useRef<CriteriaType[]>([]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -322,8 +326,9 @@ const CreateFilter = () => {
         `${ROOT_PATH}/invest_mate/api/stock_filter/list_criteria`,
       );
       if (res.status === 200) {
-        console.log(res.data);
-        setCriteriaList(res.data);
+        // console.log(res.data);
+        // setCriteriaList(res.data);
+        DataCriteriaFilterRef.current = res.data;
         // setSmallList(res.data.slice(0, 3));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
@@ -335,27 +340,30 @@ const CreateFilter = () => {
     // setLoading(true)
   };
 
-  // const addItem = (item: any) => {
-  //   setSmallList([...smallList, item]);
-  // };
-
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
+  const addItem = (rawItem: StockFilterCriteria) => {
+    const item = DataCriteriaFilterRef.current.find(i => i.key === rawItem.key);
+    if (item) {
+      setCriteriaList([...criteriaList, item]);
+    }
   };
 
-  // const removeItem = (item: CriteriaType) => {
-  //   setSmallList(smallList.filter(i => i.name !== item.name));
-  // };
+  const removeItem = (item: StockFilterCriteria) => {
+    setCriteriaList(criteriaList.filter(i => i.name !== item.name));
+  };
 
-  const udpateValueItem = (item: any, values: any) => {
-    // setSmallList(
-    //   smallList.map(i => {
-    //     if (i.name === item.name) {
-    //       return {...i, currentMinValue: values[0], currentMaxValue: values[1]};
-    //     }
-    //     return i;
-    //   }),
-    // );
+  const udpateValueItem = (
+    item: CriteriaType,
+    value1: number,
+    value2: number,
+  ) => {
+    setCriteriaList(
+      criteriaList.map(i => {
+        if (i.name === item.name) {
+          return {...i, currentMinValue: value1, currentMaxValue: value2};
+        }
+        return i;
+      }),
+    );
   };
 
   React.useEffect(() => {
@@ -364,35 +372,36 @@ const CreateFilter = () => {
   }, []);
 
   const handleFilter = () => {
-    // const item = {
-    //   exchange: currentExchange.exchangeId,
-    //   industry: currentIndustry.industryId,
-    //   conditions: smallList.map(i => {
-    //     return {
-    //       value: i.key,
-    //       from: i.currentMinValue,
-    //       to: i.currentMaxValue,
-    //     };
-    //   }),
-    // };
-    // navigation.navigate('FilterResults', {item});
+    const item = {
+      exchange: currentExchange.exchangeId,
+      industry: currentIndustry.industryId,
+      conditions: criteriaList.map(i => {
+        return {
+          value: i.key,
+          from: i.currentMinValue,
+          to: i.currentMaxValue,
+        };
+      }),
+    };
+    console.log(criteriaList);
+    navigation.navigate('FilterResults', {item});
   };
 
   return (
     <View style={{flex: 1}}>
-      {/* <ModalAddCondition 
-        isModalVisible={isModalVisible} 
-        toggleModal={toggleModal} 
-        smallList={smallList} 
-        addItem={addItem} 
-        removeItem ={removeItem} 
-        criteriaList={criteriaList}
-        /> */}
-      <ModalBaseSlide ref={addConditionModalRef} showClose>
-        <AddConditionModal />
+      <ModalBaseSlide
+        ref={addConditionModalRef}
+        showClose
+        animationType="slide">
+        <AddConditionModal
+          onClose={() => addConditionModalRef.current?.hide()}
+          addItem={addItem}
+          removeItem={removeItem}
+          criteriaList={criteriaList}
+        />
       </ModalBaseSlide>
       <View style={{flex: 1, paddingBottom: 100}}>
-        <ScrollView>
+        <ScrollView style={{}} contentContainerStyle={{paddingBottom: 50}}>
           <View
             style={{
               width: '100%',
@@ -443,8 +452,8 @@ const CreateFilter = () => {
               <CriteriaItem
                 key={index}
                 item={item}
-                updateItem={() => {}}
-                removeSelf={() => {}}
+                updateItem={udpateValueItem}
+                removeSelf={removeItem}
               />
             ))}
 
@@ -456,10 +465,10 @@ const CreateFilter = () => {
                 marginTop: 30,
                 justifyContent: 'center',
                 alignItems: 'center',
-                borderColor: '#999999',
+                borderColor: COLOR.secoundaryColor,
               }}
               onPress={() => addConditionModalRef.current?.show()}>
-              <Text style={{color: 'black'}}>+Thêm tiêu chí</Text>
+              <Text style={{color: COLOR.secoundaryColor}}>+Thêm tiêu chí</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

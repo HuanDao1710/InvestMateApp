@@ -240,5 +240,10 @@ export interface CriteriaType {
     currentMaxValue : number
 }
 
+export interface StockFilterCriteria {
+    key : string,
+    name : string
+}
+
   
   

@@ -21,6 +21,7 @@ import {useNavigation} from '@react-navigation/native';
 import {listSortOption} from './ListSortOptions';
 import {
   arrayToGraphData,
+  convertEpochToDateString,
   getColorPrice,
   getTextChangePrice,
 } from '../../utils/utils';
@@ -29,7 +30,7 @@ import {API_CORE} from '../../api';
 import {StockTemporary, Industry} from '../../type';
 import ShortenedGraph from '../../charts/GhortenedChart';
 import {FlatList} from 'react-native-gesture-handler';
-import { ROOT_PATH} from '../../constants';
+import {ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -40,7 +41,11 @@ const removeDuplicates = (list: any[]) => {
   });
 };
 
-export const renderStock = (item: StockTemporary, onPress: any, index: number) => {
+export const renderStock = (
+  item: StockTemporary,
+  onPress: any,
+  index: number,
+) => {
   const colorStyle = getColorPrice(item.priceChange);
   const textChange = getTextChangePrice(
     item.priceChange,
@@ -55,7 +60,7 @@ export const renderStock = (item: StockTemporary, onPress: any, index: number) =
       }}>
       <View style={styles.stockItemContent}>
         <View style={{width: '35%', height: '100%', justifyContent: 'center'}}>
-          <Text style={{color: 'black', fontWeight: '600'}}  numberOfLines={2}>
+          <Text style={{color: 'black', fontWeight: '600'}} numberOfLines={2}>
             {item.shortName}
           </Text>
           <Text style={{color: '#646464', fontWeight: '500'}}>
@@ -96,7 +101,7 @@ export const renderStock = (item: StockTemporary, onPress: any, index: number) =
 };
 
 const ListStockScreen = () => {
-  const [updateTime, setUpdateTime] = React.useState<string>('18/11/2023');
+  const [updateTime, setUpdateTime] = React.useState<string>('');
   const [sortOption, setSortOption] = React.useState<{
     code: string;
     name: string;
@@ -146,6 +151,8 @@ const ListStockScreen = () => {
         },
       );
       if (res.status === 200) {
+        setUpdateTime(convertEpochToDateString(res.data.content[0].updateTime));
+
         replace
           ? setListStock(res.data.content)
           : setListStock(removeDuplicates([...listStock, ...res.data.content]));
