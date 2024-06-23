@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  RefreshControl,
+  FlatList,
 } from 'react-native';
 import SMG from '../../common/SMG';
 import IconSort from '../../icons/IconSort';
@@ -26,7 +28,6 @@ import {Dropdown} from 'react-native-element-dropdown';
 import {API_CORE} from '../../api';
 import {StockTemporary, Industry} from '../../type';
 import ShortenedGraph from '../../charts/GhortenedChart';
-import {FlatList} from 'react-native-gesture-handler';
 import {ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
@@ -111,6 +112,7 @@ const ListStockScreen = () => {
   const [listStock, setListStock] = React.useState<StockTemporary[]>([]);
   const [page, setPage] = React.useState(0);
   const [currentIndustry, setCurrentIndustry] = React.useState('');
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const getListIndustry = async () => {
     try {
@@ -126,6 +128,16 @@ const ListStockScreen = () => {
       console.error('Error fetching data:', error);
     }
   };
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await getListIndustry();
+    await getListStock('', sortOption.code, 0, 20, true);
+    setPage(0);
+    setCurrentIndustry('');
+    setSortOption({code: 'highest_RS', name: 'SMG cao nhất'});
+    setRefreshing(false);
+  }, []);
 
   const getListStock = async (
     industry: string,
@@ -149,7 +161,6 @@ const ListStockScreen = () => {
       );
       if (res.status === 200) {
         setUpdateTime(convertEpochToDateString(res.data.content[0].updateTime));
-
         replace
           ? setListStock(res.data.content)
           : setListStock(removeDuplicates([...listStock, ...res.data.content]));
@@ -275,6 +286,9 @@ const ListStockScreen = () => {
               renderStock(item, handlePressItem, index)
             }
             onEndReached={getMoreData}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         </View>
       </View>

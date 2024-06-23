@@ -29,6 +29,7 @@ const screenWidth = Dimensions.get('screen').width;
 const FilterItem = (props: {item: StockFilterEntity}) => {
   const {item} = props;
   const [expanded, setExpanded] = React.useState(false);
+  const navigation = useNavigation<any>();
   const sqlite = useContext(SQLiteContext);
   const [listCriteria, setListCriteria] = useState<StockFilterCriteriaEntity[]>(
     [],
@@ -56,7 +57,9 @@ const FilterItem = (props: {item: StockFilterEntity}) => {
           alignItems: 'center',
           zIndex: 10,
         }}
-        onPress={() => console.log('do something!')}>
+        onPress={() =>
+          navigation.navigate('CreateFilter', {filterInited: listCriteria})
+        }>
         <View style={{gap: 15, flexDirection: 'row', alignItems: 'center'}}>
           <FilterIcon height={35} width={35} fill={COLOR.secoundaryColor} />
           <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>

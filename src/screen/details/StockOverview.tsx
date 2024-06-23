@@ -27,7 +27,8 @@ import IconQuestionMark from '../../icons/IconQuestionMark';
 import {API_CORE} from '../../api';
 import {ROOT_PATH} from '../../constants';
 import ModalBaseSlide from '../../common/ModalBaseSlide';
-import {ModalBaseRefType} from '../../common/ModalBase';
+import ModalBase, {ModalBaseRefType} from '../../common/ModalBase';
+import ModalAddToWatchlist from '../../common/ModalAddToWatchList';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -180,12 +181,12 @@ const StockOverview = () => {
   const route = useRoute<RouteProp<ParamList>>();
   const {item} = route.params;
   const financialIntorRef = React.useRef<ModalBaseRefType | null>(null);
-  // const [isModalVisible, setModalVisible] = React.useState(false);
   const [currentFinancial, setCurrentFinancial] = useState<BasicIndexType>({
     code: '',
     name: '',
     explain: '',
   });
+  const ModalAddToWatchlistRef = React.useRef<ModalBaseRefType | null>(null);
 
   const [financialData, setFinancialData] =
     React.useState<FinancialRatioDTO>(temp);
@@ -220,10 +221,6 @@ const StockOverview = () => {
       title: 'Tổng quan',
     });
   });
-
-  // const toggleModal = () => {
-  //   setModalVisible(!isModalVisible);
-  // };
 
   const handleShowModal = (item: BasicIndexType) => {
     financialIntorRef.current?.show();
@@ -272,6 +269,12 @@ const StockOverview = () => {
           item={currentFinancial}
         />
       </ModalBaseSlide>
+      <ModalBase ref={ModalAddToWatchlistRef}>
+        <ModalAddToWatchlist
+          item={item}
+          onClose={() => ModalAddToWatchlistRef.current?.hide()}
+        />
+      </ModalBase>
       <ScrollView>
         <View>
           <Text
@@ -407,7 +410,8 @@ const StockOverview = () => {
                 elevation: 3,
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }}
+              onPress={() => ModalAddToWatchlistRef.current?.show()}>
               <IconAddWhite height={12} width={12} fill={'white'} />
             </TouchableOpacity>
           </View>
@@ -463,6 +467,10 @@ const StockOverview = () => {
             <FinancialRatioItem
               item={FinancialRatios.percentMonth}
               value={(item.percentChangeMonth * 100).toFixed(2) + '%'}
+            />
+            <FinancialRatioItem
+              item={FinancialRatios.marketCap}
+              value={item.marketCap?.toFixed(2) + ''}
             />
           </ListedComponent>
           <ListedComponent title="Chỉ số giá trị">

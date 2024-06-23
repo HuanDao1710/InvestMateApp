@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   FlatList,
   ViewToken,
+  RefreshControl,
 } from 'react-native';
 import {DataTable} from 'react-native-paper';
 import IconTime from '../../icons/IconTime';
@@ -217,9 +218,17 @@ const HomeScreen = () => {
   const [top10Stock, setTop10Stock] = React.useState<StockTemporary[]>([]);
   const flatListRef = React.useRef<FlatList | null>(null);
   const [currentIndex, setCurrentIndex] = React.useState(0);
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const navigation = useNavigation<any>();
   // navigation.navigate("StockNews");
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await getDataIndex();
+    await getDataStock();
+    setRefreshing(false);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -287,7 +296,10 @@ const HomeScreen = () => {
   }).current;
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View
         style={{
           width: windowWidth,

@@ -9,6 +9,7 @@ import {
   Dimensions,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import {API_CORE} from '../../api';
 import {COLOR, ROOT_PATH} from '../../constants';
@@ -18,10 +19,7 @@ import {
   StockFilterDTO,
   StockTemporary,
 } from '../../type';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
 import {DataTable} from 'react-native-paper';
-import {renderStock} from '../stock-list/StockListScreen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import ViewIcon from '../../icons/ViewIcon';
 
 const screenHeight = Dimensions.get('window').height;

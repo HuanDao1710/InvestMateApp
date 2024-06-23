@@ -33,18 +33,20 @@ const StockFilterScreen = () => {
         <View style={styles.filterContainer}>
           <TouchableOpacity
             style={styles.filter}
-            onPress={() => navigation.navigate('CreateFilter')}>
-            <IconCreateFilter style={{width: 55, aspectRatio: 1,}} />
+            onPress={() => navigation.navigate('CreateFilter', {})}>
+            <IconCreateFilter style={{width: 55, aspectRatio: 1}} />
             <Text style={{color: 'black', fontSize: 14}}>Tạo bộ lọc</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.filter}
+          <TouchableOpacity
+            style={styles.filter}
             onPress={() => navigation.navigate('SuggestFilter')}>
             <IconSuggestFilter style={{width: 55, aspectRatio: 1}} />
             <Text style={{color: 'black', fontSize: 14}}>Bộ lọc gợi ý</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filter}
+          <TouchableOpacity
+            style={styles.filter}
             onPress={() => navigation.navigate('PersonalFilter')}>
             <IconPersonalFilter style={{width: 55, aspectRatio: 1}} />
             <Text style={{color: 'black', fontSize: 14}}>Bộ lọc cá nhân</Text>

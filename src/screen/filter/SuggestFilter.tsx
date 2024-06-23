@@ -6,9 +6,15 @@ import {COLOR} from '../../constants';
 import ArrowRoundIcon from '../../icons/ArrowRoundIcon';
 import IconStar from '../../icons/IconStar';
 
+const suggest1 = [
+  {key: 'tp.marketCap', name: 'Vốn hóa thị trường'},
+  {key: 'sf.postTaxProfitYear', name: 'Lợi nhuận sau thuế (năm gần nhất)'},
+  {key: 'sf.postTaxProfitQuarter', name: 'Lợi nhuận sau thuế (quý gần nhất)'},
+];
 
 const FilterItem = () => {
   const [expanded, setExpanded] = React.useState(false);
+  const navigation = useNavigation<any>();
   return (
     <View>
       <TouchableOpacity
@@ -24,7 +30,9 @@ const FilterItem = () => {
           alignItems: 'center',
           zIndex: 10,
         }}
-        onPress={() => console.log('do something!')}>
+        onPress={() =>
+          navigation.navigate('CreateFilter', {filterInited: suggest1})
+        }>
         <View style={{gap: 15, flexDirection: 'row', alignItems: 'center'}}>
           <FilterIcon height={35} width={35} fill={COLOR.secoundaryColor} />
           <Text style={{fontSize: 16, fontWeight: 'bold', color: 'black'}}>

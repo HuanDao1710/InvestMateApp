@@ -7,16 +7,16 @@ import {
   ScrollView,
   Dimensions,
   StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import {API_CORE} from '../../api';
 import {CompanyOverviewDTO} from '../../type';
 import RenderHTML from 'react-native-render-html';
 import CollapseIcon from '../../icons/CollapseIcon';
-import {TouchableOpacity} from 'react-native-gesture-handler';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {PieChart} from 'react-native-chart-kit';
 import {ParamList} from './StockDetail';
-import {IP, ROOT_PATH} from '../../constants';
+import {ROOT_PATH} from '../../constants';
 
 const screenWidth = Dimensions.get('screen').width;
 
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     margin: 2,
     backgroundColor: 'white',
     borderRadius: 10,
-    paddingHorizontal: 5
+    paddingHorizontal: 5,
     // padding: 5,
     // height:35
   },

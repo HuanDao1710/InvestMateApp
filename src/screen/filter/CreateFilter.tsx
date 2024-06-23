@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {RouteProp, useNavigation, useRoute} from '@react-navigation/native';
 import React, {useContext, useLayoutEffect, useState} from 'react';
 import {
   Dimensions,
@@ -153,127 +153,16 @@ const CriteriaItem = (props: {
   );
 };
 
-// const ModalAddCondition = (props: {
-//   isModalVisible: boolean;
-//   toggleModal: any;
-//   smallList: any[];
-//   addItem: any;
-//   removeItem: any;
-//   criteriaList: CriteriaType[];
-// }) => {
-//   const {
-//     isModalVisible,
-//     toggleModal,
-//     smallList,
-//     addItem,
-//     removeItem,
-//     criteriaList,
-//   } = props;
-
-//   const isAlreadyExist = (item: CriteriaType) => {
-//     return smallList.some(i => i.name === item.name);
-//   };
-
-//   const RenderItem = (item: any, index: any) => {
-//     const isExst = isAlreadyExist(item);
-//     return (
-//       <View
-//         key={index}
-//         style={{
-//           borderBottomWidth: 1,
-//           borderColor: '#EAEAEA',
-//           flexDirection: 'row',
-//           justifyContent: 'space-between',
-//           alignItems: 'center',
-//         }}>
-//         <View style={{flex: 1, justifyContent: 'center'}}>
-//           <Text
-//             style={{color: 'gray', fontWeight: '500', marginHorizontal: 15}}>
-//             {item.name}
-//           </Text>
-//         </View>
-//         <View
-//           style={{height: '60%', borderLeftWidth: 1, borderColor: '#DADADA'}}
-//         />
-//         <View style={{height: 40, backgroundColor: '#FBFBFB', aspectRatio: 1}}>
-//           {isExst ? (
-//             <TouchableOpacity
-//               style={{
-//                 width: 40,
-//                 aspectRatio: 1,
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//               }}
-//               onPress={() => removeItem(item)}>
-//               <IconGreyV style={{height: 20, aspectRatio: 1}} />
-//             </TouchableOpacity>
-//           ) : (
-//             <TouchableOpacity
-//               style={{width: 40, aspectRatio: 1, justifyContent: 'center'}}
-//               onPress={() => addItem(item)}>
-//               <IconGreyAdd style={{height: 15}} />
-//             </TouchableOpacity>
-//           )}
-//         </View>
-//       </View>
-//     );
-//   };
-
-//   return (
-//     <Modal
-//       animationType="slide"
-//       transparent={true}
-//       visible={isModalVisible}
-//       onRequestClose={toggleModal}>
-//       <View style={styles.modalContainer}>
-//         <View style={styles.modalContent}>
-//           <View
-//             style={{
-//               height: 55,
-//               justifyContent: 'center',
-//               alignItems: 'center',
-//               width: '100%',
-//               borderBottomWidth: 0.5,
-//               borderBottomColor: '#DADADA',
-//               backgroundColor: '#F1F1F1',
-//             }}>
-//             <Text style={styles.modalText}>Thêm tiêu chí</Text>
-//             <TouchableOpacity
-//               style={{
-//                 position: 'absolute',
-//                 right: 5,
-//                 aspectRatio: 1,
-//                 height: 25,
-//                 borderRadius: 100,
-//                 justifyContent: 'center',
-//                 alignItems: 'center',
-//                 top: 10,
-//                 backgroundColor: '#DADADA',
-//               }}
-//               onPress={toggleModal}>
-//               <IconGreyX style={{width: 12, aspectRatio: 1}} />
-//             </TouchableOpacity>
-//           </View>
-//           <View
-//             style={{
-//               width: '100%',
-//               height: screenHeight * 0.7 - 75,
-//               backgroundColor: 'white',
-//             }}>
-//             <FlatList
-//               data={criteriaList}
-//               renderItem={({item, index}) => RenderItem(item, index)}
-//               extraData={criteriaList}
-//             />
-//           </View>
-//         </View>
-//       </View>
-//     </Modal>
-//   );
-// };
+type ParamList = {
+  stockinfo: {
+    filterInited?: StockFilterCriteria[];
+  };
+};
 
 const CreateFilter = () => {
   const navigation = useNavigation<any>();
+  const route = useRoute<RouteProp<ParamList>>();
+  const {filterInited} = route.params;
   const [criteriaList, setCriteriaList] = useState<CriteriaType[]>([]);
   const [listIndustry, setListIndustry] = React.useState<Industry[]>([
     {industry: 'Tất cả ngành', industryId: ''},
@@ -349,9 +238,21 @@ const CreateFilter = () => {
 
   const addItem = (rawItem: StockFilterCriteria) => {
     const item = DataCriteriaFilterRef.current.find(i => i.key === rawItem.key);
+    console.log('IIIIIIIIIIII', item);
     if (item) {
       setCriteriaList([...criteriaList, item]);
     }
+  };
+
+  const addAllItem = (listRawItem: StockFilterCriteria[]) => {
+    const list: CriteriaType[] = [];
+    listRawItem.forEach(item => {
+      const re = DataCriteriaFilterRef.current.find(i => i.key === item.key);
+      if (re) {
+        list.push(re);
+      }
+    });
+    setCriteriaList(list);
   };
 
   const removeItem = (item: StockFilterCriteria) => {
@@ -390,7 +291,11 @@ const CreateFilter = () => {
 
   React.useEffect(() => {
     getListIndustry();
-    getListCriteria();
+    getListCriteria().then(r => {
+      if (filterInited) {
+        addAllItem(filterInited);
+      }
+    });
   }, []);
 
   const handleFilter = () => {

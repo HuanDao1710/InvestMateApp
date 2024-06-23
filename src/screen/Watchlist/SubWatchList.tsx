@@ -103,7 +103,6 @@ const SubWatchList = () => {
 
   const handleEditTrackingStockList =async () => {
     for (let item of listStockRemove) {
-      console.log('AAAAAAAAAAAAAAAAAA',item)
       await sqlite.deleteTrackingStocks(item)
     }
     setListStockRemove([]);
