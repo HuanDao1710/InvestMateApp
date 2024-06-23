@@ -50,7 +50,7 @@ const AddConditionModal = (props: AddConditionModalProps) => {
         }}>
         <View style={{flex: 1, justifyContent: 'center'}}>
           <Text
-            style={{color: 'gray', fontWeight: '500', marginHorizontal: 15}}>
+            style={{color: 'black', fontWeight: '500', marginHorizontal: 15}}>
             {item.name}
           </Text>
         </View>
@@ -67,16 +67,22 @@ const AddConditionModal = (props: AddConditionModalProps) => {
                 alignItems: 'center',
               }}
               onPress={() => props.removeItem(item)}>
-              <IconGreyV
-                style={{height: 20, aspectRatio: 1}}
-                fill={COLOR.secoundaryColor}
-              />
+              <IconGreyV width={15} height={15} fill={COLOR.greenColor} />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              style={{width: 40, aspectRatio: 1, justifyContent: 'center'}}
+              style={{
+                width: 40,
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
               onPress={() => props.addItem(item)}>
-              <IconGreyAdd style={{height: 15}} fill={COLOR.secoundaryColor} />
+              <IconGreyAdd
+                width={15}
+                height={15}
+                fill={COLOR.secoundaryColor}
+              />
             </TouchableOpacity>
           )}
         </View>
@@ -147,7 +153,7 @@ const AddConditionModal = (props: AddConditionModalProps) => {
               borderRadius: 15,
             }}
             onPress={() => setFilterList(0)}>
-            <Text style={{color: 'black'}}>Cơ bản</Text>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>Cơ bản</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -161,7 +167,7 @@ const AddConditionModal = (props: AddConditionModalProps) => {
               borderRadius: 15,
             }}
             onPress={() => setFilterList(1)}>
-            <Text style={{color: 'black'}}>Biến động</Text>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>Biến động</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
@@ -175,7 +181,9 @@ const AddConditionModal = (props: AddConditionModalProps) => {
               borderRadius: 15,
             }}
             onPress={() => setFilterList(2)}>
-            <Text style={{color: 'black'}}>Tăng trưởng</Text>
+            <Text style={{color: 'black', fontWeight: 'bold'}}>
+              Tăng trưởng
+            </Text>
           </TouchableOpacity>
         </View>
         <ScrollView style={{flex: 1}}>

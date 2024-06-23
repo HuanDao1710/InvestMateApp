@@ -1,9 +1,10 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useLayoutEffect, useState} from 'react';
+import React, {useContext, useLayoutEffect, useState} from 'react';
 import {
   Dimensions,
   StyleSheet,
   Text,
+  ToastAndroid,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -18,6 +19,8 @@ import IconGreyX from '../../icons/IconGeyX';
 import {ModalBaseRefType} from '../../common/ModalBase';
 import ModalBaseSlide from '../../common/ModalBaseSlide';
 import AddConditionModal from './AddConditionModal';
+import SQLiteContext from '../../sqlite/SQLContext';
+import SaveFilterModal from './SaveFilterModal';
 
 const exchangeData = [
   {exchange: 'Tất cả sản', exchangeId: ''},
@@ -286,6 +289,8 @@ const CreateFilter = () => {
   // const [loading, setLoading] = React.useState(false);
   const addConditionModalRef = React.useRef<ModalBaseRefType | null>(null);
   const DataCriteriaFilterRef = React.useRef<CriteriaType[]>([]);
+  const sqlite = useContext(SQLiteContext);
+  const modalSaveFilterRef = React.useRef<null | ModalBaseRefType>(null);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -293,7 +298,9 @@ const CreateFilter = () => {
       headerTitleStyle: {fontSize: 18},
       headerRight: () => (
         <View style={{flexDirection: 'row'}}>
-          <TouchableOpacity style={{margin: 15}} onPress={() => {}}>
+          <TouchableOpacity
+            style={{margin: 15}}
+            onPress={() => modalSaveFilterRef.current?.show()}>
             <IconSave style={{height: 23, aspectRatio: 1}} />
           </TouchableOpacity>
         </View>
@@ -366,6 +373,21 @@ const CreateFilter = () => {
     );
   };
 
+  const hanldeCreatePersonalFilter = async (name: string) => {
+    try {
+      const result = await sqlite.addStockFilter(name);
+      if (result !== null) {
+        criteriaList.map(item => {
+          sqlite.addStockFilterCriteria(result.insertId, item.key, item.name);
+        });
+      }
+      modalSaveFilterRef.current?.hide();
+      ToastAndroid.show('Thành công', ToastAndroid.SHORT);
+    } catch {
+      ToastAndroid.show('Lưu thất bại', ToastAndroid.SHORT);
+    }
+  };
+
   React.useEffect(() => {
     getListIndustry();
     getListCriteria();
@@ -375,15 +397,8 @@ const CreateFilter = () => {
     const item = {
       exchange: currentExchange.exchangeId,
       industry: currentIndustry.industryId,
-      conditions: criteriaList.map(i => {
-        return {
-          value: i.key,
-          from: i.currentMinValue,
-          to: i.currentMaxValue,
-        };
-      }),
+      conditions: criteriaList,
     };
-    console.log(criteriaList);
     navigation.navigate('FilterResults', {item});
   };
 
@@ -398,6 +413,12 @@ const CreateFilter = () => {
           addItem={addItem}
           removeItem={removeItem}
           criteriaList={criteriaList}
+        />
+      </ModalBaseSlide>
+      <ModalBaseSlide ref={modalSaveFilterRef} animationType="slide">
+        <SaveFilterModal
+          onSave={hanldeCreatePersonalFilter}
+          onClose={() => modalSaveFilterRef.current?.hide()}
         />
       </ModalBaseSlide>
       <View style={{flex: 1, paddingBottom: 100}}>

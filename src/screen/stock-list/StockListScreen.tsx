@@ -3,11 +3,8 @@ import {
   Text,
   View,
   StyleSheet,
-  ScrollView,
   Dimensions,
-  Modal,
   TouchableOpacity,
-  TouchableHighlight,
 } from 'react-native';
 import SMG from '../../common/SMG';
 import IconSort from '../../icons/IconSort';

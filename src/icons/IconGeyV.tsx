@@ -1,22 +1,21 @@
-import * as React from "react"
-import Svg, { Path, SvgProps } from "react-native-svg"
+import * as React from 'react';
+import Svg, {Path, SvgProps} from 'react-native-svg';
 
-function SvgComponent(props : SvgProps) {
+function IconGreyV(props: SvgProps) {
   return (
     <Svg
-      style={props.style}
-      viewBox="0 0 24 24"
-      {...props}
-    >
+      // xmlns="http://www.w3.org/2000/svg"
+      width={512}
+      height={512}
+      viewBox="0 0 511.985 511.985"
+      // enableBackground="new 0 0 512 512"
+      {...props}>
       <Path
-        fill="#6d6b6b"
-        fillRule="evenodd"
-        d="M20.71 5.795a1 1 0 01-.005 1.415l-11.077 11a1 1 0 01-1.41 0l-4.923-4.89a1 1 0 011.41-1.418l4.218 4.189 10.372-10.3a1 1 0 011.415.004z"
-        clipRule="evenodd"
+        d="M500.088 83.681c-15.841-15.862-41.564-15.852-57.426 0L184.205 342.148 69.332 227.276c-15.862-15.862-41.574-15.862-57.436 0-15.862 15.862-15.862 41.574 0 57.436l143.585 143.585c7.926 7.926 18.319 11.899 28.713 11.899 10.394 0 20.797-3.963 28.723-11.899l287.171-287.181c15.862-15.851 15.862-41.574 0-57.435z"
         data-original="#000000"
       />
     </Svg>
-  )
+  );
 }
 
-export default SvgComponent
+export default IconGreyV;

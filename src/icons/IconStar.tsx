@@ -1,7 +1,7 @@
 import * as React from "react"
 import Svg, { Path, SvgProps } from "react-native-svg"
 
-function SvgComponent(props : SvgProps) {
+function IconStar(props : SvgProps) {
   return (
     <Svg
       style={props.style}
@@ -17,4 +17,4 @@ function SvgComponent(props : SvgProps) {
   )
 }
 
-export default SvgComponent
+export default IconStar

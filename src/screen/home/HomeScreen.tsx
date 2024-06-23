@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   View,
@@ -10,12 +10,12 @@ import {
   FlatList,
   ViewToken,
 } from 'react-native';
-import { DataTable } from 'react-native-paper';
+import {DataTable} from 'react-native-paper';
 import IconTime from '../../icons/IconTime';
 import IconChart from '../../icons/IconChart';
 import SMG from '../../common/SMG';
 import IconSmallAdd from '../../icons/IconSmallAdd';
-import { API_CORE } from '../../api';
+import {API_CORE} from '../../api';
 import {
   arrayToGraphData,
   convertEpochToDateString,
@@ -24,9 +24,9 @@ import {
 import ChartDetail from '../../charts/ChartDetail';
 import ShortenedGraph from '../../charts/GhortenedChart';
 import DetailChart2 from '../../charts/DetailChart2';
-import { StockTemporary } from '../../type';
-import { useNavigation } from '@react-navigation/native';
-import { ROOT_PATH } from '../../constants';
+import {StockTemporary} from '../../type';
+import {useNavigation} from '@react-navigation/native';
+import {ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -45,7 +45,7 @@ interface IndexPropsStyle {
 
 const indexContent = (data: IndexPropsStyle) => {
   const priceColor =
-    data.priceChange > 0 ? { color: '#37c284' } : { color: '#f65959' };
+    data.priceChange > 0 ? {color: '#37c284'} : {color: '#f65959'};
   const price = data.price.toFixed(2);
   const volume = (data.volume / 1e6).toFixed(2);
   const priceChange = data.priceChange.toFixed(2);
@@ -53,7 +53,7 @@ const indexContent = (data: IndexPropsStyle) => {
     data.priceChange > 0 ? '+' + priceChange : priceChange;
   const percentChange = ((data.priceChange / data.price) * 100).toFixed(2);
   const percentChangeText =
-    data.priceChange > 0 ? '+' + percentChange + '%' :  percentChange + '%';
+    data.priceChange > 0 ? '+' + percentChange + '%' : percentChange + '%';
   const transactionValue =
     data.transactionValue > 0 ? data.transactionValue : '_._';
   const updateTime = convertEpochToTimeString(data.updateTime);
@@ -84,14 +84,14 @@ const indexContent = (data: IndexPropsStyle) => {
           alignItems: 'center',
         }}>
         <View style={styles.indexContentDetail}>
-          <Text style={{ color: 'black', fontSize: 14, fontWeight: '600' }}>
+          <Text style={{color: 'black', fontSize: 14, fontWeight: '600'}}>
             {data.name}
           </Text>
-          <Text style={[{ fontSize: 16, fontWeight: '600' }, priceColor]}>
+          <Text style={[{fontSize: 16, fontWeight: '600'}, priceColor]}>
             {price}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, { height: '30%' }]}>
+        <View style={[styles.indexContentDetail, {height: '30%'}]}>
           <View
             style={{
               width: 'auto',
@@ -100,16 +100,16 @@ const indexContent = (data: IndexPropsStyle) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <IconTime style={{ width: 10, height: 10, marginRight: 5 }} />
-            <Text style={{ color: '#7e7e7e', fontSize: 10 }}>{updateTime}</Text>
+            <IconTime style={{width: 10, height: 10, marginRight: 5}} />
+            <Text style={{color: '#7e7e7e', fontSize: 10}}>{updateTime}</Text>
           </View>
-          <Text style={[{ fontSize: 10, fontWeight: '600' }, priceColor]}>
+          <Text style={[{fontSize: 10, fontWeight: '600'}, priceColor]}>
             {priceChangeText}/{percentChangeText}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, { height: '30%' }]}>
-          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>{volume} triệu</Text>
-          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>
+        <View style={[styles.indexContentDetail, {height: '30%'}]}>
+          <Text style={{color: '#7e7e7e', fontSize: 12}}>{volume} triệu</Text>
+          <Text style={{color: '#7e7e7e', fontSize: 12}}>
             {transactionValue} nghìn tỷ
           </Text>
         </View>
@@ -118,9 +118,12 @@ const indexContent = (data: IndexPropsStyle) => {
   );
 };
 
-const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
+const renderItemTopStock = (
+  props: StockTemporary,
+  onPress: () => void,
+): React.JSX.Element => {
   const colorStyle = (n: number) => {
-    if (n < 0) return { color: '#f65959' };
+    if (n < 0) return {color: '#f65959'};
     return {};
   };
   console.log(props.code);
@@ -132,15 +135,16 @@ const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-          }}>
+          }}
+          onPress={onPress}>
           <Text
             style={[
               styles.textCell,
-              { color: 'black', width: '60%', fontWeight: '500' },
+              {color: 'black', width: '60%', fontWeight: '500'},
             ]}>
             {props.code}
           </Text>
-          <IconSmallAdd style={{ width: 13, aspectRatio: 1, margin: '6%' }} />
+          <IconSmallAdd style={{width: 13, aspectRatio: 1, margin: '6%'}} />
         </TouchableOpacity>
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
@@ -153,7 +157,7 @@ const renderItemTopStock = (props: StockTemporary): React.JSX.Element => {
         />
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
-        <SMG style={{ width: '55%', aspectRatio: 1 }} smg={props.smg} />
+        <SMG style={{width: '55%', aspectRatio: 1}} smg={props.smg} />
       </DataTable.Cell>
       <DataTable.Cell style={styles.cell}>
         <Text style={[styles.textCell]}>{props.price.toFixed(1)}</Text>
@@ -219,10 +223,10 @@ const HomeScreen = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => {
+      setCurrentIndex(prevIndex => {
         const nextIndex = (prevIndex + 1) % 2;
         if (flatListRef.current) {
-          flatListRef.current.scrollToIndex({ animated: true, index: nextIndex });
+          flatListRef.current.scrollToIndex({animated: true, index: nextIndex});
         }
         return nextIndex;
       });
@@ -235,8 +239,8 @@ const HomeScreen = () => {
       const res = await API_CORE.post<any>(
         `${ROOT_PATH}/invest_mate/api/home/index`,
         {
-          'indexes': ['VNINDEX', 'VN30', 'HNX', 'HNX30']
-        }
+          indexes: ['VNINDEX', 'VN30', 'HNX', 'HNX30'],
+        },
       );
       if (res.status === 200) {
         setIndexOverViewData(res.data);
@@ -267,13 +271,13 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    console.log(`${ROOT_PATH}/invest_mate/api/home/top_smg`)
+    console.log(`${ROOT_PATH}/invest_mate/api/home/top_smg`);
     getDataIndex();
     getDataStock();
   }, []);
 
   const handleOnViewableItemsChanged = React.useRef(
-    ({ viewableItems }: { viewableItems: Array<ViewToken> }) => {
+    ({viewableItems}: {viewableItems: Array<ViewToken>}) => {
       // setActive(viewableItems[0].index || 0);
     },
   ).current;
@@ -295,15 +299,16 @@ const HomeScreen = () => {
           <Text style={styles.title}>Tổng quan</Text>
           <Text style={styles.updateTime}>Ngày cập nhật: {updateTime}</Text>
         </View>
-        <View style={{
-          backgroundColor: 'white',
-          width: '100%',
-          height: windowHeight * 0.3,
-          margin: '1%',
-          borderRadius: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
+        <View
+          style={{
+            backgroundColor: 'white',
+            width: '100%',
+            height: windowHeight * 0.3,
+            margin: '1%',
+            borderRadius: 20,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <FlatList
             snapToAlignment="center"
             ref={r => {
@@ -314,11 +319,11 @@ const HomeScreen = () => {
             horizontal
             data={[1, 2]}
             pagingEnabled
-            style={{ flex: 1 }}
-            contentContainerStyle={{ alignItems: 'center' }}
+            style={{flex: 1}}
+            contentContainerStyle={{alignItems: 'center'}}
             progressViewOffset={2}
             onViewableItemsChanged={handleOnViewableItemsChanged}
-            renderItem={({ item }) => (
+            renderItem={({item}) => (
               <View
                 key={item}
                 style={{
@@ -327,9 +332,8 @@ const HomeScreen = () => {
                   flexDirection: 'row',
                   alignItems: 'center',
                   width: windowWidth, // Đặt chiều rộng của mỗi mục bằng chiều rộng màn hình
-                }}
-              >
-                {item === 1 ?
+                }}>
+                {item === 1 ? (
                   <>
                     {indexOverViewData[0] !== undefined ? (
                       indexContent(indexOverViewData[0])
@@ -349,7 +353,8 @@ const HomeScreen = () => {
                     ) : (
                       <View style={styles.indexContent} />
                     )}
-                  </> :
+                  </>
+                ) : (
                   <>
                     {indexOverViewData[2] !== undefined ? (
                       indexContent(indexOverViewData[2])
@@ -369,7 +374,8 @@ const HomeScreen = () => {
                     ) : (
                       <View style={styles.indexContent} />
                     )}
-                  </>}
+                  </>
+                )}
               </View>
             )}
           />
@@ -394,7 +400,7 @@ const HomeScreen = () => {
                 Top cổ phiếu mạnh nhất
               </Text>
             </View>
-            <View style={{ width: '100%', height: 'auto' }}>
+            <View style={{width: '100%', height: 'auto'}}>
               <DataTable>
                 <DataTable.Header>
                   <DataTable.Title style={styles.cell}>Mã</DataTable.Title>
@@ -406,40 +412,16 @@ const HomeScreen = () => {
                   <DataTable.Title style={styles.cell}>%M</DataTable.Title>
                 </DataTable.Header>
                 {top10Stock.map((item: StockTemporary) =>
-                  renderItemTopStock(item),
+                  renderItemTopStock(item, () =>
+                    navigation.navigate('StockDetail', {item}),
+                  ),
                 )}
               </DataTable>
             </View>
           </View>
         </View>
-        {/* <View style={styles.topStock}>
-                    <View style={{height: "auto", width: "100%",marginBottom: '1%', marginTop: "1%"}}>
-                        <Text style={{color: "black", fontSize : 16, fontFamily: "roboto",  fontWeight:"600", marginLeft: 20, }}>
-                            Top ngành
-                        </Text>
-                    </View>
-                    <View style={styles.tableContainer}>
-                        <View style={{margin: "2%", alignSelf:'baseline', backgroundColor: "#b8c4ff", borderRadius: 10}}>
-                            <Text style={{marginLeft: 6, marginRight: 6, fontWeight:"600", fontSize: 12, color: "#141ffc"}}>
-                                Top ngành mạnh nhất
-                            </Text>
-                        </View>
-                        <View style={{width: "100%", height: "auto",}}>
-                            <DataTable>
-                                <DataTable.Header> 
-                                    <DataTable.Title style={[styles.cell, {flex: 3}]}>Tên ngành</DataTable.Title> 
-                                    <DataTable.Title style={styles.cell}>SMG</DataTable.Title> 
-                                    <DataTable.Title style={styles.cell}>%D</DataTable.Title> 
-                                    <DataTable.Title style={styles.cell}>%W</DataTable.Title> 
-                                    <DataTable.Title style={styles.cell}>%M</DataTable.Title> 
-                                </DataTable.Header>
-                                {listTopIndustry.map((item : TopIndustryPropsStyle) => renderItemTopIndustry(item))}
-                            </DataTable>
-                        </View>
-                    </View>           
-                </View> */}
       </View>
-      <View style={{ paddingBottom: '15%' }}></View>
+      <View style={{paddingBottom: '15%'}}></View>
     </ScrollView>
   );
 };

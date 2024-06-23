@@ -25,94 +25,89 @@ import {
 } from '../../utils/utils';
 import IconQuestionMark from '../../icons/IconQuestionMark';
 import {API_CORE} from '../../api';
-import { ROOT_PATH} from '../../constants';
+import {ROOT_PATH} from '../../constants';
+import ModalBaseSlide from '../../common/ModalBaseSlide';
+import {ModalBaseRefType} from '../../common/ModalBase';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 const FinancialRatioInfoModal = (props: {
-  isModalVisible: boolean;
-  toggleModal: any;
+  // isModalVisible: boolean;
+  // toggleModal: any;
+  onClose: () => void;
   item?: BasicIndexType;
 }) => {
-  const {isModalVisible, toggleModal, item} = props;
+  const {onClose, item} = props;
   return (
-    <Modal
-      animationType="slide"
-      transparent={true}
-      visible={isModalVisible}
-      onRequestClose={toggleModal}>
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <View
-            style={{
-              height: '10%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <Text style={styles.modalText}>{item?.code}</Text>
-          </View>
-          <View style={{height: '80%', width: '100%'}}>
-            <ScrollView
-              style={{
-                borderBottomWidth: 1,
-                borderColor: '#ABA9A9',
-                borderTopWidth: 1,
-              }}>
-              <View
-                style={{alignItems: 'center', width: '100%', height: 'auto'}}>
-                <View
-                  style={{minHeight: 30, width: '94%', flexDirection: 'row'}}>
-                  <Text
-                    style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
-                    Tên :
-                  </Text>
-                  <Text
-                    style={{
-                      color: 'black',
-                      fontSize: 16,
-                      fontWeight: '500',
-                      maxWidth: '90%',
-                    }}>
-                    {' '}
-                    {item?.name}
-                  </Text>
-                </View>
-                <View
-                  style={{minHeight: 30, width: '96%', flexDirection: 'row'}}>
-                  <Text
-                    style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
-                    Tên viết tắt :
-                  </Text>
-                  <Text
-                    style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
-                    {' '}
-                    {item?.code}
-                  </Text>
-                </View>
-                <View style={{height: 'auto', width: '96%'}}>
-                  <Text
-                    style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
-                    Ý nghĩa :
-                  </Text>
-                </View>
-                <View style={{height: 'auto', width: '90%'}}>
-                  <Text
-                    style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
-                    {' '}
-                    {item?.explain}
-                  </Text>
-                </View>
-                <View style={{height: 30}}></View>
-              </View>
-            </ScrollView>
-          </View>
-          <TouchableOpacity onPress={toggleModal} style={styles.modalButton}>
-            <Text style={styles.buttonText}>Đóng</Text>
-          </TouchableOpacity>
+    // <Modal
+    //   animationType="slide"
+    //   transparent={true}
+    //   visible={isModalVisible}
+    //   onRequestClose={toggleModal}>
+    <View style={styles.modalContainer}>
+      <View style={styles.modalContent}>
+        <View
+          style={{
+            // height: '10%',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Text style={styles.modalText}>{item?.code}</Text>
         </View>
+        <View style={{width: '100%', maxHeight: 500}}>
+          <ScrollView
+            style={{
+              borderBottomWidth: 1,
+              borderColor: '#ABA9A9',
+              borderTopWidth: 1,
+            }}>
+            <View style={{alignItems: 'center', width: '100%', height: 'auto'}}>
+              <View style={{minHeight: 30, width: '94%', flexDirection: 'row'}}>
+                <Text style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
+                  Tên :
+                </Text>
+                <Text
+                  style={{
+                    color: 'black',
+                    fontSize: 16,
+                    fontWeight: '500',
+                    maxWidth: '90%',
+                  }}>
+                  {' '}
+                  {item?.name}
+                </Text>
+              </View>
+              <View style={{minHeight: 30, width: '96%', flexDirection: 'row'}}>
+                <Text style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
+                  Tên viết tắt :
+                </Text>
+                <Text style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
+                  {' '}
+                  {item?.code}
+                </Text>
+              </View>
+              <View style={{height: 'auto', width: '96%'}}>
+                <Text style={{color: 'grey', fontSize: 16, fontWeight: '500'}}>
+                  Ý nghĩa :
+                </Text>
+              </View>
+              <View style={{height: 'auto', width: '90%'}}>
+                <Text style={{color: 'black', fontSize: 16, fontWeight: '500'}}>
+                  {' '}
+                  {item?.explain}
+                </Text>
+              </View>
+              <View style={{height: 30}}></View>
+            </View>
+          </ScrollView>
+        </View>
+        <TouchableOpacity onPress={onClose} style={styles.modalButton}>
+          <Text style={styles.buttonText}>Đóng</Text>
+        </TouchableOpacity>
       </View>
-    </Modal>
+    </View>
+    // </Modal>
   );
 };
 
@@ -184,13 +179,14 @@ const StockOverview = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<RouteProp<ParamList>>();
   const {item} = route.params;
-  const [isModalVisible, setModalVisible] = React.useState(false);
+  const financialIntorRef = React.useRef<ModalBaseRefType | null>(null);
+  // const [isModalVisible, setModalVisible] = React.useState(false);
   const [currentFinancial, setCurrentFinancial] = useState<BasicIndexType>({
     code: '',
     name: '',
     explain: '',
   });
-  
+
   const [financialData, setFinancialData] =
     React.useState<FinancialRatioDTO>(temp);
 
@@ -225,13 +221,13 @@ const StockOverview = () => {
     });
   });
 
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+  // const toggleModal = () => {
+  //   setModalVisible(!isModalVisible);
+  // };
 
   const handleShowModal = (item: BasicIndexType) => {
+    financialIntorRef.current?.show();
     setCurrentFinancial(item);
-    toggleModal();
   };
 
   const handleViewComapnyInfor = () => {
@@ -270,11 +266,12 @@ const StockOverview = () => {
 
   return (
     <SafeAreaView style={{flex: 1}}>
-      <FinancialRatioInfoModal
-        isModalVisible={isModalVisible}
-        toggleModal={toggleModal}
-        item={currentFinancial}
-      />
+      <ModalBaseSlide ref={financialIntorRef}>
+        <FinancialRatioInfoModal
+          onClose={() => financialIntorRef.current?.hide()}
+          item={currentFinancial}
+        />
+      </ModalBaseSlide>
       <ScrollView>
         <View>
           <Text
@@ -295,8 +292,8 @@ const StockOverview = () => {
             marginTop: 28,
             flexDirection: 'row',
             backgroundColor: 'white',
-            justifyContent:'center',
-            alignItems:"center"
+            justifyContent: 'center',
+            alignItems: 'center',
             // borderWidth: 1
           }}>
           <View style={{width: '75%', height: '100%', marginLeft: 10}}>
@@ -350,7 +347,6 @@ const StockOverview = () => {
                   alignItems: 'center',
                   borderRadius: 5,
                   margin: 6,
-        
                 }}>
                 <Text
                   style={{
@@ -409,10 +405,10 @@ const StockOverview = () => {
                 padding: 3,
                 margin: 8,
                 elevation: 3,
-                justifyContent:'center',
-                alignItems:'center'
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
-              <IconAddWhite height={12} width={12} fill={'white'}/>
+              <IconAddWhite height={12} width={12} fill={'white'} />
             </TouchableOpacity>
           </View>
         </View>
@@ -769,7 +765,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
     // color: '#3961F8',
-    color:"black"
+    color: 'black',
   },
   subtitle: {
     marginLeft: 6,
@@ -817,14 +813,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    paddingHorizontal: 20,
   },
   modalContent: {
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
-    width: 320,
-    height: 400,
+    width: '100%',
+    gap: 10,
+
+    // height: 400,
   },
   modalText: {
     fontSize: 18,
