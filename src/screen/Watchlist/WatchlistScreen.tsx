@@ -5,18 +5,12 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
-  Modal,
   TouchableOpacity,
-  TouchableHighlight,
   Alert,
 } from 'react-native';
-import IconTime from '../../icons/IconTime';
-import IconChart from '../../icons/IconChart';
-import SMG from '../../common/SMG';
 import IconThreeDot from '../../icons/IconThreeDot';
 import IconStar from '../../icons/IconStar';
 import IconBlackAdd from '../../icons/IconBlackAdd';
-import IconEdit from '../../icons/IconEdit';
 import {
   Menu,
   MenuOptions,

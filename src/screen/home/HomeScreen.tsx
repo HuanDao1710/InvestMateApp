@@ -5,210 +5,21 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
-  Touchable,
-  TouchableOpacity,
   FlatList,
   ViewToken,
   RefreshControl,
 } from 'react-native';
 import {DataTable} from 'react-native-paper';
-import IconTime from '../../icons/IconTime';
-import IconChart from '../../icons/IconChart';
-import SMG from '../../common/SMG';
-import IconSmallAdd from '../../icons/IconSmallAdd';
 import {API_CORE} from '../../api';
-import {
-  arrayToGraphData,
-  convertEpochToDateString,
-  convertEpochToTimeString,
-} from '../../utils/utils';
-import ChartDetail from '../../charts/ChartDetail';
-import ShortenedGraph from '../../charts/GhortenedChart';
-import DetailChart2 from '../../charts/DetailChart2';
+import {convertEpochToDateString} from '../../utils/utils';
 import {StockTemporary} from '../../type';
 import {useNavigation} from '@react-navigation/native';
 import {ROOT_PATH} from '../../constants';
+import renderItemTopStock from './renderStockItem';
+import IndexContent, {IndexPropsStyle} from './IndexContent';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
-
-interface IndexPropsStyle {
-  name: string;
-  comGroupCode: string;
-  updateTime: number;
-  priceTimeSeries: number[];
-  preferencePrice: number;
-  price: number;
-  volume: number;
-  transactionValue: number;
-  priceChange: number;
-}
-
-const indexContent = (data: IndexPropsStyle) => {
-  const priceColor =
-    data.priceChange > 0 ? {color: '#37c284'} : {color: '#f65959'};
-  const price = data.price.toFixed(2);
-  const volume = (data.volume / 1e6).toFixed(2);
-  const priceChange = data.priceChange.toFixed(2);
-  const priceChangeText =
-    data.priceChange > 0 ? '+' + priceChange : priceChange;
-  const percentChange = ((data.priceChange / data.price) * 100).toFixed(2);
-  const percentChangeText =
-    data.priceChange > 0 ? '+' + percentChange + '%' : percentChange + '%';
-  const transactionValue =
-    data.transactionValue > 0 ? data.transactionValue : '_._';
-  const updateTime = convertEpochToTimeString(data.updateTime);
-  return (
-    <View style={styles.indexContent}>
-      <View
-        style={{
-          height: '60%',
-          width: '100%',
-          borderBottomWidth: 0.5,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {/* <ChartDetail data={data.priceTimeSeries} lineColor={priceColor.color}/> */}
-        <DetailChart2
-          data={arrayToGraphData(data.priceTimeSeries, 2)}
-          width={windowWidth / 2 - 20}
-          height={windowHeight * 0.13}
-          referencePrices={data.preferencePrice}
-          changePrice={data.priceChange}
-        />
-      </View>
-      <View
-        style={{
-          width: '100%',
-          height: '40%',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <View style={styles.indexContentDetail}>
-          <Text style={{color: 'black', fontSize: 14, fontWeight: '600'}}>
-            {data.name}
-          </Text>
-          <Text style={[{fontSize: 16, fontWeight: '600'}, priceColor]}>
-            {price}
-          </Text>
-        </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
-          <View
-            style={{
-              width: 'auto',
-              height: 'auto',
-              flexDirection: 'row',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <IconTime style={{width: 10, height: 10, marginRight: 5}} />
-            <Text style={{color: '#7e7e7e', fontSize: 10}}>{updateTime}</Text>
-          </View>
-          <Text style={[{fontSize: 10, fontWeight: '600'}, priceColor]}>
-            {priceChangeText}/{percentChangeText}
-          </Text>
-        </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>{volume} triệu</Text>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>
-            {transactionValue} nghìn tỷ
-          </Text>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const renderItemTopStock = (
-  props: StockTemporary,
-  onPress: () => void,
-): React.JSX.Element => {
-  const colorStyle = (n: number) => {
-    if (n < 0) return {color: '#f65959'};
-    return {};
-  };
-  console.log(props.code);
-  return (
-    <DataTable.Row key={props.code}>
-      <DataTable.Cell style={styles.cell}>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}
-          onPress={onPress}>
-          <Text
-            style={[
-              styles.textCell,
-              {color: 'black', width: '60%', fontWeight: '500'},
-            ]}>
-            {props.code}
-          </Text>
-          <IconSmallAdd style={{width: 13, aspectRatio: 1, margin: '6%'}} />
-        </TouchableOpacity>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <ShortenedGraph
-          data={arrayToGraphData(props.timeSeries, 2)}
-          width={35}
-          height={25}
-          priceReference={props.pricePreference}
-          exchange={props.exchange}
-        />
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <SMG style={{width: '55%', aspectRatio: 1}} smg={props.smg} />
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={[styles.textCell]}>{props.price.toFixed(1)}</Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={[styles.textCell, colorStyle(props.percentChangeDay)]}>
-          {(props.percentChangeDay * 100).toFixed(2)}%
-        </Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={[styles.textCell, colorStyle(props.percentChangeWeek)]}>
-          {(props.percentChangeWeek * 100).toFixed(2)}%
-        </Text>
-      </DataTable.Cell>
-      <DataTable.Cell style={styles.cell}>
-        <Text style={[styles.textCell, colorStyle(props.percentChangeMonth)]}>
-          {(props.percentChangeMonth * 100).toFixed(2)}%
-        </Text>
-      </DataTable.Cell>
-    </DataTable.Row>
-  );
-};
-
-// const renderItemTopIndustry = (props : TopIndustryPropsStyle) : React.JSX.Element => {
-//     const colorStyle = (n : number) => {
-//         if( n < 0) return {color: "#f65959"}
-//         return {}
-//     }
-//     return (
-//         <DataTable.Row key={props.id}>
-//             <DataTable.Cell style={[styles.cell, {flex: 3}]}>
-//                 <TouchableOpacity style={{flexDirection: 'row', justifyContent: "center", alignItems: "center",}}>
-//                     <Text style={[styles.textCell, {color: "black"}]}>{props.name}</Text>
-//                 </TouchableOpacity>
-//             </DataTable.Cell>
-//             <DataTable.Cell style={styles.cell}>
-//                 <SMG style={{width:"55%", aspectRatio: 1}} smg={props.smg}/>
-//             </DataTable.Cell>
-//             <DataTable.Cell style={styles.cell}>
-//                 <Text style={[styles.textCell, colorStyle(props.changeD)]}>{(props.changeD * 100).toFixed(2)}%</Text>
-//             </DataTable.Cell>
-//             <DataTable.Cell style={styles.cell}>
-//                 <Text style={[styles.textCell, colorStyle(props.changeW)]}>{(props.changeW * 100).toFixed(2)}%</Text>
-//             </DataTable.Cell>
-//             <DataTable.Cell style={styles.cell}>
-//                 <Text style={[styles.textCell, colorStyle(props.changeM)]}>{(props.changeM * 100).toFixed(2)}%</Text>
-//             </DataTable.Cell>
-//         </DataTable.Row>
-//     );
-// }
 
 const HomeScreen = () => {
   const [updateTime, setUpdateTime] = React.useState<String | undefined>('');
@@ -270,7 +81,7 @@ const HomeScreen = () => {
       if (res.status === 200) {
         setTop10Stock(res.data);
         //   console.log(res.data)
-        //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
+        setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -348,7 +159,7 @@ const HomeScreen = () => {
                 {item === 1 ? (
                   <>
                     {indexOverViewData[0] !== undefined ? (
-                      indexContent(indexOverViewData[0])
+                      <IndexContent data={indexOverViewData[0]} />
                     ) : (
                       <View style={styles.indexContent} />
                     )}
@@ -361,7 +172,7 @@ const HomeScreen = () => {
                       }}
                     />
                     {indexOverViewData[1] !== undefined ? (
-                      indexContent(indexOverViewData[1])
+                      <IndexContent data={indexOverViewData[1]} />
                     ) : (
                       <View style={styles.indexContent} />
                     )}
@@ -369,7 +180,7 @@ const HomeScreen = () => {
                 ) : (
                   <>
                     {indexOverViewData[2] !== undefined ? (
-                      indexContent(indexOverViewData[2])
+                      <IndexContent data={indexOverViewData[2]} />
                     ) : (
                       <View style={styles.indexContent} />
                     )}
@@ -382,7 +193,7 @@ const HomeScreen = () => {
                       }}
                     />
                     {indexOverViewData[3] !== undefined ? (
-                      indexContent(indexOverViewData[3])
+                      <IndexContent data={indexOverViewData[3]} />
                     ) : (
                       <View style={styles.indexContent} />
                     )}

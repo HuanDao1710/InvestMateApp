@@ -1,13 +1,9 @@
 import * as React from "react"
 import Svg, { Path, SvgProps } from "react-native-svg"
 
-function SvgComponent(props: SvgProps) {
+function IconSmallAdd(props: SvgProps) {
   return (
-    <Svg
-      style={props.style}
-      viewBox="0 0 512 512"
-      {...props}
-    >
+    <Svg style={props.style} viewBox="0 0 512 512" {...props}>
       <Path
         fill="#3961f8"
         d="M256 0C114.836 0 0 114.836 0 256s114.836 256 256 256 256-114.836 256-256S397.164 0 256 0zm0 0"
@@ -19,7 +15,7 @@ function SvgComponent(props: SvgProps) {
         data-original="#fafafa"
       />
     </Svg>
-  )
+  );
 }
 
-export default SvgComponent
+export default IconSmallAdd;
