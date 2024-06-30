@@ -19,7 +19,9 @@ const SearceBar = (props: {
   handleTextChange?: any;
 }) => {
   const [text, setText] = React.useState('');
+
   const handleTextChange = (inputText: string) => {
+    setText(inputText);
     props.handleTextChange(inputText);
   };
 
@@ -31,8 +33,8 @@ const SearceBar = (props: {
         />
         <TextInput
           style={styles.input}
-          onChangeText={setText}
-          onBlur={() => handleTextChange(text)}
+          onChangeText={handleTextChange}
+          // onBlur={() => handleTextChange(text)}
           value={text}
           editable={props.enable ? props.enable : false}
           placeholder="Tìm kiếm..."
