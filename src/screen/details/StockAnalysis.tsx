@@ -91,7 +91,7 @@ const StockAnanlysis = () => {
       );
       if (res.status === 200) {
         setBalanceSheetData(res.data);
-        //   setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
+        console.log(res.data)
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
