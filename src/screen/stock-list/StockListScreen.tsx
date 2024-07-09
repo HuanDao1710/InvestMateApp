@@ -160,7 +160,23 @@ const ListStockScreen = () => {
         },
       );
       if (res.status === 200) {
-        setUpdateTime(convertEpochToDateString(res.data.content[0].updateTime));
+        if (res.data.content.length > 0) {
+          // Khởi tạo giá trị ban đầu cho updateTime lớn nhất
+          let maxUpdateTime = res.data.content[0].updateTime;
+
+          // Duyệt qua từng phần tử trong mảng
+          for (let i = 1; i < res.data.content.length; i++) {
+            // So sánh và cập nhật giá trị updateTime lớn nhất
+            if (
+              new Date(res.data.content[i].updateTime) > new Date(maxUpdateTime)
+            ) {
+              maxUpdateTime = res.data.content[i].updateTime;
+            }
+          }
+          // In ra kết quả
+          setUpdateTime(convertEpochToDateString(maxUpdateTime));
+        }
+
         replace
           ? setListStock(res.data.content)
           : setListStock(removeDuplicates([...listStock, ...res.data.content]));

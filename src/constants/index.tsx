@@ -4,7 +4,8 @@ export enum STORAGE {
   IS_FIRST_LAUNCH_APP = 'is_first_launch_app',
 }
 
-export const ROOT_PATH = 'https://d058-103-238-68-64.ngrok-free.app';
+export const ROOT_PATH = 'https://test-ai-translator.data4game.com';
+// export const ROOT_PATH = 'https://2008-103-238-68-64.ngrok-free.app';
 
 export type RootRouter = {
   HomeScreen: undefined;

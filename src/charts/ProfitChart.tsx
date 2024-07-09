@@ -34,24 +34,33 @@ const extractLableColumn = (
   return listItem.map(item => item.year + '');
 };
 
-const extractLineData  = (listItem : IncomeStatementDataChartDTO[], yearly : number) : any[] => {
-  let lineData : any[];
-  if(yearly === 0) {
-      lineData = listItem.map(i =>  i.quarterShareHolderIncomeGrowth);
+const extractLineData = (
+  listItem: IncomeStatementDataChartDTO[],
+  yearly: number,
+): any[] => {
+  let lineData: any[];
+  if (yearly === 0) {
+    lineData = listItem.map(i => i.quarterShareHolderIncomeGrowth);
   } else {
-      lineData = listItem.map(i => i.yearShareHolderIncomeGrowth);
+    lineData = listItem.map(i => i.yearShareHolderIncomeGrowth);
   }
-  for(let i = 1; i < lineData.length; i ++) {
-      let temp1 = listItem[i - 1].shareHolderIncome;
-      let temp2 = listItem[i].shareHolderIncome;
-      if(temp1 === null || temp2 === null || temp1 === undefined || temp2 === undefined || temp1 === 0) {
-        lineData[i] = 1;
-        continue;
-      }
-      lineData[i] = (temp2 - temp1) / temp1;
+  for (let i = 1; i < lineData.length; i++) {
+    let temp1 = listItem[i - 1].shareHolderIncome;
+    let temp2 = listItem[i].shareHolderIncome;
+    if (
+      temp1 === null ||
+      temp2 === null ||
+      temp1 === undefined ||
+      temp2 === undefined ||
+      temp1 === 0
+    ) {
+      lineData[i] = 1;
+      continue;
+    }
+    lineData[i] = (temp2 - temp1) / temp1;
   }
-  return lineData.map(i => ({y : parseFloat((100*i).toFixed(2))}))
-}
+  return lineData.map(i => ({y: parseFloat((100 * i).toFixed(2))}));
+};
 
 const renderTable = (lables: any[], ...params: any[][]) => {
   return (
@@ -87,14 +96,14 @@ const renderTable = (lables: any[], ...params: any[][]) => {
   );
 };
 
-const getABC = (x : number) => {
-    let i = 1;
-    while(x > 10) {
-        i = i * 10;
-        x = x / 10;
-    }
-    return i;
-}
+const getABC = (x: number) => {
+  let i = 1;
+  while (x > 10) {
+    i = i * 10;
+    x = x / 10;
+  }
+  return i;
+};
 
 const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
   const [yearly, setYearly] = React.useState<number>(0);
@@ -108,11 +117,11 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
 
   React.useEffect(() => {
     const raws = filterFinancialData(props.raws, yearly);
-    if(raws.length > 0) setHasData(true);
+    if (raws.length > 0) setHasData(true);
     const size = yearly === 1 ? raws.length - 4 : raws.length - 7;
-    setLables(extractLableColumn(raws, yearly).slice(size,));
-    const _revenues = extractPostTaxProfitData(raws).slice(size,);
-    const _lines = extractLineData(raws, yearly).slice(size,);
+    setLables(extractLableColumn(raws, yearly).slice(size));
+    const _revenues = extractPostTaxProfitData(raws).slice(size);
+    const _lines = extractLineData(raws, yearly).slice(size);
     setLines(['Lợi nhuận(TT C.Kỳ)', ..._lines.map(item => item.y + '%')]);
     setRevenues(['Lợi nhuận', ..._revenues.map(item => item.y)]);
 
@@ -123,40 +132,36 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
     let unitLine = getABC(maxLine - minLine);
     let unitRevenue = getABC(maxRevenue - minRevenue);
 
-    if(unitLine === 0 || unitRevenue === 0) return;
+    // if (unitLine === 0 || unitRevenue === 0) return;
 
-    const minLinestandardized = Math.floor(
-      minLine / unitLine,
-    );
-    const maxLinestandardized = Math.ceil(
-      maxLine / unitLine,
-    );
-    const minRevenuestandardized = Math.floor(
-      minRevenue / unitRevenue,
-    );
-    const maxRevenuestandardized = Math.ceil(
-      maxRevenue / unitRevenue,
-    );
-    // console.log(minLinestandardized, maxLinestandardized, minRevenuestandardized, maxRevenuestandardized);
+    // const minLinestandardized = Math.floor(minLine / unitLine);
+    // const maxLinestandardized = Math.ceil(maxLine / unitLine);
+    // const minRevenuestandardized = Math.floor(minRevenue / unitRevenue);
+    // const maxRevenuestandardized = Math.ceil(maxRevenue / unitRevenue);
+    // // console.log(minLinestandardized, maxLinestandardized, minRevenuestandardized, maxRevenuestandardized);
 
-    const rangeLine = maxLinestandardized - minLinestandardized;
-    const rangeRevenue = maxRevenuestandardized - minRevenuestandardized;
+    // const rangeLine = maxLinestandardized - minLinestandardized;
+    // const rangeRevenue = maxRevenuestandardized - minRevenuestandardized;
 
-
-    let results = rangeRevenue * rangeLine;
-    for (let i = rangeLine; i < Math.max(rangeLine * 2, rangeRevenue); i++) {
-      if (i % rangeRevenue === 0 || rangeRevenue % i == 0) {
-        results = i;
-        break;
-      }
-    }
+    // let results = rangeRevenue * rangeLine;
+    // for (let i = rangeLine; i < Math.max(rangeLine * 2, rangeRevenue); i++) {
+    //   if (i % rangeRevenue === 0 || rangeRevenue % i == 0) {
+    //     results = i;
+    //     break;
+    //   }
+    // }
     setYAxisLeft({
-      axisMinimum: minRevenuestandardized * unitRevenue,
-      axisMaximum: maxRevenuestandardized * unitRevenue,
+      // axisMinimum: minRevenuestandardized * unitRevenue,
+      // axisMaximum: maxRevenuestandardized * unitRevenue,
+      axisMinimum: minRevenue - unitRevenue / 2,
+      axisMaximum: maxRevenue + unitRevenue / 2,
     });
     setYAxisRight({
-      axisMinimum: minLinestandardized * unitLine,
-      axisMaximum: (minLinestandardized + results) * unitLine,
+      // axisMinimum: minLinestandardized * unitLine,
+      // axisMaximum:
+      //   (minLinestandardized + results) * unitLine,
+      axisMinimum: minLine - unitLine / 2,
+      axisMaximum: maxLine + unitLine / 2,
       valueFormatter: 'percent',
     });
     setData({
@@ -254,24 +259,26 @@ const ProfitChart = (props: {raws: IncomeStatementDataChartDTO[]}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          {hasData?
-          <CombinedChart
-          style={{width: '96%', height: '90%'}}
-          data={data}
-          xAxis={{valueFormatter: lables}}
-          yAxis={{
-            left: yAxisLeft,
-            right: yAxisRight,
-          }}
-          chartDescription={{text: ''}}
-          legend={{
-            enabled: true,
-            horizontalAlignment: 'CENTER',
-            verticalAlignment: 'BOTTOM',
-          }}
-          drawOrder={['BAR', 'LINE']}
-        />:
-        <Text style={{color: "grey"}}>Không có dữ liệu</Text>}
+          {hasData ? (
+            <CombinedChart
+              style={{width: '96%', height: '90%'}}
+              data={data}
+              xAxis={{valueFormatter: lables}}
+              yAxis={{
+                left: yAxisLeft,
+                right: yAxisRight,
+              }}
+              chartDescription={{text: ''}}
+              legend={{
+                enabled: true,
+                horizontalAlignment: 'CENTER',
+                verticalAlignment: 'BOTTOM',
+              }}
+              drawOrder={['BAR', 'LINE']}
+            />
+          ) : (
+            <Text style={{color: 'grey'}}>Không có dữ liệu</Text>
+          )}
         </View>
         <View
           style={{

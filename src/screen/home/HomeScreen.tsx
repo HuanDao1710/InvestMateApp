@@ -81,7 +81,7 @@ const HomeScreen = () => {
       if (res.status === 200) {
         setTop10Stock(res.data);
         //   console.log(res.data)
-        setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
+        // setUpdateTime(convertEpochToDateString(res.data[0].updateTime));
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
@@ -91,7 +91,6 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    console.log(`${ROOT_PATH}/invest_mate/api/home/top_smg`);
     getDataIndex();
     getDataStock();
   }, []);

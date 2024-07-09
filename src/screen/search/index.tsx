@@ -3,7 +3,6 @@ import React, {useLayoutEffect, useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   FlatList,
@@ -120,7 +119,7 @@ const SearchScreen = () => {
   const [key, setKey] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const search = debounce(async (keyword: string) => {
+  const search = async (keyword: string) => {
     try {
       setLoading(true);
       const res = await API_CORE.get<any>(
@@ -144,7 +143,14 @@ const SearchScreen = () => {
     } finally {
       setLoading(false);
     }
-  }, 800);
+  };
+
+  const debouncedSearch = React.useCallback(debounce(search, 500), []);
+
+  const onTextChange = (text: string) => {
+    setKey(text);
+    debouncedSearch(text);
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -168,11 +174,6 @@ const SearchScreen = () => {
       ),
     });
   });
-
-  const onTextChange = (text: string) => {
-    setKey(text);
-    search(text);
-  };
 
   return (
     <View style={{flex: 1}}>
