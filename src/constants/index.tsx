@@ -5,7 +5,7 @@ export enum STORAGE {
 }
 
 export const ROOT_PATH = 'https://test-ai-translator.data4game.com';
-// export const ROOT_PATH = 'https://2008-103-238-68-64.ngrok-free.app';
+// export const ROOT_PATH = ' https://0fec-14-162-145-192.ngrok-free.app';
 
 export type RootRouter = {
   HomeScreen: undefined;

@@ -142,7 +142,7 @@ const PersonalFilter = () => {
           <TouchableOpacity
             style={{padding: 5}}
             onPress={() => {
-              navigation.navigate('CreateFilter');
+              navigation.navigate('CreateFilter', {});
             }}>
             <IconBlackAdd height={30} width={30} />
           </TouchableOpacity>
@@ -299,7 +299,7 @@ const PersonalFilter = () => {
               gap: 10,
             }}
             onPress={() => {
-              navigation.navigate('CreateFilter');
+              navigation.navigate('CreateFilter', {});
             }}>
             <IconAddWhite height={15} width={15} fill={'white'} />
             <Text
