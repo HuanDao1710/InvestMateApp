@@ -17,6 +17,7 @@ const SearceBar = (props: {
   enable?: boolean;
   style?: ViewStyle;
   handleTextChange?: any;
+  onSearch: (text: string) => void;
 }) => {
   const [text, setText] = React.useState('');
 
@@ -41,6 +42,7 @@ const SearceBar = (props: {
           placeholderTextColor={'#7D7C7C'}
           cursorColor="black"
           autoFocus={props.enable ? props.enable : false}
+          onSubmitEditing={() => props.onSearch(text)}
         />
         <TouchableOpacity
           style={{

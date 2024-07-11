@@ -4,6 +4,7 @@ import {Dimensions, SafeAreaView, ScrollView, StyleSheet, Text, View} from 'reac
 import { ActivityIndicator } from 'react-native-paper';
 import WebView from 'react-native-webview';
 import { ParamList } from './StockDetail';
+import { COLOR } from '../../constants';
 
 const screenWidth= Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -37,7 +38,7 @@ export const NewsView = () => {
             <View style={{width:"94%", height: "100%", borderTopWidth: 1, borderColor: "#DADADA"}}>
                 {loading&&(
                     <View style={{position:"absolute", width: "100%", height:"100%", alignItems:"center", top: screenHeight /2 - 100}}>
-                        <ActivityIndicator size="small" color="grey" /> 
+                        ActivityIndicator
                         <Text style={{color: "grey", margin: 5, fontSize: 14, fontWeight: "500"}}>Đang tải...</Text>
                     </View>
                     )}
@@ -99,31 +100,46 @@ const StockNews = () => {
 
 
     return (
-        <SafeAreaView style={{flex: 1}}>
-            <ScrollView>
-                <View style={{width: screenWidth, height: 1400, paddingTop: 5}}>
-                    {loading&&(
-                    <View style={{position:"absolute", width: "100%", height:"100%", alignItems:"center", top: screenHeight /2 - 120}}>
-                        <ActivityIndicator size="small" color="grey" /> 
-                        <Text style={{color: "grey", margin: 5, fontSize: 14, fontWeight: "500"}}>Đang tải...</Text>
-                    </View>
-                    )}
-                    <WebView
-                    source={{ uri: link}}
-                    injectedJavaScript={runFirst}
-                    onMessage={({ nativeEvent }) => {
-                        if (nativeEvent.data === 'done') {
-                            setLoading(false);
-                        }
-                    }}
-                    setSupportMultipleWindows={false}
-                    onShouldStartLoadWithRequest={handleNavigationStateChange}
-                    style={{ opacity: loading ? 0 : 1 }}
-                    />   
-                </View>
-            </ScrollView>
-        </SafeAreaView>
-    )
+      <SafeAreaView style={{flex: 1}}>
+        <ScrollView>
+          <View style={{width: screenWidth, height: 1400, paddingTop: 5}}>
+            {loading && (
+              <View
+                style={{
+                  position: 'absolute',
+                  width: '100%',
+                  height: '100%',
+                  alignItems: 'center',
+                  top: screenHeight / 2 - 120,
+                }}>
+                <ActivityIndicator size="small" color={COLOR.secoundaryColor} />
+                <Text
+                  style={{
+                    color: 'grey',
+                    margin: 5,
+                    fontSize: 14,
+                    fontWeight: '500',
+                  }}>
+                  Đang tải...
+                </Text>
+              </View>
+            )}
+            <WebView
+              source={{uri: link}}
+              injectedJavaScript={runFirst}
+              onMessage={({nativeEvent}) => {
+                if (nativeEvent.data === 'done') {
+                  setLoading(false);
+                }
+              }}
+              setSupportMultipleWindows={false}
+              onShouldStartLoadWithRequest={handleNavigationStateChange}
+              style={{opacity: loading ? 0 : 1}}
+            />
+          </View>
+        </ScrollView>
+      </SafeAreaView>
+    );
 }
 
 export default StockNews;

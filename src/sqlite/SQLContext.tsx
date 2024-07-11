@@ -9,9 +9,9 @@ import SQLite from 'react-native-sqlite-storage';
 
 export interface SQLiteFunc {
   findAllWatchlist: () => Promise<WatchlistEntity[]>;
-  createWatchlist: (value: WatchlistEntity) => void;
+  createWatchlist: (value: WatchlistEntity) => Promise<WatchlistEntity | null>;
   updateWatchlist: (name: string, id: number) => void;
-  deleteWatchlist: (value: WatchlistEntity) => void;
+  deleteWatchlist: (value: WatchlistEntity) => Promise<void>;
   findAllTrackingStocks: (watchlist: number) => Promise<TrackingStockEntity[]>;
   createTrackingStocks: (
     value: TrackingStockEntity,
@@ -40,9 +40,9 @@ export interface SQLiteFunc {
 
 const SQLiteContext = createContext<SQLiteFunc>({
   findAllWatchlist: () => Promise.resolve([]),
-  createWatchlist: (value: WatchlistEntity) => undefined,
+  createWatchlist: (value: WatchlistEntity) => Promise.resolve(null),
   updateWatchlist: (name: string, id: number) => undefined,
-  deleteWatchlist: (value: WatchlistEntity) => undefined,
+  deleteWatchlist: (value: WatchlistEntity) => Promise.resolve(undefined),
   findAllTrackingStocks: (watchlist: number) => Promise.resolve([]),
   createTrackingStocks: (value: TrackingStockEntity) => Promise.resolve(null),
   deleteTrackingStocks: (value: TrackingStockEntity) => Promise.resolve(false),

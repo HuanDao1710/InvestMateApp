@@ -178,7 +178,7 @@ const FilterResults = () => {
             alignItems: 'center',
             top: screenHeight / 2 - 120,
           }}>
-          <ActivityIndicator size="small" color="grey" />
+          <ActivityIndicator size="small" color={COLOR.secoundaryColor} />
           <Text
             style={{color: 'grey', margin: 5, fontSize: 14, fontWeight: '500'}}>
             Đang tải...

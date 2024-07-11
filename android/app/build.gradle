@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.investmate"
+    namespace "com.Investmate"
     defaultConfig {
-        applicationId "com.investmate"
+        applicationId "com.Investmate"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -21,6 +21,7 @@ import {useIsFocused, useNavigation} from '@react-navigation/native';
 import {TrackingStockEntity, WatchlistEntity} from '../../type';
 import SQLiteContext from '../../sqlite/SQLContext';
 import AddWatchListModal from './AddWatchListModal';
+import {sortedUniq} from 'lodash';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -63,6 +64,8 @@ const GroupStock = (props: {
     setNumStock(_numStock);
     const _listTrackingStock = await sqlite.findAllTrackingStocks(item.id);
     setListTrackingStock(_listTrackingStock.reverse());
+
+    console.log(item, _numStock);
   };
 
   useEffect(() => {
@@ -164,15 +167,15 @@ const WatchlistScreen = () => {
     setVisible(true);
   };
 
-  const createWatchList = (watchlistName: string) => {
-    sqlite.createWatchlist({id: 1, name: watchlistName});
+  const createWatchList = async (watchlistName: string) => {
+    await sqlite.createWatchlist({id: 1, name: watchlistName});
     setVisible(false);
-    fetchWatchList();
+    await fetchWatchList();
     setMessage(undefined);
   };
 
-  const deleteWatchlist = (watchlistName: string, id: number) => {
-    sqlite.deleteWatchlist({name: watchlistName, id: id});
+  const deleteWatchlist = async (watchlistName: string, id: number) => {
+    await sqlite.deleteWatchlist({name: watchlistName, id: id});
     setVisible(false);
     fetchWatchList();
   };
@@ -191,7 +194,8 @@ const WatchlistScreen = () => {
 
   const fetchWatchList = async () => {
     const results = await sqlite.findAllWatchlist();
-    setWatchlist(results.reverse());
+    console.log(results);
+    setWatchlist(results);
   };
 
   useEffect(() => {
@@ -221,7 +225,7 @@ const WatchlistScreen = () => {
         <View style={styles.listGroup}>
           {watchlist.map((item, index) => (
             <GroupStock
-              key={index}
+              key={item.id}
               item={item}
               navigation={navigation}
               editWatchlist={editWatchlist}

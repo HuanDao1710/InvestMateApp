@@ -26,17 +26,62 @@ const SQLiteContextProvider = ({children}: {children: React.ReactNode}) => {
   }, []);
 
   const createWatchlist = (value: WatchlistEntity) => {
-    if (!dbRef.current) return;
-    dbRef.current.transaction(tx =>
-      tx.executeSql('INSERT INTO watchlist (name) VALUES (?)', [value.name]),
-    );
+    return new Promise<WatchlistEntity>((resolve, reject) => {
+      if (!dbRef.current) return;
+      dbRef.current.transaction(tx => {
+        tx.executeSql(
+          'INSERT INTO watchlist (name) VALUES (?)',
+          [value.name],
+          (_, result) => {
+            const newId = result.insertId;
+            tx.executeSql(
+              'SELECT * FROM watchlist WHERE id = ?',
+              [newId],
+              (_, {rows}) => {
+                if (rows.length > 0) {
+                  resolve(rows.item(0) as WatchlistEntity);
+                } else {
+                  reject(
+                    new Error('Unable to retrieve the new watchlist entity'),
+                  );
+                }
+              },
+              (transaction, error) => {
+                reject(error);
+                return false;
+              },
+            );
+          },
+          (transaction, error) => {
+            reject(error);
+            return false;
+          },
+        );
+      });
+    });
   };
 
-  const deleteWatchlist = (value: WatchlistEntity) => {
-    if (!dbRef.current) return;
-    dbRef.current.transaction(tx =>
-      tx.executeSql(`DELETE FROM watchlist WHERE id = ?;`, [value.id]),
-    );
+  const deleteWatchlist = (value: WatchlistEntity): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      if (!dbRef.current) {
+        reject(new Error('Database not initialized'));
+        return;
+      }
+
+      dbRef.current.transaction(tx => {
+        tx.executeSql(
+          'DELETE FROM watchlist WHERE id = ?',
+          [value.id],
+          (_, result) => {
+            resolve();
+          },
+          (transaction, error) => {
+            reject(error);
+            return false;
+          },
+        );
+      });
+    });
   };
 
   const updateWatchlist = (name: string, id: number) => {
@@ -306,7 +351,7 @@ const SQLiteContextProvider = ({children}: {children: React.ReactNode}) => {
   React.useEffect(() => {
     const db = SQLite.openDatabase(
       {
-        name: 'investmate.db',
+        name: 'Investmate.db',
       },
       () => null,
     );

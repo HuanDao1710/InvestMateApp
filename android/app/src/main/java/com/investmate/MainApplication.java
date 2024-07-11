@@ -1,4 +1,4 @@
-package com.investmate;
+package com.Investmate;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

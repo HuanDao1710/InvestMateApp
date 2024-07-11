@@ -8,13 +8,14 @@ import {
   FlatList,
   ViewToken,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import {DataTable} from 'react-native-paper';
 import {API_CORE} from '../../api';
 import {convertEpochToDateString} from '../../utils/utils';
 import {StockTemporary} from '../../type';
 import {useNavigation} from '@react-navigation/native';
-import {ROOT_PATH} from '../../constants';
+import {COLOR, ROOT_PATH} from '../../constants';
 import renderItemTopStock from './renderStockItem';
 import IndexContent, {IndexPropsStyle} from './IndexContent';
 
@@ -30,6 +31,8 @@ const HomeScreen = () => {
   const flatListRef = React.useRef<FlatList | null>(null);
   const [currentIndex, setCurrentIndex] = React.useState(0);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [loadingIndex, setLoadingIndex] = React.useState(true);
+  const [loadingStock, setLoadingStock] = React.useState(true);
 
   const navigation = useNavigation<any>();
   // navigation.navigate("StockNews");
@@ -55,6 +58,7 @@ const HomeScreen = () => {
   }, []);
 
   const getDataIndex = async () => {
+    setLoadingIndex(true);
     try {
       const res = await API_CORE.post<any>(
         `${ROOT_PATH}/invest_mate/api/home/index`,
@@ -70,10 +74,13 @@ const HomeScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoadingIndex(false);
     }
   };
 
   const getDataStock = async () => {
+    setLoadingStock(true);
     try {
       const res = await API_CORE.get<any>(
         `${ROOT_PATH}/invest_mate/api/home/top_smg`,
@@ -87,6 +94,8 @@ const HomeScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoadingStock(false);
     }
   };
 
@@ -160,7 +169,22 @@ const HomeScreen = () => {
                     {indexOverViewData[0] !== undefined ? (
                       <IndexContent data={indexOverViewData[0]} />
                     ) : (
-                      <View style={styles.indexContent} />
+                      <View
+                        style={[
+                          styles.indexContent,
+                          {justifyContent: 'center', alignItems: 'center'},
+                        ]}>
+                        {loadingIndex ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={COLOR.secoundaryColor}
+                          />
+                        ) : (
+                          <Text style={{fontSize: 12, color: 'black'}}>
+                            Không có dữ liệu!
+                          </Text>
+                        )}
+                      </View>
                     )}
                     <View
                       style={{
@@ -173,7 +197,22 @@ const HomeScreen = () => {
                     {indexOverViewData[1] !== undefined ? (
                       <IndexContent data={indexOverViewData[1]} />
                     ) : (
-                      <View style={styles.indexContent} />
+                      <View
+                        style={[
+                          styles.indexContent,
+                          {justifyContent: 'center', alignItems: 'center'},
+                        ]}>
+                        {loadingIndex ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={COLOR.secoundaryColor}
+                          />
+                        ) : (
+                          <Text style={{fontSize: 12, color: 'black'}}>
+                            Không có dữ liệu!
+                          </Text>
+                        )}
+                      </View>
                     )}
                   </>
                 ) : (
@@ -181,7 +220,22 @@ const HomeScreen = () => {
                     {indexOverViewData[2] !== undefined ? (
                       <IndexContent data={indexOverViewData[2]} />
                     ) : (
-                      <View style={styles.indexContent} />
+                      <View
+                        style={[
+                          styles.indexContent,
+                          {justifyContent: 'center', alignItems: 'center'},
+                        ]}>
+                        {loadingIndex ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={COLOR.secoundaryColor}
+                          />
+                        ) : (
+                          <Text style={{fontSize: 12, color: 'black'}}>
+                            Không có dữ liệu!
+                          </Text>
+                        )}
+                      </View>
                     )}
                     <View
                       style={{
@@ -194,7 +248,22 @@ const HomeScreen = () => {
                     {indexOverViewData[3] !== undefined ? (
                       <IndexContent data={indexOverViewData[3]} />
                     ) : (
-                      <View style={styles.indexContent} />
+                      <View
+                        style={[
+                          styles.indexContent,
+                          {justifyContent: 'center', alignItems: 'center'},
+                        ]}>
+                        {loadingIndex ? (
+                          <ActivityIndicator
+                            size="small"
+                            color={COLOR.secoundaryColor}
+                          />
+                        ) : (
+                          <Text style={{fontSize: 12, color: 'black'}}>
+                            Không có dữ liệu!
+                          </Text>
+                        )}
+                      </View>
                     )}
                   </>
                 )}
@@ -240,6 +309,20 @@ const HomeScreen = () => {
                 )}
               </DataTable>
             </View>
+            {top10Stock.length === 0 && (
+              <View style={{marginTop: 60, marginBottom: 60}}>
+                {loadingStock ? (
+                  <ActivityIndicator
+                    size="small"
+                    color={COLOR.secoundaryColor}
+                  />
+                ) : (
+                  <Text style={{fontSize: 12, color: 'black'}}>
+                    Không có dữ liệu!
+                  </Text>
+                )}
+              </View>
+            )}
           </View>
         </View>
       </View>

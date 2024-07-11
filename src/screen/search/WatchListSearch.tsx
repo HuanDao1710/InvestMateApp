@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {API_CORE} from '../../api';
 import SearceBar from '../../common/SearchBar';
-import {ROOT_PATH} from '../../constants';
+import {COLOR, ROOT_PATH} from '../../constants';
 import IconBack from '../../icons/IconBack';
 import {SearchDTO, StockInfoProps, TrackingStockEntity} from '../../type';
 import {debounce} from 'lodash';
@@ -220,7 +220,7 @@ const WatchListSearch = () => {
 
   const onTextChange = (text: string) => {
     setKey(text);
-    debouncedSearch(text);
+    // debouncedSearch(text);
   };
 
   useLayoutEffect(() => {
@@ -240,7 +240,11 @@ const WatchListSearch = () => {
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <IconBack style={{width: 23, aspectRatio: 1, margin: 15}} />
           </TouchableOpacity>
-          <SearceBar enable={true} handleTextChange={onTextChange} />
+          <SearceBar
+            enable={true}
+            handleTextChange={onTextChange}
+            onSearch={search}
+          />
         </View>
       ),
     });
@@ -271,7 +275,7 @@ const WatchListSearch = () => {
               alignItems: 'center',
               justifyContent: 'center',
             }}>
-            <ActivityIndicator size="large" color="grey" />
+            <ActivityIndicator size="small" color={COLOR.secoundaryColor} />
             <Text
               style={{
                 color: 'grey',

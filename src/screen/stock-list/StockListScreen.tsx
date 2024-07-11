@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import SMG from '../../common/SMG';
 import IconSort from '../../icons/IconSort';
@@ -28,7 +29,7 @@ import {Dropdown} from 'react-native-element-dropdown';
 import {API_CORE} from '../../api';
 import {StockTemporary, Industry} from '../../type';
 import ShortenedGraph from '../../charts/GhortenedChart';
-import {ROOT_PATH} from '../../constants';
+import {COLOR, ROOT_PATH} from '../../constants';
 
 const windowHeight = Dimensions.get('window').height;
 const windowWidth = Dimensions.get('window').width;
@@ -113,6 +114,7 @@ const ListStockScreen = () => {
   const [page, setPage] = React.useState(0);
   const [currentIndustry, setCurrentIndustry] = React.useState('');
   const [refreshing, setRefreshing] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
 
   const getListIndustry = async () => {
     try {
@@ -146,7 +148,7 @@ const ListStockScreen = () => {
     size: number,
     replace = false,
   ) => {
-    console.log(industry, sortBy, page, size, replace);
+    setLoading(true);
     try {
       const res = await API_CORE.get<any>(
         `${ROOT_PATH}/invest_mate/api/stock_list/list_stock`,
@@ -185,6 +187,8 @@ const ListStockScreen = () => {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -220,9 +224,9 @@ const ListStockScreen = () => {
       <View
         style={{
           width: windowWidth,
-          height: 'auto',
           alignItems: 'center',
           backgroundColor: '#f0f0f0',
+          flex: 1,
         }}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Danh sách mã cổ phiếu</Text>
@@ -296,8 +300,9 @@ const ListStockScreen = () => {
         <View style={styles.listStock}>
           <FlatList
             data={listStock}
+            style={{flex: 1}}
             keyExtractor={item => item.code}
-            contentContainerStyle={{paddingBottom: 150}}
+            contentContainerStyle={{paddingBottom: 50}}
             renderItem={({item, index}) =>
               renderStock(item, handlePressItem, index)
             }
@@ -306,6 +311,19 @@ const ListStockScreen = () => {
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
             }
           />
+          {loading && !refreshing && (
+            <View
+              style={{
+                position: 'absolute',
+                bottom: 60,
+                padding: 8,
+                borderRadius: 100,
+                backgroundColor: '#FAFAFA',
+                elevation: 2,
+              }}>
+              <ActivityIndicator size="small" color={COLOR.secoundaryColor} />
+            </View>
+          )}
         </View>
       </View>
     </View>
@@ -345,10 +363,11 @@ const styles = StyleSheet.create({
   },
   listStock: {
     width: '100%',
-    height: '90%',
+    // height: '90%',
     justifyContent: 'center',
     alignItems: 'center',
     margin: '2%',
+    flex: 1,
   },
   stockItemContainer: {
     width: '97%',

@@ -1,6 +1,12 @@
-import {RouteProp, useRoute} from '@react-navigation/native';
+import {RouteProp, useIsFocused, useRoute} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {ScrollView, Text, View, StyleSheet} from 'react-native';
+import {
+  ScrollView,
+  Text,
+  View,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 // import { StackedBarChart, BarChart } from "react-native-chart-kit";
 import RevenueChart from '../../charts/ReveneuChart';
 import ProfitChart from '../../charts/ProfitChart';
@@ -9,11 +15,8 @@ import CashFlowChart from '../../charts/CashFlowChart';
 import EPSChart from '../../charts/EPSChart';
 import {API_CORE} from '../../api';
 import {ParamList} from './StockDetail';
-import {ROOT_PATH} from '../../constants';
-import {
-  convertEpochToDateString,
-  convertEpochToTimeString,
-} from '../../utils/utils';
+import {COLOR, ROOT_PATH} from '../../constants';
+import {convertEpochToDateString} from '../../utils/utils';
 
 const StockAnanlysis = () => {
   const route = useRoute<RouteProp<ParamList>>();
@@ -24,8 +27,12 @@ const StockAnanlysis = () => {
   const [balanceSheetData, setBalanceSheetData] = React.useState<any[]>([]);
   const [financialRatioData, setFinancialRatioData] = React.useState<any[]>([]);
   const {item} = route.params;
+  const [loading, setLoading] = React.useState(true);
+
+  const focus = useIsFocused();
 
   const getData = async () => {
+    setLoading(true);
     try {
       const res = await API_CORE.get<any>(
         `${ROOT_PATH}/invest_mate/api/stock_detail/income_statement_data`,
@@ -91,18 +98,21 @@ const StockAnanlysis = () => {
       );
       if (res.status === 200) {
         setBalanceSheetData(res.data);
-        console.log(res.data)
+        console.log(res.data);
       } else {
         console.log('FETCH FAIL! Status Code: ' + res.status);
       }
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+    setLoading(false);
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    if (focus) {
+      getData();
+    }
+  }, [focus]);
 
   return (
     <View style={{width: '100%', height: '100%'}}>
@@ -150,6 +160,11 @@ const StockAnanlysis = () => {
             {financialRatioData.length > 0 && (
               <View style={styles.chartContainer}>
                 <EPSChart raws={financialRatioData} />
+              </View>
+            )}
+            {loading && (
+              <View style={{top: 50}}>
+                <ActivityIndicator size="large" color={COLOR.secoundaryColor} />
               </View>
             )}
           </View>
