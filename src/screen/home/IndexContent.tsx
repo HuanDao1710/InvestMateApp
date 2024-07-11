@@ -1,9 +1,9 @@
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {arrayToGraphData, convertEpochToTimeString} from '../../utils/utils';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { arrayToGraphData, convertEpochToTimeString } from '../../utils/utils';
 import DetailChart2 from '../../charts/DetailChart2';
 import IconTime from '../../icons/IconTime';
 import axios from 'axios';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 export interface IndexPropsStyle {
   name: string;
@@ -67,7 +67,9 @@ const fetchGiaTriKhopLenh = async (time: string, symbol: string) => {
 
     if (data && data.Data && data.Data.Data.length > 0) {
       const giaTriKhopLenhArray = data.Data.Data.map(
-        (item: {GiaTriKhopLenh: number}) => item.GiaTriKhopLenh,
+        (item: { GiaTriKhopLenh: number, GtThoaThuan: number }) => {
+          return item.GiaTriKhopLenh + item.GtThoaThuan
+        },
       );
       return giaTriKhopLenhArray;
     } else {
@@ -84,10 +86,10 @@ const fetchGiaTriKhopLenh = async (time: string, symbol: string) => {
   }
 };
 
-const IndexContent = (props: {data: IndexPropsStyle}) => {
-  const {data} = props;
+const IndexContent = (props: { data: IndexPropsStyle }) => {
+  const { data } = props;
   const priceColor =
-    data.priceChange > 0 ? {color: '#37c284'} : {color: '#f65959'};
+    data.priceChange > 0 ? { color: '#37c284' } : { color: '#f65959' };
   const price = data.price.toFixed(2);
   const volume = (data.volume / 1e6).toFixed(2);
   const priceChange = data.priceChange.toFixed(2);
@@ -136,14 +138,14 @@ const IndexContent = (props: {data: IndexPropsStyle}) => {
           alignItems: 'center',
         }}>
         <View style={styles.indexContentDetail}>
-          <Text style={{color: 'black', fontSize: 14, fontWeight: '600'}}>
+          <Text style={{ color: 'black', fontSize: 14, fontWeight: '600' }}>
             {data.name}
           </Text>
-          <Text style={[{fontSize: 16, fontWeight: '600'}, priceColor]}>
+          <Text style={[{ fontSize: 16, fontWeight: '600' }, priceColor]}>
             {price}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
+        <View style={[styles.indexContentDetail, { height: '30%' }]}>
           <View
             style={{
               width: 'auto',
@@ -152,16 +154,16 @@ const IndexContent = (props: {data: IndexPropsStyle}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <IconTime style={{width: 10, height: 10, marginRight: 5}} />
-            <Text style={{color: '#7e7e7e', fontSize: 10}}>{updateTime}</Text>
+            <IconTime style={{ width: 10, height: 10, marginRight: 5 }} />
+            <Text style={{ color: '#7e7e7e', fontSize: 10 }}>{updateTime}</Text>
           </View>
-          <Text style={[{fontSize: 10, fontWeight: '600'}, priceColor]}>
+          <Text style={[{ fontSize: 10, fontWeight: '600' }, priceColor]}>
             {priceChangeText}/{percentChangeText}
           </Text>
         </View>
-        <View style={[styles.indexContentDetail, {height: '30%'}]}>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>{volume} triệu</Text>
-          <Text style={{color: '#7e7e7e', fontSize: 12}}>
+        <View style={[styles.indexContentDetail, { height: '30%' }]}>
+          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>{volume} triệu</Text>
+          <Text style={{ color: '#7e7e7e', fontSize: 12 }}>
             {transactionValue}
           </Text>
         </View>
